@@ -105,13 +105,13 @@ func (c *Controller) Start() error {
 	// Add periodic tasks
 	c.tasks = append(c.tasks,
 		periodicTask{
-			tag: "Node monitor",
+			tag: "Node",
 			Periodic: &task.Periodic{
 				Interval: time.Duration(60) * time.Second,
 				Execute:  c.nodeInfoMonitor,
 			}},
 		periodicTask{
-			tag: "User monitor",
+			tag: "Service",
 			Periodic: &task.Periodic{
 				Interval: time.Duration(60) * time.Second,
 				Execute:  c.userInfoMonitor,
@@ -121,7 +121,7 @@ func (c *Controller) Start() error {
 	// Check cert service in need
 	if c.nodeInfo.TLSType == "tls"  && c.nodeInfo.CertMode != "none" {
 		c.tasks = append(c.tasks, periodicTask{
-			tag: "Cert monitor",
+			tag: "Cert",
 			Periodic: &task.Periodic{
 				Interval: time.Duration(60) * time.Second * 60,
 				Execute:  c.certMonitor,
