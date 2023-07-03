@@ -236,12 +236,12 @@ func (d *DefaultDispatcher) getLink(ctx context.Context, network net.Network, sn
 		// Speed Limit and Device Limit
 		bucket, ok, reject := d.Limiter.GetUserBucket(sessionInbound.Tag, user.Email, sessionInbound.Source.Address.IP().String())
 		if reject {
-			newError("Devices reach the limit: ", user.Email).AtWarning().WriteToLog()
+			newError(fmt.Sprintf("Service %s has exceeded allowed IP(s) limit ", user.Email)).AtWarning().WriteToLog()
 			common.Close(outboundLink.Writer)
 			common.Close(inboundLink.Writer)
 			common.Interrupt(outboundLink.Reader)
 			common.Interrupt(inboundLink.Reader)
-			return nil, nil, newError("Devices reach the limit: ", user.Email)
+			return nil, nil, newError(fmt.Sprintf("Service %s has exceeded allowed IP(s) limit ", user.Email))
 		}
 		if ok {
 			inboundLink.Writer = d.Limiter.RateWriter(inboundLink.Writer, bucket)
@@ -460,8 +460,8 @@ func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.
 	// Whether the inbound connection contains a user
 	if sessionInbound.User != nil {
 		if d.RuleManager.Detect(sessionInbound.Tag, destination.String(), sessionInbound.User.Email) {
-			newError(fmt.Sprintf("Service [ %s ] access to [ %s ] reject by rule", sessionInbound.User.Email, destination.String())).AtError().WriteToLog()
-			newError("destination is reject by rule")
+			newError(fmt.Sprintf("Service [ %s ] access to [ %s ] was denied by rule", sessionInbound.User.Email, destination.String())).AtError().WriteToLog()
+			newError("Access to destination is denied by rule")
 			common.Close(link.Writer)
 			common.Interrupt(link.Reader)
 			return
