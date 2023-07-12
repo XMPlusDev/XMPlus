@@ -10,6 +10,7 @@ type Config struct {
 	FallBackConfigs         []*FallBackConfig                `mapstructure:"FallBackConfigs"`
 	EnableDNS               bool                             `mapstructure:"EnableDNS"`
 	DNSStrategy             string                           `mapstructure:"DNSStrategy"`
+	RealityPrivateKey       string                           `mapstructure:"RealityPrivateKey"`
 	EnableFragment          bool                             `mapstructure:"EnableFragment"`
 	FragmentConfigs         *FragmentConfig                  `mapstructure:"FragmentConfigs"`
 }

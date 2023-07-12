@@ -26,7 +26,6 @@ type APIClient struct {
 	eTags          map[string]string
 	LastReportOnline   map[int]int
 	access        sync.Mutex
-	
 }
 
 func New(apiConfig *api.Config) *APIClient {
@@ -311,12 +310,10 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	TLSType = s.Security
 	
 	if TLSType == "tls" {
-		if TLSType == "tls" {
-			enableTLS = true
-			RejectUnknownSni = s.SecuritySettings.RejectUnknownSni
-            AllowInsecure = s.SecuritySettings.AllowInsecure
-		}
-		
+		enableTLS = true
+		RejectUnknownSni = s.SecuritySettings.RejectUnknownSni
+        AllowInsecure = s.SecuritySettings.AllowInsecure
+
 		if s.SecuritySettings.ServerName == "" {
 			return nil, fmt.Errorf("TLS certificate domain (ServerName) is empty: %s",  s.SecuritySettings.ServerName)
 		}

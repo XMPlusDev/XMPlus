@@ -238,7 +238,11 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 		realitySettings.Show = nodeInfo.Show
 		realitySettings.Xver = nodeInfo.Xver
 		realitySettings.ServerNames = nodeInfo.ServerNames
-		realitySettings.PrivateKey = nodeInfo.PrivateKey
+		if nodeInfo.PrivateKey != "" {
+			realitySettings.PrivateKey = nodeInfo.PrivateKey
+		}else{
+			realitySettings.PrivateKey = config.RealityPrivateKey
+		}
 		realitySettings.ShortIds = nodeInfo.ShortIds
 		
 		if nodeInfo.MinClientVer != "" {

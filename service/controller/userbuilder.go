@@ -61,7 +61,6 @@ func (c *Controller) buildTrojanUser(serviceInfo *[]api.ServiceInfo) (services [
 	for i, service := range *serviceInfo {
 		trojanAccount := &trojan.Account{
 			Password: service.UUID,
-			Flow:     "xtls-rprx-direct",
 		}
 		services[i] = &protocol.User{
 			Level:   0,

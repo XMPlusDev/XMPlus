@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	ServiceNotModified = "users not modified"
+	ServiceNotModified = "services not modified"
 	NodeNotModified = "node not modified"
 	RuleNotModified = "rules not modified"
 )
@@ -45,9 +45,7 @@ type NodeInfo struct {
 	ServerKey         string
 	ServiceName       string
 	Header            json.RawMessage
-	DomainStrategy    string
 	SendIP            string
-	EnableDNS         bool
 	Flow              string
 	Seed              string
 	Alpn              string
