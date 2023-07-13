@@ -107,7 +107,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/insta
   "serverName": "xmplus.dev",
   "rejectUnknownSni": true,
   "allowInsecure": false,
-  "fingerprint": "chrome",
+  "fingerprint": "chrome"
 }
 ```
 #### REALITY
