@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package xmplus.app.xdispatcher;
+option csharp_namespace = "XMPlus.App.Myispatcher";
+option go_package = "github.com/XMPlusDev/XMPlus/app/xdispatcher";
+option java_package = "com.xmplus.app.xdispatcher";
+option java_multiple_files = true;
+
+message SessionConfig {
+  reserved 1;
+}
+
+message Config {
+  SessionConfig settings = 1;
+}

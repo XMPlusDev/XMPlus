@@ -1,0 +1,36 @@
+package manager
+
+import (
+	"github.com/XMPlusDev/XMPlus/api"
+	"github.com/XMPlusDev/XMPlus/service/controller"
+)
+
+type Config struct {
+	LogConfig          *LogConfig        `mapstructure:"Log"`
+	DnsConfigPath      string            `mapstructure:"DnsConfigPath"`
+	InboundConfigPath  string            `mapstructure:"InboundConfigPath"`
+	OutboundConfigPath string            `mapstructure:"OutboundConfigPath"`
+	RouteConfigPath    string            `mapstructure:"RouteConfigPath"`
+	ConnectionConfig   *ConnectionConfig `mapstructure:"ConnectionConfig"`
+	NodesConfig        []*NodesConfig    `mapstructure:"Nodes"`
+}
+
+type NodesConfig struct {
+	ApiConfig        *api.Config        `mapstructure:"ApiConfig"`
+	ControllerConfig *controller.Config `mapstructure:"ControllerConfig"`
+}
+
+type LogConfig struct {
+	Level      string `mapstructure:"Level"`
+	AccessPath string `mapstructure:"AccessPath"`
+	ErrorPath  string `mapstructure:"ErrorPath"`
+	MaskAddress string `mapstructure:"MaskAddress"`
+}
+
+type ConnectionConfig struct {
+	Handshake    uint32 `mapstructure:"handshake"`
+	ConnIdle     uint32 `mapstructure:"connIdle"`
+	UplinkOnly   uint32 `mapstructure:"uplinkOnly"`
+	DownlinkOnly uint32 `mapstructure:"downlinkOnly"`
+	BufferSize   int32  `mapstructure:"bufferSize"`
+}
