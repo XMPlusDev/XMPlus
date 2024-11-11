@@ -466,7 +466,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		Sniffing:          s.Sniffing,
 		RejectUnknownSNI:  RejectUnknownSni,
 		Fingerprint:       s.SecuritySettings.Fingerprint, 
-		CurvePreferences   CurvePreferences, 
+		CurvePreferences:   CurvePreferences, 
 		CypherMethod:      s.Cipher,
 		Address:           s.Address, 
 		ListenIP:          s.Listenip, 
