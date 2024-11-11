@@ -154,7 +154,7 @@ update() {
 		fi
 		
 		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/XMPlus.service"
-		wget -N --no-check-certificate -O /usr/lib/systemd/system/XMPlus.service ${file}
+		wget -N --no-check-certificate -O /etc/systemd/system/XMPlus.service ${file}
 		systemctl daemon-reload
 		systemctl stop XMPlus
 		systemctl enable XMPlus
