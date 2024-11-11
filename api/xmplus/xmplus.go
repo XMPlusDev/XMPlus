@@ -348,7 +348,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		congestion ,RejectUnknownSni, Show, noSSEHeader  bool
 		MaxTimeDiff,ProxyProtocol  uint64 = 0, 0	
 		scMaxEachPostBytes, scMaxConcurrentPosts, scMinPostsIntervalMs, xPaddingBytes int32 = 1000000, 10, 30, 200
-		ServerNames,  ShortIds  []string
+		ServerNames,  ShortIds, CurvePreferences []string
 	)
 		
 	if s.NetworkSettings.Flow == "xtls-rprx-vision" || s.NetworkSettings.Flow == "xtls-rprx-vision-udp443"{
@@ -363,6 +363,9 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		RejectUnknownSni = s.SecuritySettings.RejectUnknownSni
 		if s.SecuritySettings.ServerName == "" {
 			return nil, fmt.Errorf("TLS certificate domain (ServerName) is empty: %s",  s.SecuritySettings.ServerName)
+		}
+		if len(s.SecuritySettings.CurvePreferences) > 0 {
+			CurvePreferences = s.SecuritySettings.CurvePreferences
 		}
 	}
 	
@@ -463,6 +466,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		Sniffing:          s.Sniffing,
 		RejectUnknownSNI:  RejectUnknownSni,
 		Fingerprint:       s.SecuritySettings.Fingerprint, 
+		CurvePreferences   CurvePreferences, 
 		CypherMethod:      s.Cipher,
 		Address:           s.Address, 
 		ListenIP:          s.Listenip, 
