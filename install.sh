@@ -98,7 +98,15 @@ install_XMPlus() {
     if [[ -e /usr/local/XMPlus/ ]]; then
         rm /usr/local/XMPlus/ -rf
     fi
-
+	
+	if [[ -f /usr/bin/XMPlus ]]; then
+		rm /usr/bin/XMPlus -f
+	fi
+	
+	if [[ -f /usr/bin/xmplus ]]; then
+		rm /usr/bin/xmplus -f
+	fi
+	
     mkdir /usr/local/XMPlus/ -p
 	
 	cd /usr/local/XMPlus/

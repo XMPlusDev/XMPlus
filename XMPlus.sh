@@ -116,8 +116,13 @@ update() {
         rm /usr/local/XMPlus/ -rf
     fi
 	
-	rm /usr/bin/XMPlus -f
-	rm /usr/bin/xmplus -f
+	if [[ -f /usr/bin/XMPlus ]]; then
+		rm /usr/bin/XMPlus -f
+	fi
+	
+	if [[ -f /usr/bin/xmplus ]]; then
+		rm /usr/bin/xmplus -f
+	fi
 	
     mkdir /usr/local/XMPlus/ -p
 	cd /usr/local/XMPlus/
