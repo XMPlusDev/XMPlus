@@ -364,6 +364,8 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		if s.SecuritySettings.ServerName == "" {
 			return nil, fmt.Errorf("TLS certificate domain (ServerName) is empty: %s",  s.SecuritySettings.ServerName)
 		}
+		
+		CurvePreferences = "X25519"
 		if s.SecuritySettings.CurvePreferences != "" {
 			CurvePreferences = s.SecuritySettings.CurvePreferences
 		}

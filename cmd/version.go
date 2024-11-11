@@ -8,7 +8,7 @@ import (
 
 var (
 	version  = "v1.0.15"
-	codename = "(XMPlus - Relay)"
+	codename = "XMPlus "
 )
 
 func init() {
