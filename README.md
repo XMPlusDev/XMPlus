@@ -179,7 +179,7 @@ Nodes:
   "allowInsecure": false,
   "fingerprint": "chrome",
   "sni": "xmplus.dev",
-  "curvepreferences": "x25519Kyber768Draft00",
+  "curvepreferences": "X25519",
   "alpn": [
     "h2",
     "http/1.1"
