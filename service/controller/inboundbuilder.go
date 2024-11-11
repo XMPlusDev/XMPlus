@@ -228,7 +228,7 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 			tlsSettings := &conf.TLSConfig{
 				RejectUnknownSNI: nodeInfo.RejectUnknownSNI,
 			}
-			tlsSettings.CurvePreferences = conf.StringList{nodeInfo.CurvePreferences}
+			tlsSettings.CurvePreferences = &conf.StringList{nodeInfo.CurvePreferences}
 			tlsSettings.Fingerprint = nodeInfo.Fingerprint
 			tlsSettings.Certs = append(tlsSettings.Certs, &conf.TLSCertConfig{CertFile: certFile, KeyFile: keyFile, OcspStapling: 3600})
 
