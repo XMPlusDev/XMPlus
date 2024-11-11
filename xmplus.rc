@@ -1,0 +1,19 @@
+#!/sbin/openrc-run
+
+description="XMPlus Service"
+
+extra_started_commands="reload"
+
+command="/usr/local/XMPlus/XMPlus"
+command_args="run --config /etc/XMPlus/config.yml"
+
+pidfile="/run/$RC_SVCNAME.pid"
+required_files="/etc/XMPlus/config.json"
+
+depend() {
+	want net
+}
+
+reload() {
+	start-stop-daemon --signal HUP --exec "$command" --pidfile "$pidfile"
+}
