@@ -1,0 +1,8 @@
+version: '3'
+services: 
+  xmplus: 
+    image: ghcr.io/xmplusdev/xmplus:latest
+    volumes:
+      - /etc/XMPlus/:/etc/XMPlus/
+    restart: always
+    network_mode: host

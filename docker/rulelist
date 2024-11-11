@@ -1,0 +1,7 @@
+(.+\.|^)(360|so)\.(cn|com)
+speed.cloudflare.com
+(.*\.||)(speedtest|fast)\.(cn|com|net|xfinity.com)
+(.?)(xunlei|sandai|Thunder|XLLiveUD)(.)
+(api|ps|sv|offnavi|newvector|ulog.imap|newloc)(.map|).(baidu|n.shifen).com
+(torrent|.torrent|peer_id=|info_hash|get_peers|find_node|BitTorrent|announce_peer|announce.php?passkey=)
+(^.*@)(guerrillamail|guerrillamailblock|sharklasers|grr|pokemail|spam4|bccto|chacuo|027168).(info|biz|com|de|net|org|me|la)
