@@ -5,7 +5,7 @@ on:
       - published
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: xmplusdev/xmplus-relay
+  IMAGE_NAME: xmplusdev/xmplus
 
 jobs:
   build:
