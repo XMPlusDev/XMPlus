@@ -1,6 +1,4 @@
 #!/bin/bash
- 
-rm -rf $0
 
 red='\033[0;31m'
 green='\033[0;32m'
@@ -132,14 +130,14 @@ install_XMPlus() {
     rm XMPlus-linux.zip -f
     chmod +x XMPlus
 	
-    if [ -e "/usr/lib/systemd" ] ; then
+    if [ -e "/etc/systemd/system/" ] ; then
 		if [ -e "/usr/lib/systemd/system/XMPlus.service" ] ; then
 			systemctl stop XMPlus
 			systemctl disable XMPlus
 		    rm /etc/systemd/system/XMPlus.service -f
 		fi
 		
-		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/XMPlus.service"
+		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/XMPlus.service"
 		wget -N --no-check-certificate -O /usr/lib/systemd/system/XMPlus.service ${file}
 		systemctl daemon-reload
 		systemctl stop XMPlus
@@ -152,7 +150,7 @@ install_XMPlus() {
 		else	
 			 mkdir /etc/init.d/xmplus/ -p
 		fi
-		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/XMPlus.service"
+		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/xmplus.rc"
 		wget -N --no-check-certificate -O /etc/init.d/xmplus/xmplus.rc ${file}
 		systemctl daemon-reload
 		rc-update add xmplus default 
@@ -193,7 +191,7 @@ install_XMPlus() {
     if [[ ! -f /etc/XMPlus/config.yml ]]; then
         cp config.yml /etc/XMPlus/
     else
-		if [ -e "/usr/lib/systemd" ] ; then
+		if [ -e "/etc/systemd/system/" ] ; then
 			systemctl start XMPlus
 		else
 			rc-service xmplus start
@@ -208,7 +206,7 @@ install_XMPlus() {
         fi
     fi
     
-    curl -o /usr/bin/XMPlus -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/XMPlus.sh
+    curl -o /usr/bin/XMPlus -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/XMPlus.sh
     chmod +x /usr/bin/XMPlus
     ln -s /usr/bin/XMPlus /usr/bin/xmplus 
     chmod +x /usr/bin/xmplus

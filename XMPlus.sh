@@ -100,7 +100,7 @@ before_show_menu() {
 }
 
 install() {
-    bash <(curl -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/install.sh)
+    bash <(curl -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/install.sh)
     if [[ $? == 0 ]]; then
         if [[ $# == 0 ]]; then
             start
@@ -146,14 +146,14 @@ update() {
     rm XMPlus-linux.zip -f
     chmod +x XMPlus
 	
-    if [ -e "/usr/lib/systemd" ] ; then
-		if [ -f "/usr/lib/systemd/system/XMPlus.service" ] ; then
+    if [ -e "/etc/systemd/system/" ] ; then
+		if [ -f "/etc/systemd/system/XMPlus.service" ] ; then
 			systemctl stop XMPlus
 			systemctl disable XMPlus
 		    rm /etc/systemd/system/XMPlus.service -f
 		fi
 		
-		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/XMPlus.service"
+		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/XMPlus.service"
 		wget -N --no-check-certificate -O /usr/lib/systemd/system/XMPlus.service ${file}
 		systemctl daemon-reload
 		systemctl stop XMPlus
@@ -166,7 +166,7 @@ update() {
 		else	
 			 mkdir /etc/init.d/xmplus/ -p
 		fi
-		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/XMPlus.service"
+		file="https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/xmplus.rc"
 		wget -N --no-check-certificate -O /etc/init.d/xmplus/xmplus.rc ${file}
 		systemctl daemon-reload
 		rc-update add xmplus default 
@@ -205,7 +205,7 @@ update() {
     if [[ ! -f /etc/XMPlus/config.yml ]]; then
         cp config.yml /etc/XMPlus/
     else
-        if [ -e "/usr/lib/systemd" ] ; then
+        if [ -e "/etc/systemd/" ] ; then
 			systemctl start XMPlus
 		else
 			rc-service xmplus start
@@ -220,7 +220,7 @@ update() {
         fi
     fi
     
-    curl -o /usr/bin/XMPlus -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/XMPlus.sh
+    curl -o /usr/bin/XMPlus -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/XMPlus.sh
     chmod +x /usr/bin/XMPlus
     ln -s /usr/bin/XMPlus /usr/bin/xmplus 
     chmod +x /usr/bin/xmplus
@@ -281,7 +281,7 @@ uninstall() {
         fi
         return 0
     fi
-	if [ -e "/usr/lib/systemd" ] ; then
+	if [ -e "/etc/systemd/system/" ] ; then
 		systemctl stop XMPlus
 		systemctl disable XMPlus
 		rm /etc/systemd/system/XMPlus.service -f
@@ -313,22 +313,13 @@ start() {
         echo ""
         echo -e "${green}XMPlus aready running, no need to start again, if you need to restart, please select restart${plain}"
     else
-		if [ -e "/usr/lib/systemd" ] ; then
-			systemctl start XMPlus
-			sleep 2
-			check_status
-			if [[ $? == 0 ]]; then
-				echo -e "${green}XMPlus startup is successful, please use XMPlus log to view the operation log${plain}"
-			else
-				echo -e "${red}XMPlus may fail to start, please use XMPlus log to check the log information later${plain}"
-			fi
-		else	
-			rc-service xmplus start
-			if [[ $? == 0 ]]; then
-				echo -e "${green}XMPlus startup is successful, please use XMPlus log to view the operation log${plain}"
-			else
-				echo -e "${red}XMPlus may fail to start, please use XMPlus log to check the log information later${plain}"
-			fi
+		systemctl start XMPlus
+		sleep 2
+		check_status
+		if [[ $? == 0 ]]; then
+			echo -e "${green}XMPlus startup is successful, please use XMPlus log to view the operation log${plain}"
+		else
+			echo -e "${red}XMPlus may fail to start, please use XMPlus log to check the log information later${plain}"
 		fi
     fi
 
@@ -338,22 +329,13 @@ start() {
 }
 
 stop() {
-	if [ -e "/usr/lib/systemd" ] ; then
-		systemctl stop XMPlus
-		sleep 2
-		check_status
-		if [[ $? == 1 ]]; then
-			echo -e "${green}XMPlus stop successful${plain}"
-		else
-			echo -e "${red}XMPlus stop failed, probably because the stop time exceeded two seconds, please check the log information later${plain}"
-		fi
+	systemctl stop XMPlus
+	sleep 2
+	check_status
+	if [[ $? == 1 ]]; then
+		echo -e "${green}XMPlus stop successful${plain}"
 	else
-		rc-service xmplus stop
-		if [[ $? == 1 ]]; then
-			echo -e "${green}XMPlus stop successful${plain}"
-		else
-			echo -e "${red}XMPlus stop failed, probably because the stop time exceeded two seconds"
-		fi
+		echo -e "${red}XMPlus stop failed, probably because the stop time exceeded two seconds, please check the log information later${plain}"
 	fi
 
     if [[ $# == 0 ]]; then
@@ -362,56 +344,33 @@ stop() {
 }
 
 restart() {
-	if [ -e "/usr/lib/systemd" ] ; then
-		systemctl restart XMPlus
-		sleep 2
-		check_status
-		if [[ $? == 0 ]]; then
-			echo -e "${green}XMPlus restart is successful, please use XMPlus log to view the operation log${plain}"
-		else
-			echo -e "${red}XMPlus may fail to start, please use XMPlus log to check the log information later${plain}"
-		fi
+	systemctl restart XMPlus
+	sleep 2
+	check_status
+	if [[ $? == 0 ]]; then
+		echo -e "${green}XMPlus restart is successful, please use XMPlus log to view the operation log${plain}"
 	else
-		rc-service xmplus restart
-		if [[ $? == 0 ]]; then
-			echo -e "${green}XMPlus restart is successful, please use XMPlus log to view the operation log${plain}"
-		else
-			echo -e "${red}XMPlus may fail to start, please use XMPlus log to check the log information later${plain}"
-		fi
+		echo -e "${red}XMPlus may fail to start, please use XMPlus log to check the log information later${plain}"
 	fi
-	
+
     if [[ $# == 0 ]]; then
         before_show_menu
     fi
 }
 
 status() {
-	if [ -e "/usr/lib/systemd" ] ; then
-		systemctl status XMPlus --no-pager -l
-	else
-		rc-service xmplus status
-	fi
-	
+	systemctl status XMPlus --no-pager -l
     if [[ $# == 0 ]]; then
         before_show_menu
     fi
 }
 
 enable() {
-	if [ -e "/usr/lib/systemd" ] ; then
-		systemctl enable XMPlus
-		if [[ $? == 0 ]]; then
-			echo -e "${green}start XMPlus on system boot successfully enabled${plain}"
-		else
-			echo -e "${red}start XMPlus on system boot failed to enable${plain}"
-		fi
+	systemctl enable XMPlus
+	if [[ $? == 0 ]]; then
+		echo -e "${green}start XMPlus on system boot successfully enabled${plain}"
 	else
-		rc-update add xmplus default
-		if [[ $? == 0 ]]; then
-			echo -e "${green}start XMPlus on system boot successfully enabled${plain}"
-		else
-			echo -e "${red}start XMPlus on system boot failed to enable${plain}"
-		fi
+		echo -e "${red}start XMPlus on system boot failed to enable${plain}"
 	fi
 
     if [[ $# == 0 ]]; then
@@ -420,18 +379,12 @@ enable() {
 }
 
 disable() {
-
-	if [ -e "/usr/lib/systemd" ] ; then
-		systemctl disable XMPlus
-		if [[ $? == 0 ]]; then
-			echo -e "${green}diable XMPlus on system boot successfull${plain}"
-		else
-			echo -e "${red}diable XMPlus on system boot failed${plain}"
-		fi
+	systemctl disable XMPlus
+	if [[ $? == 0 ]]; then
+		echo -e "${green}diable XMPlus on system boot successfull${plain}"
 	else
-		rc-update delete xmplus default
-		rc-update --update
-    fi
+		echo -e "${red}diable XMPlus on system boot failed${plain}"
+	fi
     if [[ $# == 0 ]]; then
         before_show_menu
     fi
@@ -451,7 +404,7 @@ install_bbr() {
 update_script() {
 	systemctl stop XMPlus
 	rm -rf /usr/bin/XMPlus
-    wget -O /usr/bin/XMPlus -N --no-check-certificate https://raw.githubusercontent.com/XMPlusDev/XMPlus/install/XMPlus.sh
+    wget -O /usr/bin/XMPlus -N --no-check-certificate https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/XMPlus.sh
     if [[ $? != 0 ]]; then
         echo ""
         echo -e "${red}Failed to download the script, please check whether the machine can connect Github${plain}"
@@ -467,7 +420,6 @@ update_script() {
 
 # 0: running, 1: not running, 2: not installed
 check_status() {
-	if [ -e "/usr/lib/systemd" ] ; then
 		if [[ ! -f /etc/systemd/system/XMPlus.service ]]; then
 			return 2
 		fi
@@ -478,33 +430,16 @@ check_status() {
 		else
 			return 1
 		fi
-	else
-		if [[ ! -f /etc/init.d/xmplus/xmplus.rc ]]; then
-			return 2
-		fi
-		if [[ rc-service xmplus status ]]; then
-			return 0
-		else
-			return 1
-		fi
-	fi
+
 }
 
 check_enabled() {
-	if [ -e "/usr/lib/systemd" ] ; then
 		temp=$(systemctl is-enabled XMPlus)
 		if [[ x"${temp}" == x"enabled" ]]; then
 			return 0
 		else
 			return 1;
 		fi
-	else
-		if [[ -f /etc/init.d/xmplus/xmplus.rc ]]; then
-			return 0
-		else
-			return 1;
-		fi
-	fi
 }
 
 check_uninstall() {
@@ -614,7 +549,7 @@ show_usage() {
 show_menu() {
     echo -e "
   ${green}XMPlus backend management script，${plain}${red}not applicable to docker${plain}
---- https://github.com/XMPlusDev/XMPlus-Relay ---
+--- https://github.com/XMPlusDev/XMPlus ---
   ${green}0.${plain} Change setting
 ————————————————
   ${green}1.${plain} Install XMPlus
