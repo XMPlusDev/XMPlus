@@ -112,7 +112,12 @@ install() {
 
 update() {
     if [[ $# == 0 ]]; then
-        echo && echo -n -e "Enter the specified version (default latest version): " && read version
+		version=$(curl -Ls "https://api.github.com/repos/XMPlusDev/XMPlus/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        if [[ ! -n "$version" ]]; then
+            echo -e "${red}Failed to detect the XMPlus version, it may be because of Github API limit, please try again later, or manually specify the XMPlus version to install${plain}"
+            exit 1
+        fi
+        echo -e "XMPlus latest version detected：${version}，Start Installation"
     else
         version=$2
     fi
