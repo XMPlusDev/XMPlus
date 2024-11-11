@@ -2,6 +2,7 @@ Log:
   Level: warning # Log level: none, error, warning, info, debug 
   AccessPath: # /etc/XMPlus/access.Log
   ErrorPath: # /etc/XMPlus/error.log
+  MaskAddress: half # half, full, quater
 DnsConfigPath:  #/etc/XMPlus/dns.json   #https://xtls.github.io/config/dns.html
 RouteConfigPath: # /etc/XMPlus/route.json   #https://xtls.github.io/config/routing.html
 InboundConfigPath: # /etc/XMPlus/inbound.json  #https://xtls.github.io/config/inbound.html#inboundobject
