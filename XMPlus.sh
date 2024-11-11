@@ -115,7 +115,10 @@ update() {
     if [[ -e /usr/local/XMPlus/ ]]; then
         rm /usr/local/XMPlus/ -rf
     fi
-
+	
+	rm /usr/bin/XMPlus -f
+	rm /usr/bin/xmplus -f
+	
     mkdir /usr/local/XMPlus/ -p
 	cd /usr/local/XMPlus/
 
@@ -404,6 +407,8 @@ install_bbr() {
 update_script() {
 	systemctl stop XMPlus
 	rm -rf /usr/bin/XMPlus
+	rm -rf /usr/bin/xmplus
+	systemctl daemon-reload
     wget -O /usr/bin/XMPlus -N --no-check-certificate https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/XMPlus.sh
     if [[ $? != 0 ]]; then
         echo ""
