@@ -39,7 +39,7 @@ type server struct {
 	Security    string `json:"security"`
 	SecuritySettings  struct {
 		Fingerprint   string    `json:"fingerprint"`
-		CurvePreferences []string  `json:"curvepreferences"`
+		CurvePreferences string  `json:"curvepreferences"`
 		RejectUnknownSni bool   `json:"rejectUnknownSni"`
 		ServerName    string    `json:"serverName"`
 		Dest          string    `json:"dest"`

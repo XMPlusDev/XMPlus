@@ -33,7 +33,7 @@ type NodeInfo struct {
 	Sniffing          bool
 	RejectUnknownSNI  bool
 	Fingerprint       string
-	CurvePreferences  []string
+	CurvePreferences  string
 	Address           string
 	ListenIP          string
 	ProxyProtocol     bool

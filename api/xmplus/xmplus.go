@@ -343,12 +343,12 @@ func (c *APIClient) ReportNodeOnlineIPs(onlineSubscriptionList *[]api.OnlineIP) 
 
 func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	var (
-		path, host, serviceName, seed, Dest, PrivateKey, MinClientVer, MaxClientVer, Flow, Authority string
+		path, host, serviceName, seed, Dest, PrivateKey, MinClientVer, MaxClientVer, Flow, Authority, CurvePreferences string
 		header  json.RawMessage
 		congestion ,RejectUnknownSni, Show, noSSEHeader  bool
 		MaxTimeDiff,ProxyProtocol  uint64 = 0, 0	
 		scMaxEachPostBytes, scMaxConcurrentPosts, scMinPostsIntervalMs, xPaddingBytes int32 = 1000000, 10, 30, 200
-		ServerNames,  ShortIds, CurvePreferences []string
+		ServerNames,  ShortIds []string
 	)
 		
 	if s.NetworkSettings.Flow == "xtls-rprx-vision" || s.NetworkSettings.Flow == "xtls-rprx-vision-udp443"{
@@ -364,7 +364,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		if s.SecuritySettings.ServerName == "" {
 			return nil, fmt.Errorf("TLS certificate domain (ServerName) is empty: %s",  s.SecuritySettings.ServerName)
 		}
-		if len(s.SecuritySettings.CurvePreferences) > 0 {
+		if s.SecuritySettings.CurvePreferences != "" {
 			CurvePreferences = s.SecuritySettings.CurvePreferences
 		}
 	}

@@ -178,17 +178,11 @@ Nodes:
   "rejectUnknownSni": false,
   "allowInsecure": false,
   "fingerprint": "chrome",
-  "sni" : "xmplus.dev",
+  "sni": "xmplus.dev",
+  "curvepreferences": "x25519Kyber768Draft00",
   "alpn": [
     "h2",
     "http/1.1"
-  ],
-  "curvepreferences": [
-	"CurveP256",
-	"CurveP384",
-	"CurveP521",
-	"X25519",
-	"x25519Kyber768Draft00"
   ]
 }
 ```
