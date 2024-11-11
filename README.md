@@ -1,7 +1,8 @@
 # XMPlus
 XMPlus backend
 
-
+[Backend Documentation](https://docs.xmplus.dev/backend/install.html)
+  
 #### Config directory
 ```
 cd /etc/XMPlus
