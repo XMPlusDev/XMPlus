@@ -19,7 +19,7 @@ Log:
   Level: none # Log level: none, error, warning, info, debug 
   AccessPath: # /etc/XMPlus/access.Log
   ErrorPath: # /etc/XMPlus/error.log
-  MaskAddress: half # half, full, quater
+  MaskAddress: half # half, full, quarter
 DnsConfigPath:  #/etc/XMPlus/dns.json
 RouteConfigPath: # /etc/XMPlus/route.json
 InboundConfigPath: # /etc/XMPlus/inbound.json
