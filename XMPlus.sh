@@ -111,25 +111,8 @@ install() {
 }
 
 update() {
-    if [[ $# == 0 ]]; then
-		version=$(curl -Ls "https://api.github.com/repos/XMPlusDev/XMPlus/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-        if [[ ! -n "$version" ]]; then
-            echo -e "${red}Failed to detect the XMPlus version, it may be because of Github API limit, please try again later, or manually specify the XMPlus version to install${plain}"
-            exit 1
-        fi
-        echo -e "XMPlus latest version detected：${version}，Start Installation"
-    else
-        version=$2
-    fi
+    version=$2
     bash <(curl -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/install.sh) $version
-    if [[ $? == 0 ]]; then
-        echo -e "${green}The update is complete and XMPlus has restarted automatically, please use XMPlus log to view the operation log${plain}"
-        exit
-    fi
-
-    if [[ $# == 0 ]]; then
-        before_show_menu
-    fi
 }
 
 config() {
