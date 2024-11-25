@@ -152,7 +152,9 @@ Nodes:
   "scMaxConcurrentPosts": 100,
   "scMinPostsIntervalMs": 30,
   "noSSEHeader": false,
-  "xPaddingBytes": 200
+  "xPaddingBytes": 200,
+  "noGRPCHeader": true,
+  "mode": "auto", // "auto", "packet-up", "stream-up"
 }
 ```
 

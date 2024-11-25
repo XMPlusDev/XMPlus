@@ -35,6 +35,8 @@ type server struct {
 		scMinPostsIntervalMs int       `json:"scMinPostsIntervalMs"`
 		noSSEHeader     bool           `json:"noSSEHeader"`
 		xPaddingBytes   int            `json:"xPaddingBytes"`
+		mode            string         `json:"mode"`
+		noGRPCHeader    bool           `json:"noGRPCHeader"`
 	} `json:"networkSettings"`
 	Security    string `json:"security"`
 	SecuritySettings  struct {
@@ -83,7 +85,9 @@ type relay_server struct {
 		scMaxConcurrentPosts  int      `json:"scMaxConcurrentPosts"`
 		scMinPostsIntervalMs int       `json:"scMinPostsIntervalMs"`
 		noSSEHeader     bool           `json:"noSSEHeader"`
-		xPaddingBytes   int            `json:"xPaddingBytes"`
+		xPaddingBytes   int             json:"xPaddingBytes"`
+		mode            string         `json:"mode"`
+		noGRPCHeader    bool           `json:"noGRPCHeader"`
 	} `json:"networkSettings"`
 	RSecurity string `json:"security"`
 	RSecuritySettings struct {

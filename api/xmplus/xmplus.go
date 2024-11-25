@@ -343,9 +343,9 @@ func (c *APIClient) ReportNodeOnlineIPs(onlineSubscriptionList *[]api.OnlineIP) 
 
 func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	var (
-		path, host, serviceName, seed, Dest, PrivateKey, MinClientVer, MaxClientVer, Flow, Authority, CurvePreferences string
+		path, host, serviceName, seed, Dest, PrivateKey, MinClientVer, MaxClientVer, Flow, Authority, CurvePreferences, mode string
 		header  json.RawMessage
-		congestion ,RejectUnknownSni, Show, noSSEHeader  bool
+		congestion ,RejectUnknownSni, Show, noSSEHeader, noGRPCHeader  bool
 		MaxTimeDiff,ProxyProtocol  uint64 = 0, 0	
 		scMaxEachPostBytes, scMaxConcurrentPosts, scMinPostsIntervalMs, xPaddingBytes int32 = 1000000, 10, 30, 200
 		ServerNames,  ShortIds []string
@@ -403,6 +403,11 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 			scMinPostsIntervalMs = int32(s.NetworkSettings.scMinPostsIntervalMs)
 			noSSEHeader = s.NetworkSettings.noSSEHeader
 			xPaddingBytes = int32(s.NetworkSettings.xPaddingBytes)
+			noGRPCHeader = s.NetworkSettings.noGRPCHeader
+			mode = ""
+			if s.NetworkSettings.mode != "" {
+			   mode = s.NetworkSettings.mode
+			}
 		case "grpc":
 			serviceName = s.NetworkSettings.ServiceName
 		case "tcp":
@@ -468,7 +473,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		Sniffing:          s.Sniffing,
 		RejectUnknownSNI:  RejectUnknownSni,
 		Fingerprint:       s.SecuritySettings.Fingerprint, 
-		CurvePreferences:   CurvePreferences, 
+		CurvePreferences:  CurvePreferences, 
 		CypherMethod:      s.Cipher,
 		Address:           s.Address, 
 		ListenIP:          s.Listenip, 
@@ -494,6 +499,8 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		ScMinPostsIntervalMs: scMinPostsIntervalMs,
 		NoSSEHeader:      noSSEHeader,
 		XPaddingBytes:    xPaddingBytes,
+		NoGRPCHeader:     noGRPCHeader
+		Mode:             mode
 	}
 	return nodeInfo, nil
 }
@@ -502,9 +509,9 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 	s := c.resp.Load().(*serverConfig)
 	var (
-		path, host, serviceName, seed, PublicKey , ShortId ,SpiderX, ServerName, Flow, Authority string
+		path, host, serviceName, seed, PublicKey , ShortId ,SpiderX, ServerName, Flow, Authority, mode string
 		header   json.RawMessage
-		congestion, Show, noSSEHeader  bool
+		congestion, Show, noSSEHeader, noGRPCHeader  bool
 		scMaxEachPostBytes, scMaxConcurrentPosts, scMinPostsIntervalMs, xPaddingBytes int32 = 1000000, 10, 30, 200
 	)
 		
@@ -544,6 +551,11 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 			scMinPostsIntervalMs = int32(s.RNetworkSettings.scMinPostsIntervalMs)
 			noSSEHeader = s.RNetworkSettings.noSSEHeader
 			xPaddingBytes = int32(s.RNetworkSettings.xPaddingBytes)
+			noGRPCHeader = s.RNetworkSettings.noGRPCHeader
+			mode = ""
+			if s.RNetworkSettings.mode != "" {
+			   mode = s.RNetworkSettings.mode
+			}
 	case "grpc":
 		serviceName = s.RNetworkSettings.ServiceName
 	case "tcp":
@@ -624,6 +636,8 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		ScMinPostsIntervalMs: scMinPostsIntervalMs,
 		NoSSEHeader:      noSSEHeader,
 		XPaddingBytes:    xPaddingBytes,
+		NoGRPCHeader:     noGRPCHeader
+		Mode:             mode
 	}
 	return nodeInfo, nil
 }

@@ -235,6 +235,8 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 			ScMinPostsIntervalMs: scMinPostsIntervalMs,
 			NoSSEHeader: nodeInfo.NoSSEHeader,
 			XPaddingBytes: xPaddingBytes,
+			NoGRPCHeader: nodeInfo.NoGRPCHeader,
+			Mode: nodeInfo.Mode,
 		}
 		streamSetting.SplitHTTPSettings = splithttpSettings		
 	case "grpc":

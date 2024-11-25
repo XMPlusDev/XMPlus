@@ -63,6 +63,8 @@ type NodeInfo struct {
 	ScMinPostsIntervalMs  int32
 	NoSSEHeader       bool
 	XPaddingBytes     int32
+	Mode              string
+	NoGRPCHeader      bool 
 }
 
 type RelayNodeInfo struct {
@@ -97,6 +99,8 @@ type RelayNodeInfo struct {
 	ScMinPostsIntervalMs  int32
 	NoSSEHeader       bool
 	XPaddingBytes     int32
+	Mode              string
+	NoGRPCHeader      bool
 }
 
 type SubscriptionInfo struct {

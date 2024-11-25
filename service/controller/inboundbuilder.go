@@ -197,6 +197,8 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 			ScMinPostsIntervalMs: scMinPostsIntervalMs,
 			NoSSEHeader: nodeInfo.NoSSEHeader,
 			XPaddingBytes: xPaddingBytes,
+			NoGRPCHeader: nodeInfo.NoGRPCHeader,
+			Mode: nodeInfo.Mode,
 		}
 		streamSetting.SplitHTTPSettings = splithttpSettings		
 	case "grpc":
