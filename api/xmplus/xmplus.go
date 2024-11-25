@@ -499,8 +499,8 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		ScMinPostsIntervalMs: scMinPostsIntervalMs,
 		NoSSEHeader:      noSSEHeader,
 		XPaddingBytes:    xPaddingBytes,
-		NoGRPCHeader:     noGRPCHeader
-		Mode:             mode
+		NoGRPCHeader:     noGRPCHeader,
+		Mode:             mode,
 	}
 	return nodeInfo, nil
 }
@@ -636,8 +636,8 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		ScMinPostsIntervalMs: scMinPostsIntervalMs,
 		NoSSEHeader:      noSSEHeader,
 		XPaddingBytes:    xPaddingBytes,
-		NoGRPCHeader:     noGRPCHeader
-		Mode:             mode
+		NoGRPCHeader:     noGRPCHeader,
+		Mode:             mode,
 	}
 	return nodeInfo, nil
 }
