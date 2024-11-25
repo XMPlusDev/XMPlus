@@ -21,8 +21,6 @@ case $arch in
 		;;
 esac
 
-echo "arch: ${kernelArch}"
-
 # check root
 [[ $EUID -ne 0 ]] && echo -e "${red}Error: ${plain} This script must be run with the root user！\n" && exit 1
 
