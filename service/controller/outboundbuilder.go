@@ -194,6 +194,7 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 			AcceptProxyProtocol: nodeInfo.ProxyProtocol,
 			Path: nodeInfo.Path,
 			Host: nodeInfo.Host,
+			HeartbeatPeriod: nodeInfo.HeartbeatPeriod,
 		}
 		streamSetting.WSSettings = wsSettings
 	case "http":
@@ -237,6 +238,7 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 			XPaddingBytes: xPaddingBytes,
 			NoGRPCHeader: nodeInfo.NoGRPCHeader,
 			Mode: nodeInfo.Mode,
+			KeepAlivePeriod:  nodeInfo.KeepAlivePeriod,
 		}
 		streamSetting.SplitHTTPSettings = splithttpSettings		
 	case "grpc":

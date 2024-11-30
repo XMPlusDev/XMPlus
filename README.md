@@ -1,5 +1,5 @@
 # XMPlus
-XMPlus backend
+XMPlus backend v1.0.17
 
 [Backend Documentation](https://docs.xmplus.dev/backend/install.html)
 
@@ -105,6 +105,7 @@ Nodes:
   "acceptProxyProtocol": false,
   "path": "/xmplus?ed=2560",
   "host": "hk1.xyz.com",
+  "heartbeatperiod": 30,
   "cdn_host": "fakedomain.com"
 }
 ```
@@ -154,7 +155,8 @@ Nodes:
   "noSSEHeader": false,
   "xPaddingBytes": 200,
   "noGRPCHeader": true,
-  "mode": "auto", // "auto", "packet-up", "stream-up"
+  "keepaliveperiod": 60,
+  "mode": "auto" // "auto", "packet-up", "stream-up", "stream-one"
 }
 ```
 

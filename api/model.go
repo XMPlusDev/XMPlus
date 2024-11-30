@@ -65,6 +65,8 @@ type NodeInfo struct {
 	XPaddingBytes     int32
 	Mode              string
 	NoGRPCHeader      bool 
+	KeepAlivePeriod   int64
+	HeartbeatPeriod   uint32
 }
 
 type RelayNodeInfo struct {
@@ -101,6 +103,8 @@ type RelayNodeInfo struct {
 	XPaddingBytes     int32
 	Mode              string
 	NoGRPCHeader      bool
+	KeepAlivePeriod   int64
+	HeartbeatPeriod   uint32
 }
 
 type SubscriptionInfo struct {

@@ -156,6 +156,7 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 			AcceptProxyProtocol: nodeInfo.ProxyProtocol,
 			Path: nodeInfo.Path,
 			Host: nodeInfo.Host,
+			HeartbeatPeriod: nodeInfo.HeartbeatPeriod,
 		}
 		streamSetting.WSSettings = wsSettings
 	case "http":
@@ -199,6 +200,7 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 			XPaddingBytes: xPaddingBytes,
 			NoGRPCHeader: nodeInfo.NoGRPCHeader,
 			Mode: nodeInfo.Mode,
+			KeepAlivePeriod:  nodeInfo.KeepAlivePeriod,
 		}
 		streamSetting.SplitHTTPSettings = splithttpSettings		
 	case "grpc":

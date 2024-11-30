@@ -23,6 +23,7 @@ type server struct {
 	    ProxyProtocol bool 	           `json:"acceptProxyProtocol"`
 		Path          string           `json:"path"`
 		Host          string           `json:"host"`
+		Heartbeat     int              `json:"heartbeatperiod"`
 		ServiceName   string           `json:"serviceName"`
 		Authority     string           `json:"authority"`
 		Header        *json.RawMessage `json:"header"`
@@ -37,6 +38,7 @@ type server struct {
 		xPaddingBytes   int            `json:"xPaddingBytes"`
 		mode            string         `json:"mode"`
 		noGRPCHeader    bool           `json:"noGRPCHeader"`
+		KeepAlive       int            `json:"keepaliveperiod"`
 	} `json:"networkSettings"`
 	Security    string `json:"security"`
 	SecuritySettings  struct {
@@ -74,6 +76,7 @@ type relay_server struct {
 	    ProxyProtocol bool 	           `json:"acceptProxyProtocol"`
 		Path          string           `json:"path"`
 		Host          string           `json:"host"`
+		Heartbeat     int              `json:"heartbeatperiod"`
 		ServiceName   string           `json:"serviceName"`
 		Authority     string           `json:"authority"`
 		Header        *json.RawMessage `json:"header"`
@@ -88,6 +91,7 @@ type relay_server struct {
 		xPaddingBytes   int            `json:"xPaddingBytes"`
 		mode            string         `json:"mode"`
 		noGRPCHeader    bool           `json:"noGRPCHeader"`
+		KeepAlive       int            `json:"keepaliveperiod"`
 	} `json:"networkSettings"`
 	RSecurity string `json:"security"`
 	RSecuritySettings struct {

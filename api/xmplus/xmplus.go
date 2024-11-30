@@ -347,6 +347,8 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		header  json.RawMessage
 		congestion ,RejectUnknownSni, Show, noSSEHeader, noGRPCHeader  bool
 		MaxTimeDiff,ProxyProtocol  uint64 = 0, 0	
+		HeartbeatPeriod uint32 = 10
+		KeepAlivePeriod int64 = 0
 		scMaxEachPostBytes, scMaxConcurrentPosts, scMinPostsIntervalMs, xPaddingBytes int32 = 1000000, 10, 30, 200
 		ServerNames,  ShortIds []string
 	)
@@ -386,16 +388,17 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	transportProtocol := s.NetworkSettings.Transport
 
 	switch transportProtocol {
-		case "ws":
+		case "ws", "websocket":
 			path = s.NetworkSettings.Path
 			host = s.NetworkSettings.Host
-		case "h2":
+			HeartbeatPeriod = int64(s.NetworkSettings.Heartbeat)
+		case "h2", "h3", "http":
 			path = s.NetworkSettings.Path
 			host = s.NetworkSettings.Host
 		case "httpupgrade":
 			path = s.NetworkSettings.Path
 			host = s.NetworkSettings.Host
-		case "splithttp":
+		case "xhttp", "splithttp":
 			path = s.NetworkSettings.Path
 			host = s.NetworkSettings.Host
 			scMaxEachPostBytes = int32(s.NetworkSettings.scMaxEachPostBytes)
@@ -408,9 +411,10 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 			if s.NetworkSettings.mode != "" {
 			   mode = s.NetworkSettings.mode
 			}
+			KeepAlivePeriod = int64(s.NetworkSettings.KeepAlive)
 		case "grpc":
 			serviceName = s.NetworkSettings.ServiceName
-		case "tcp":
+		case "raw", "tcp":
 			if httpHeader, err := s.NetworkSettings.Header.MarshalJSON(); err != nil {
 					return nil, err
 			} else {
@@ -431,7 +435,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 			}
 		case "quic":
 			return nil, errors.New("Quic is deprecated in this version of xray-core")
-		case "kcp":
+		case "kcp", "mkcp":
 			seed = s.NetworkSettings.Seed
 			congestion = s.NetworkSettings.Congestion
 			if httpHeader, err := s.NetworkSettings.Header.MarshalJSON(); err != nil {
@@ -464,6 +468,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		TLSType:           s.Security,
 		Path:              path,
 		Host:              host,
+		HeartbeatPeriod:   HeartbeatPeriod,
 		ServiceName:       serviceName,
 		Flow:              Flow,
 		Authority:         Authority,
@@ -501,6 +506,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		XPaddingBytes:    xPaddingBytes,
 		NoGRPCHeader:     noGRPCHeader,
 		Mode:             mode,
+		KeepAlivePeriod:  KeepAlivePeriod,
 	}
 	return nodeInfo, nil
 }
@@ -512,6 +518,8 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		path, host, serviceName, seed, PublicKey , ShortId ,SpiderX, ServerName, Flow, Authority, mode string
 		header   json.RawMessage
 		congestion, Show, noSSEHeader, noGRPCHeader  bool
+		HeartbeatPeriod uint32 = 10
+		KeepAlivePeriod int64 = 0
 		scMaxEachPostBytes, scMaxConcurrentPosts, scMinPostsIntervalMs, xPaddingBytes int32 = 1000000, 10, 30, 200
 	)
 		
@@ -534,16 +542,17 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 	transportProtocol := s.RNetworkSettings.Transport
 
 	switch transportProtocol {
-	case "ws":
+	case "ws", "websocket":
 		path = s.RNetworkSettings.Path
 		host = s.RNetworkSettings.Host
-	case "h2":
+		HeartbeatPeriod = int64(s.RNetworkSettings.Heartbeat)
+	case "h2", "h3", "http":
 		path = s.RNetworkSettings.Path
 		host = s.RNetworkSettings.Host
 	case "httpupgrade":
 		path = s.RNetworkSettings.Path
 		host = s.RNetworkSettings.Host
-	case "splithttp":
+	case "xhttp", "splithttp":
 		path = s.RNetworkSettings.Path
 		host = s.RNetworkSettings.Host
 			scMaxEachPostBytes = int32(s.RNetworkSettings.scMaxEachPostBytes)
@@ -556,9 +565,10 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 			if s.RNetworkSettings.mode != "" {
 			   mode = s.RNetworkSettings.mode
 			}
+			KeepAlivePeriod = int64(s.RNetworkSettings.KeepAlive)
 	case "grpc":
 		serviceName = s.RNetworkSettings.ServiceName
-	case "tcp":
+	case "raw", "tcp":
 		if httpHeader, err := s.RNetworkSettings.Header.MarshalJSON(); err != nil {
 				return nil, err
 		} else {
@@ -579,7 +589,7 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		}
 	case "quic":
 		return nil, errors.New("Quic is deprecated in this version of xray-core")
-	case "kcp":
+	case "kcp", "mkcp":
 		seed = s.RNetworkSettings.Seed
 		congestion = s.RNetworkSettings.Congestion
 		if httpHeader, err := s.RNetworkSettings.Header.MarshalJSON(); err != nil {
@@ -613,6 +623,7 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		TLSType:           s.RSecurity,
 		Path:              path,
 		Host:              host,
+		HeartbeatPeriod:   HeartbeatPeriod,
 		Flow:              Flow,
 		Authority:         Authority,
 		Seed :             seed,
@@ -638,6 +649,7 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		XPaddingBytes:    xPaddingBytes,
 		NoGRPCHeader:     noGRPCHeader,
 		Mode:             mode,
+		KeepAlivePeriod:  KeepAlivePeriod,
 	}
 	return nodeInfo, nil
 }
