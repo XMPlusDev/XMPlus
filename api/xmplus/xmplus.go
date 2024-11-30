@@ -391,7 +391,7 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		case "ws", "websocket":
 			path = s.NetworkSettings.Path
 			host = s.NetworkSettings.Host
-			HeartbeatPeriod = int64(s.NetworkSettings.Heartbeat)
+			HeartbeatPeriod = uint32(s.NetworkSettings.Heartbeat)
 		case "h2", "h3", "http":
 			path = s.NetworkSettings.Path
 			host = s.NetworkSettings.Host
@@ -545,7 +545,7 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 	case "ws", "websocket":
 		path = s.RNetworkSettings.Path
 		host = s.RNetworkSettings.Host
-		HeartbeatPeriod = int64(s.RNetworkSettings.Heartbeat)
+		HeartbeatPeriod = uint32(s.RNetworkSettings.Heartbeat)
 	case "h2", "h3", "http":
 		path = s.RNetworkSettings.Path
 		host = s.RNetworkSettings.Host
