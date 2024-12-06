@@ -136,7 +136,7 @@ func file_app_xdispatcher_config_proto_rawDescGZIP() []byte {
 }
 
 var file_app_xdispatcher_config_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_app_xdispatcher_config_proto_goTypes = []any{}{
+var file_app_xdispatcher_config_proto_goTypes = []any{
 	(*SessionConfig)(nil), // 0: xmplus.app.xdispatcher.SessionConfig
 	(*Config)(nil),        // 1: xmplus.app.xdispatcher.Config
 }
