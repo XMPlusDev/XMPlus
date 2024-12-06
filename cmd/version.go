@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	version  = "v1.0.17"
+	version  = "v1.0.18"
 	codename = "XMPlus "
 )
 
@@ -22,5 +22,5 @@ func init() {
 }
 
 func showVersion() {
-	fmt.Printf("%s %s \n", version,codename)
+    fmt.Printf("%s %s \n", version,codename)
 }

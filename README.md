@@ -1,5 +1,5 @@
 # XMPlus
-XMPlus backend v1.0.17
+XMPlus backend v1.0.18
 
 [Backend Documentation](https://docs.xmplus.dev/backend/install.html)
 
