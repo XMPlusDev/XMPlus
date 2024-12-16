@@ -110,17 +110,6 @@ Nodes:
 }
 ```
 
-####  H2
-```
-{
-  "transport" : "h2",
-  "acceptProxyProtocol": false,
-  "host": "hk1.xyz.com",
-  "path": "/",
-  "cdn_host": "fakedomain.com"
-}
-```
-
 ####  GRPC
 ```
 {
@@ -128,6 +117,20 @@ Nodes:
   "acceptProxyProtocol": false,
   "serviceName": "xmplus",
   "authority": "hk1.xyz.com"
+}
+```
+
+
+####  KCP
+```
+{
+  "transport" : "kcp",
+  "acceptProxyProtocol": false,
+  "congestion": false,
+  "header": {
+    "type": "none"
+  },
+  "seed": "password"
 }
 ```
 
@@ -142,7 +145,7 @@ Nodes:
 }
 ```
 
-####  SPLITHTTP
+####  XHTTP / SPLITHTTP
 ```
 {
   "transport" : "splithttp",
@@ -150,26 +153,13 @@ Nodes:
   "cdn_host": "fakedomain.com",
   "path": "/",
   "scMaxEachPostBytes": 1000000,
-  "scMaxConcurrentPosts": 100,
+  "scMaxBufferedPosts": 30,
   "scMinPostsIntervalMs": 30,
   "noSSEHeader": false,
   "xPaddingBytes": 200,
   "noGRPCHeader": true,
   "keepaliveperiod": 60,
   "mode": "auto" // "auto", "packet-up", "stream-up", "stream-one"
-}
-```
-
-####  KCP
-```
-{
-  "transport" : "kcp",
-  "acceptProxyProtocol": false,
-  "congestion": false,
-  "header": {
-    "type": "none"
-  },
-  "seed": "password"
 }
 ```
 
@@ -198,7 +188,7 @@ Nodes:
 ```
 {
   "show" : false,
-  "dest": "www.lovelive-anime.jp:443",
+  "dest": "www.cloudflare.com:443",
   "privatekey" : "yBaw532IIUNuQWDTncozoBaLJmcd1JZzvsHUgVPxMk8",
   "minclientver":"",
   "maxclientver":"",
@@ -208,7 +198,6 @@ Nodes:
     "6ba85179e30d4fc2"
   ],
   "serverNames": [
-    "www.lovelive-anime.jp",
     "www.cloudflare.com"
   ],
   "fingerprint": "chrome",

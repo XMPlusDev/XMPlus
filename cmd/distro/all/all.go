@@ -42,7 +42,6 @@ import (
 	_ "github.com/xmplusdev/xray-core/v24/proxy/wireguard"
 
 	// Transports
-	_ "github.com/xmplusdev/xray-core/v24/transport/internet/http"
 	_ "github.com/xmplusdev/xray-core/v24/transport/internet/kcp"
 	_ "github.com/xmplusdev/xray-core/v24/transport/internet/tcp"
 	_ "github.com/xmplusdev/xray-core/v24/transport/internet/tls"

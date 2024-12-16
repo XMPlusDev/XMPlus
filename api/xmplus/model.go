@@ -31,14 +31,9 @@ type server struct {
 		Seed          string           `json:"seed"`
 		Congestion    bool 	           `json:"congestion"`
 		Flow          string           `json:"flow"`
-		scMaxEachPostBytes int         `json:"scMaxEachPostBytes"`
-		scMaxConcurrentPosts  int      `json:"scMaxConcurrentPosts"`
-		scMinPostsIntervalMs int       `json:"scMinPostsIntervalMs"`
 		noSSEHeader     bool           `json:"noSSEHeader"`
-		xPaddingBytes   int            `json:"xPaddingBytes"`
 		mode            string         `json:"mode"`
 		noGRPCHeader    bool           `json:"noGRPCHeader"`
-		KeepAlive       int            `json:"keepaliveperiod"`
 	} `json:"networkSettings"`
 	Security    string `json:"security"`
 	SecuritySettings  struct {
@@ -84,14 +79,9 @@ type relay_server struct {
 		Seed          string           `json:"seed"`
 		Congestion    bool 	           `json:"congestion"`
 		Flow          string           `json:"flow"`
-		scMaxEachPostBytes int         `json:"scMaxEachPostBytes"`
-		scMaxConcurrentPosts  int      `json:"scMaxConcurrentPosts"`
-		scMinPostsIntervalMs int       `json:"scMinPostsIntervalMs"`
 		noSSEHeader     bool           `json:"noSSEHeader"`
-		xPaddingBytes   int            `json:"xPaddingBytes"`
 		mode            string         `json:"mode"`
 		noGRPCHeader    bool           `json:"noGRPCHeader"`
-		KeepAlive       int            `json:"keepaliveperiod"`
 	} `json:"networkSettings"`
 	RSecurity string `json:"security"`
 	RSecuritySettings struct {

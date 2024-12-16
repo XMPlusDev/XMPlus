@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	version  = "v1.0.18"
+	version  = "v1.0.19"
 	codename = "XMPlus "
 )
 

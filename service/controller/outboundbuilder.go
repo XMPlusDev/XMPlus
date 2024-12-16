@@ -197,13 +197,6 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 			HeartbeatPeriod: nodeInfo.HeartbeatPeriod,
 		}
 		streamSetting.WSSettings = wsSettings
-	case "http":
-		hosts := conf.StringList{nodeInfo.Host}
-		httpSettings := &conf.HTTPConfig{
-			Host: &hosts,
-			Path: nodeInfo.Path,
-		}
-		streamSetting.HTTPSettings = httpSettings
 	case "httpupgrade":
 		httpupgradeSettings := &conf.HttpUpgradeConfig{
 		    AcceptProxyProtocol: nodeInfo.ProxyProtocol,
@@ -211,36 +204,15 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 			Path: nodeInfo.Path,
 		}
 		streamSetting.HTTPUPGRADESettings = httpupgradeSettings	
-	case "splithttp":
-		scMaxEachPostBytes := &conf.Int32Range{
-			From: nodeInfo.ScMaxEachPostBytes, 
-			To: nodeInfo.ScMaxEachPostBytes,
-		}
-		scMaxConcurrentPosts := &conf.Int32Range{
-			From: nodeInfo.ScMaxConcurrentPosts, 
-			To: nodeInfo.ScMaxConcurrentPosts,
-		}
-		scMinPostsIntervalMs := &conf.Int32Range{
-			From: nodeInfo.ScMinPostsIntervalMs, 
-			To: nodeInfo.ScMinPostsIntervalMs,
-		}
-		xPaddingBytes := &conf.Int32Range{
-			From: nodeInfo.XPaddingBytes, 
-			To: nodeInfo.XPaddingBytes,
-		}
-		splithttpSettings := &conf.SplitHTTPConfig{
+	case "xhttp", "splithttp":
+		xhttpSettings := &conf.SplitHTTPConfig{
 			Host: nodeInfo.Host,
 			Path: nodeInfo.Path,
-			ScMaxEachPostBytes: scMaxEachPostBytes,
-			ScMaxConcurrentPosts: scMaxConcurrentPosts,
-			ScMinPostsIntervalMs: scMinPostsIntervalMs,
-			NoSSEHeader: nodeInfo.NoSSEHeader,
-			XPaddingBytes: xPaddingBytes,
-			NoGRPCHeader: nodeInfo.NoGRPCHeader,
 			Mode: nodeInfo.Mode,
-			KeepAlivePeriod:  nodeInfo.KeepAlivePeriod,
+			NoSSEHeader: nodeInfo.NoSSEHeader,
+			NoGRPCHeader: nodeInfo.NoGRPCHeader,
 		}
-		streamSetting.SplitHTTPSettings = splithttpSettings		
+		streamSetting.XHTTPSettings = xhttpSettings		
 	case "grpc":
 		grpcSettings := &conf.GRPCConfig{
 			ServiceName: nodeInfo.ServiceName,

@@ -348,8 +348,6 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		congestion ,RejectUnknownSni, Show, noSSEHeader, noGRPCHeader  bool
 		MaxTimeDiff,ProxyProtocol  uint64 = 0, 0	
 		HeartbeatPeriod uint32 = 10
-		KeepAlivePeriod int64 = 0
-		scMaxEachPostBytes, scMaxConcurrentPosts, scMinPostsIntervalMs, xPaddingBytes int32 = 1000000, 10, 30, 200
 		ServerNames,  ShortIds []string
 	)
 		
@@ -393,25 +391,19 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 			host = s.NetworkSettings.Host
 			HeartbeatPeriod = uint32(s.NetworkSettings.Heartbeat)
 		case "h2", "h3", "http":
-			path = s.NetworkSettings.Path
-			host = s.NetworkSettings.Host
+			return nil, errors.New("H2/HTTP is deprecated in this version of xray-core")
 		case "httpupgrade":
 			path = s.NetworkSettings.Path
 			host = s.NetworkSettings.Host
 		case "xhttp", "splithttp":
 			path = s.NetworkSettings.Path
 			host = s.NetworkSettings.Host
-			scMaxEachPostBytes = int32(s.NetworkSettings.scMaxEachPostBytes)
-			scMaxConcurrentPosts = int32(s.NetworkSettings.scMaxConcurrentPosts)
-			scMinPostsIntervalMs = int32(s.NetworkSettings.scMinPostsIntervalMs)
 			noSSEHeader = s.NetworkSettings.noSSEHeader
-			xPaddingBytes = int32(s.NetworkSettings.xPaddingBytes)
 			noGRPCHeader = s.NetworkSettings.noGRPCHeader
 			mode = ""
 			if s.NetworkSettings.mode != "" {
 			   mode = s.NetworkSettings.mode
 			}
-			KeepAlivePeriod = int64(s.NetworkSettings.KeepAlive)
 		case "grpc":
 			serviceName = s.NetworkSettings.ServiceName
 		case "raw", "tcp":
@@ -499,14 +491,9 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		Xver:              ProxyProtocol,
 		Relay:             s.Relay,
 		RelayNodeID:       s.Relayid,
-		ScMaxEachPostBytes: scMaxEachPostBytes, 
-		ScMaxConcurrentPosts: scMaxConcurrentPosts,
-		ScMinPostsIntervalMs: scMinPostsIntervalMs,
 		NoSSEHeader:      noSSEHeader,
-		XPaddingBytes:    xPaddingBytes,
 		NoGRPCHeader:     noGRPCHeader,
 		Mode:             mode,
-		KeepAlivePeriod:  KeepAlivePeriod,
 	}
 	return nodeInfo, nil
 }
@@ -519,8 +506,6 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		header   json.RawMessage
 		congestion, Show, noSSEHeader, noGRPCHeader  bool
 		HeartbeatPeriod uint32 = 10
-		KeepAlivePeriod int64 = 0
-		scMaxEachPostBytes, scMaxConcurrentPosts, scMinPostsIntervalMs, xPaddingBytes int32 = 1000000, 10, 30, 200
 	)
 		
 	if s.RNetworkSettings.Flow == "xtls-rprx-vision" || s.RNetworkSettings.Flow == "xtls-rprx-vision-udp443"{
@@ -547,25 +532,19 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		host = s.RNetworkSettings.Host
 		HeartbeatPeriod = uint32(s.RNetworkSettings.Heartbeat)
 	case "h2", "h3", "http":
-		path = s.RNetworkSettings.Path
-		host = s.RNetworkSettings.Host
+		return nil, errors.New("H2/HTTP is deprecated in this version of xray-core")
 	case "httpupgrade":
 		path = s.RNetworkSettings.Path
 		host = s.RNetworkSettings.Host
 	case "xhttp", "splithttp":
 		path = s.RNetworkSettings.Path
 		host = s.RNetworkSettings.Host
-			scMaxEachPostBytes = int32(s.RNetworkSettings.scMaxEachPostBytes)
-			scMaxConcurrentPosts = int32(s.RNetworkSettings.scMaxConcurrentPosts)
-			scMinPostsIntervalMs = int32(s.RNetworkSettings.scMinPostsIntervalMs)
 			noSSEHeader = s.RNetworkSettings.noSSEHeader
-			xPaddingBytes = int32(s.RNetworkSettings.xPaddingBytes)
 			noGRPCHeader = s.RNetworkSettings.noGRPCHeader
 			mode = ""
 			if s.RNetworkSettings.mode != "" {
 			   mode = s.RNetworkSettings.mode
 			}
-			KeepAlivePeriod = int64(s.RNetworkSettings.KeepAlive)
 	case "grpc":
 		serviceName = s.RNetworkSettings.ServiceName
 	case "raw", "tcp":
@@ -642,14 +621,9 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		SpiderX:           SpiderX,
 		Show:              Show,
 		ServerName:        ServerName,
-		ScMaxEachPostBytes: scMaxEachPostBytes, 
-		ScMaxConcurrentPosts: scMaxConcurrentPosts,
-		ScMinPostsIntervalMs: scMinPostsIntervalMs,
 		NoSSEHeader:      noSSEHeader,
-		XPaddingBytes:    xPaddingBytes,
 		NoGRPCHeader:     noGRPCHeader,
 		Mode:             mode,
-		KeepAlivePeriod:  KeepAlivePeriod,
 	}
 	return nodeInfo, nil
 }

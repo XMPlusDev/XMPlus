@@ -58,14 +58,9 @@ type NodeInfo struct {
 	Xver              uint64
 	Relay             bool
 	RelayNodeID       int
-	ScMaxEachPostBytes  int32
-	ScMaxConcurrentPosts  int32
-	ScMinPostsIntervalMs  int32
 	NoSSEHeader       bool
-	XPaddingBytes     int32
 	Mode              string
 	NoGRPCHeader      bool 
-	KeepAlivePeriod   int64
 	HeartbeatPeriod   uint32
 }
 
@@ -96,14 +91,9 @@ type RelayNodeInfo struct {
 	SpiderX           string 
 	Show              bool
 	ServerName        string
-	ScMaxEachPostBytes  int32
-	ScMaxConcurrentPosts  int32
-	ScMinPostsIntervalMs  int32
 	NoSSEHeader       bool
-	XPaddingBytes     int32
 	Mode              string
 	NoGRPCHeader      bool
-	KeepAlivePeriod   int64
 	HeartbeatPeriod   uint32
 }
 
