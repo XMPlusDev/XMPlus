@@ -17,7 +17,7 @@ type server struct {
 	Certmode    string 	 `json:"certmode"`
 	Cipher      string 	 `json:"cipher"`
 	IP          string   `json:"ip"`
-	Port        int      `json:"listeningport"`
+	Port        string    `json:"listeningport"`
 	Listenip    string   `json:"listenip"`
 	NetworkSettings struct {
 	    ProxyProtocol bool 	           `json:"acceptProxyProtocol"`
@@ -65,7 +65,7 @@ type relay_server struct {
 	RServerid    int 	    `json:"serverid"`
 	RCipher      string 	`json:"cipher"`
 	RIP          string     `json:"ip"`
-	RPort        int        `json:"listeningport"`
+	RPort        string      `json:"listeningport"`
 	RListenip    string     `json:"listenip"`
 	RNetworkSettings struct {
 	    ProxyProtocol bool 	           `json:"acceptProxyProtocol"`

@@ -38,7 +38,7 @@ func OutboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.
 	
 	// Used for Shadowsocks-Plugin
 	if nodeInfo.NodeType == "dokodemo-door" {
-		proxySetting.Redirect = fmt.Sprintf("127.0.0.1:%d", nodeInfo.Port-1)
+		proxySetting.Redirect = fmt.Sprintf("127.0.0.1:%d", uint32(nodeInfo.Port)-1)
 	}
 	var setting json.RawMessage
 	setting, err := json.Marshal(proxySetting)
@@ -219,7 +219,7 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 			Authority: nodeInfo.Authority,
 			UserAgent:   "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/123.0.6312.52 Mobile/15E148 Safari/604.1",
 		}
-		streamSetting.GRPCConfig = grpcSettings
+		streamSetting.GRPCSettings = grpcSettings
 	case "mkcp":
 		kcpSettings := &conf.KCPConfig{
 			HeaderConfig:   nodeInfo.Header,

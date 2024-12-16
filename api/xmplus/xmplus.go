@@ -168,8 +168,8 @@ func (c *APIClient) GetNodeInfo() (nodeInfo *api.NodeInfo, err error) {
 	b, _ := response.Encode()
 	json.Unmarshal(b, server)
 
-	if server.Port == 0 {
-		return nil, errors.New("server port must > 0")
+	if server.Port == 0 || server.Port == "" {
+		return nil, errors.New("server port must > 0 or a range.eg 8000 - 8999")
 	}
 	
 	if server.Type == "" {
@@ -449,13 +449,14 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	
 	NodeType := s.Type
 	if NodeType == "Shadowsocks"  && transportProtocol != "tcp" {
-		NodeType = "Shadowsocks-Plugin"
+		//NodeType = "Shadowsocks-Plugin"
+		return nil, errors.New("Shadowsocks-Plugin is deprecated in this version of XMPlus backend")
 	}
 	
 	nodeInfo := &api.NodeInfo{
 		NodeType:          NodeType,
 		NodeID:            c.NodeID,
-		Port:              uint32(s.Port),
+		Port:              s.Port,
 		Transport:         transportProtocol,
 		TLSType:           s.Security,
 		Path:              path,
@@ -590,14 +591,15 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 	
 	NodeType := s.RType
 	if NodeType == "Shadowsocks"  && transportProtocol != "tcp" {
-		NodeType = "Shadowsocks-Plugin"
+		//NodeType = "Shadowsocks-Plugin"
+		return nil, errors.New("Shadowsocks-Plugin is deprecated in this version of XMPlus backend")
 	}
 	
 	// Create GeneralNodeInfo
 	nodeInfo := &api.RelayNodeInfo{
 		NodeType:          NodeType,
 		NodeID:            s.RServerid,
-		Port:              uint32(s.RPort),
+		Port:              s.RPort,
 		Transport:         transportProtocol,
 		TLSType:           s.RSecurity,
 		Path:              path,

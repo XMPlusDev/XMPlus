@@ -23,7 +23,7 @@ type Config struct {
 type NodeInfo struct {
 	NodeType          string 
 	NodeID            int
-	Port              uint32
+	Port              string
 	SpeedLimit        uint64 
 	Transport         string
 	Host              string
@@ -67,7 +67,7 @@ type NodeInfo struct {
 type RelayNodeInfo struct {
 	NodeType          string 
 	NodeID            int
-	Port              uint32
+	Port              string
 	Transport         string
 	Host              string
 	Path              string

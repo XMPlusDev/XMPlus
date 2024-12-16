@@ -32,11 +32,11 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 	port := strings.SplitN(nodeInfo.Port, "-", 2)
 	if len(port) == 1 {
 		portList := &conf.PortList{
-			Range: []conf.PortRange{{From: port[0], To: port[0]}},
+			Range: []conf.PortRange{{From: uint32(port[0]), To: uint32(port[0])}},
 		}
 	}else{
 		portList := &conf.PortList{
-			Range: []conf.PortRange{{From: port[0], To: port[1]}},
+			Range: []conf.PortRange{{From: uint32(port[0]), To: uint32(port[1])}},
 		}
 	}
 
@@ -189,7 +189,7 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 			Authority: nodeInfo.Authority,
 			UserAgent:   "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/123.0.6312.52 Mobile/15E148 Safari/604.1",
 		}
-		streamSetting.GRPCConfig = grpcSettings
+		streamSetting.GRPCSettings = grpcSettings
 	case "mkcp":
 		kcpSettings := &conf.KCPConfig{
 			HeaderConfig:   nodeInfo.Header,
