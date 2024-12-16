@@ -152,13 +152,8 @@ Nodes:
   "host": "hk1.xyz.com",
   "cdn_host": "fakedomain.com",
   "path": "/",
-  "scMaxEachPostBytes": 1000000,
-  "scMaxBufferedPosts": 30,
-  "scMinPostsIntervalMs": 30,
   "noSSEHeader": false,
-  "xPaddingBytes": 200,
   "noGRPCHeader": true,
-  "keepaliveperiod": 60,
   "mode": "auto" // "auto", "packet-up", "stream-up", "stream-one"
 }
 ```
