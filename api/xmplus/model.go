@@ -17,7 +17,7 @@ type server struct {
 	Certmode    string 	 `json:"certmode"`
 	Cipher      string 	 `json:"cipher"`
 	IP          string   `json:"ip"`
-	Port        string    `json:"listeningport"`
+	Port        string   `json:"listeningport"`
 	Listenip    string   `json:"listenip"`
 	NetworkSettings struct {
 	    ProxyProtocol bool 	           `json:"acceptProxyProtocol"`

@@ -168,8 +168,8 @@ func (c *APIClient) GetNodeInfo() (nodeInfo *api.NodeInfo, err error) {
 	b, _ := response.Encode()
 	json.Unmarshal(b, server)
 
-	if server.Port == "0" || server.Port == "" {
-		return nil, errors.New("server port must > 0 or a range.eg 8000 - 8999")
+	if server.Port == "" {
+		return nil, errors.New("invalid server port range. eg 8000-8999")
 	}
 	
 	if server.Type == "" {
