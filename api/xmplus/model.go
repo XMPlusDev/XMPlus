@@ -65,7 +65,7 @@ type relay_server struct {
 	RServerid    int 	    `json:"serverid"`
 	RCipher      string 	`json:"cipher"`
 	RIP          string     `json:"ip"`
-	RPort        string      `json:"listeningport"`
+	RPort        int        `json:"listeningport"`
 	RListenip    string     `json:"listenip"`
 	RNetworkSettings struct {
 	    ProxyProtocol bool 	           `json:"acceptProxyProtocol"`

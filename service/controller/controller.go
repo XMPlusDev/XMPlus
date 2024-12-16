@@ -417,59 +417,6 @@ func (c *Controller) addNewTag(newNodeInfo *api.NodeInfo) (err error) {
 		if err != nil {
 			return err
 		}			
-	} else {
-		return c.addInboundForSSPlugin(*newNodeInfo)
-	}
-	return nil
-}
-
-func (c *Controller) addInboundForSSPlugin(newNodeInfo api.NodeInfo) (err error) {
-	// Shadowsocks-Plugin require a separate inbound for other TransportProtocol likes: ws, grpc
-	fakeNodeInfo := newNodeInfo
-	fakeNodeInfo.Transport = "tcp"
-	// Add a regular Shadowsocks inbound and outbound
-	inboundConfig, err := InboundBuilder(c.config, &fakeNodeInfo, c.Tag)
-	if err != nil {
-		return err
-	}
-	err = c.addInbound(inboundConfig)
-	if err != nil {
-
-		return err
-	}
-	outBoundConfig, err := OutboundBuilder(c.config, &fakeNodeInfo, c.Tag)
-	if err != nil {
-
-		return err
-	}
-	err = c.addOutbound(outBoundConfig)
-	if err != nil {
-
-		return err
-	}
-	// Add an inbound for upper streaming protocol
-	fakeNodeInfo = newNodeInfo
-	fakeNodeInfo.Port++
-	fakeNodeInfo.NodeType = "dokodemo-door"
-	dokodemoTag := fmt.Sprintf("dokodemo-door_%s+1", c.Tag)
-	inboundConfig, err = InboundBuilder(c.config, &fakeNodeInfo, dokodemoTag)
-	if err != nil {
-		return err
-	}
-	err = c.addInbound(inboundConfig)
-	if err != nil {
-
-		return err
-	}
-	outBoundConfig, err = OutboundBuilder(c.config, &fakeNodeInfo, dokodemoTag)
-	if err != nil {
-
-		return err
-	}
-	err = c.addOutbound(outBoundConfig)
-	if err != nil {
-
-		return err
 	}
 	return nil
 }
@@ -484,9 +431,7 @@ func (c *Controller) addNewSubscription(subscriptionInfo *[]api.SubscriptionInfo
 	case "Trojan":
 		subscriptions = c.buildTrojanUser(subscriptionInfo)
 	case "Shadowsocks":
-		subscriptions = c.buildSSUser(subscriptionInfo, nodeInfo.CypherMethod)
-	case "Shadowsocks-Plugin":
-		subscriptions = c.buildSSPluginUser(subscriptionInfo, nodeInfo.CypherMethod)	
+		subscriptions = c.buildSSUser(subscriptionInfo, nodeInfo.CypherMethod)	
 	default:
 		return fmt.Errorf("unsupported node type: %s", nodeInfo.NodeType)
 	}
@@ -594,11 +539,11 @@ func (c *Controller) userInfoMonitor() (err error) {
 }
 
 func (c *Controller) buildNodeTag() string {
-	return fmt.Sprintf("%s_%d_%d", c.nodeInfo.NodeType, c.nodeInfo.Port, c.nodeInfo.NodeID)
+	return fmt.Sprintf("%s_%s_%d", c.nodeInfo.NodeType, c.nodeInfo.Port, c.nodeInfo.NodeID)
 }
 
 func (c *Controller) buildRNodeTag() string {
-	return fmt.Sprintf("Relay_%d_%s_%d_%d", c.nodeInfo.NodeID, c.relaynodeInfo.NodeType, c.relaynodeInfo.Port, c.relaynodeInfo.NodeID)
+	return fmt.Sprintf("Relay_%d_%s_%s_%d", c.nodeInfo.NodeID, c.relaynodeInfo.NodeType, c.relaynodeInfo.Port, c.relaynodeInfo.NodeID)
 }
 
 func (c *Controller) logPrefix() string {

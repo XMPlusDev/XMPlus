@@ -38,7 +38,7 @@ func OutboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.
 	
 	// Used for Shadowsocks-Plugin
 	if nodeInfo.NodeType == "dokodemo-door" {
-		proxySetting.Redirect = fmt.Sprintf("127.0.0.1:%d", uint32(nodeInfo.Port)-1)
+		proxySetting.Redirect = fmt.Sprintf("127.0.0.1:%d", nodeInfo.Port-1)
 	}
 	var setting json.RawMessage
 	setting, err := json.Marshal(proxySetting)

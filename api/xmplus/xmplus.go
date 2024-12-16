@@ -599,7 +599,7 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 	nodeInfo := &api.RelayNodeInfo{
 		NodeType:          NodeType,
 		NodeID:            s.RServerid,
-		Port:              s.RPort,
+		Port:              uint32(s.RPort),
 		Transport:         transportProtocol,
 		TLSType:           s.RSecurity,
 		Path:              path,

@@ -67,7 +67,7 @@ type NodeInfo struct {
 type RelayNodeInfo struct {
 	NodeType          string 
 	NodeID            int
-	Port              string
+	Port              uint32
 	Transport         string
 	Host              string
 	Path              string
