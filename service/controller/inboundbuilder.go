@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"strconv"
 
 	"github.com/sagernet/sing-shadowsocks/shadowaead_2022"
 	C "github.com/sagernet/sing/common"
@@ -29,15 +30,32 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 		inboundDetourConfig.ListenOn = &conf.Address{Address: ipAddress}
 	}
 
+	var Port1, Port2 uint32 = 0, 0
+	
 	port := strings.SplitN(nodeInfo.Port, "-", 2)
 	if len(port) == 1 {
-		portList := &conf.PortList{
-			Range: []conf.PortRange{{From: uint32(port[0]), To: uint32(port[0])}},
+		parsedPort, err := strconv.ParseInt(port[0], 10, 32)
+		if err != nil {
+			return nil, err
 		}
+		Port1 = uint32(parsedPort)
+		Port2 = uint32(parsedPort)
 	}else{
-		portList := &conf.PortList{
-			Range: []conf.PortRange{{From: uint32(port[0]), To: uint32(port[1])}},
+		parsedPort1, err := strconv.ParseInt(port[0], 10, 32)
+		if err != nil {
+			return nil, err
 		}
+		Port1 = uint32(parsedPort1)
+		
+		parsedPort2, errr := strconv.ParseInt(port[1], 10, 32)
+		if errr != nil {
+			return nil, errr
+		}
+		Port2 = uint32(parsedPort2)
+	}
+	
+	portList := &conf.PortList{
+		Range: []conf.PortRange{{From: Port1, To: Port2}},
 	}
 
 	inboundDetourConfig.PortList = portList
