@@ -543,7 +543,7 @@ func (c *Controller) buildNodeTag() string {
 }
 
 func (c *Controller) buildRNodeTag() string {
-	return fmt.Sprintf("Relay_%d_%s_%s_%d", c.nodeInfo.NodeID, c.relaynodeInfo.NodeType, c.relaynodeInfo.Port, c.relaynodeInfo.NodeID)
+	return fmt.Sprintf("Relay_%d_%s_%d_%d", c.nodeInfo.NodeID, c.relaynodeInfo.NodeType, c.relaynodeInfo.Port, c.relaynodeInfo.NodeID)
 }
 
 func (c *Controller) logPrefix() string {
