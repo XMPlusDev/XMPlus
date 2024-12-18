@@ -24,7 +24,7 @@ require (
 	golang.org/x/crypto v0.31.0
 	golang.org/x/net v0.32.0
 	golang.org/x/time v0.8.0
-	google.golang.org/protobuf v1.35.2
+	google.golang.org/protobuf v1.36.0
 	lukechampine.com/blake3 v1.3.0 // indirect
 )
 
