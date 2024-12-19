@@ -7,6 +7,7 @@ func getDefaultLogConfig() *LogConfig {
 		Level:      "none",
 		AccessPath: "",
 		ErrorPath:  "",
+		DNSLog:     false,
 		MaskAddress: "half",
 	}
 }

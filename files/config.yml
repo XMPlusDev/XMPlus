@@ -2,6 +2,7 @@ Log:
   Level: warning # Log level: none, error, warning, info, debug 
   AccessPath: # /etc/XMPlus/access.Log
   ErrorPath: # /etc/XMPlus/error.log
+  DNSLog: false  # / true or false Whether to enable DNS query log, for example: DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms 
   MaskAddress: half # half, full, quater
 DnsConfigPath:  #/etc/XMPlus/dns.json   #https://xtls.github.io/config/dns.html
 RouteConfigPath: # /etc/XMPlus/route.json   #https://xtls.github.io/config/routing.html

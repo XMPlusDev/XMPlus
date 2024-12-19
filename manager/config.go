@@ -24,6 +24,7 @@ type LogConfig struct {
 	Level      string `mapstructure:"Level"`
 	AccessPath string `mapstructure:"AccessPath"`
 	ErrorPath  string `mapstructure:"ErrorPath"`
+	DNSLog     bool   `mapstructure:"DNSLog"`
 	MaskAddress string `mapstructure:"MaskAddress"`
 }
 

@@ -49,6 +49,7 @@ func (m *Manager) loadCore(managerConfig *Config) *core.Instance {
 	coreLogConfig.LogLevel = logConfig.Level
 	coreLogConfig.AccessLog = logConfig.AccessPath
 	coreLogConfig.ErrorLog = logConfig.ErrorPath
+	coreLogConfig.DNSLog = logConfig.DNSLog
 	coreLogConfig.MaskAddress = logConfig.MaskAddress
 
 	// DNS config

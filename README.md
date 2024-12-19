@@ -1,11 +1,8 @@
 # XMPlus
-XMPlus backend v1.0.19
-
-[Backend Documentation](https://docs.xmplus.dev/backend/install.html)
 
 #### Config directory
 ```
-cd /etc/XMPlus
+/etc/XMPlus
 ```
 
 ### Onclick XMPlus backennd Install
@@ -16,7 +13,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/XMPlusDev/XMPlus/scripts/insta
 ### /etc/XMPlus/config.yml
 ```
 Log:
-  Level: none # Log level: none, error, warning, info, debug 
+  Level: warning # Log level: none, error, warning, info, debug 
   AccessPath: # /etc/XMPlus/access.Log
   ErrorPath: # /etc/XMPlus/error.log
   MaskAddress: half # half, full, quarter
@@ -106,7 +103,7 @@ Nodes:
   "path": "/xmplus?ed=2560",
   "host": "hk1.xyz.com",
   "heartbeatperiod": 30,
-  "cdn_host": "fakedomain.com"
+  "custom_host": "fakedomain.com"
 }
 ```
 
@@ -141,7 +138,7 @@ Nodes:
   "acceptProxyProtocol": false,
   "host": "hk1.xyz.com",
   "path": "/xmplus?ed=2560",
-  "cdn_host": "fakedomain.com"
+  "custom_host": "fakedomain.com"
 }
 ```
 
@@ -150,7 +147,7 @@ Nodes:
 {
   "transport" : "splithttp",
   "host": "hk1.xyz.com",
-  "cdn_host": "fakedomain.com",
+  "custom_host": "fakedomain.com",
   "path": "/",
   "noSSEHeader": false,
   "noGRPCHeader": true,

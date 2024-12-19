@@ -22,5 +22,5 @@ func init() {
 }
 
 func showVersion() {
-    fmt.Printf("%s %s \n", version,codename)
+    fmt.Printf("%s %s \n",codename, version)
 }
