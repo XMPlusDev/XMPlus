@@ -96,7 +96,7 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 				Vnext: []*VLessOutbound{&VLessOutbound{
 						Address: nodeInfo.Address,
 						Port: uint16(nodeInfo.Port),
-						Users: []*protocol.User{
+						Users: []&protocol.User{
 							{
 								Level: 0,
 								Email: fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
@@ -122,7 +122,7 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 				Receivers: []*VMessOutbound{&VMessOutbound{
 						Address: nodeInfo.Address,
 						Port: uint16(nodeInfo.Port),
-						Users:  []*protocol.User{
+						Users:  []&protocol.User{
 							{
 								Level:   0,
 								Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID), 
