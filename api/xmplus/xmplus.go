@@ -509,8 +509,10 @@ func (c *APIClient) GetRelayNodeInfo() (*api.RelayNodeInfo, error) {
 		HeartbeatPeriod uint32 = 10
 	)
 		
-	if s.RNetworkSettings.Flow == "xtls-rprx-vision" || s.RNetworkSettings.Flow == "xtls-rprx-vision-udp443"{
-		Flow = s.RNetworkSettings.Flow
+	if s.RNetworkSettings.Flow == "xtls-rprx-vision" || 
+		s.RNetworkSettings.Flow == "xtls-rprx-vision-udp443" &&
+		s.RNetworkSettings.Transport == "tcp" {
+		Flow = "xtls-rprx-vision-udp443"
 	}
 	
 	if s.RNetworkSettings.Authority != "" {

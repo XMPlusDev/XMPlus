@@ -12,6 +12,37 @@ import (
 	"github.com/XMPlusDev/XMPlus/api"
 )
 
+type VMessOutbound struct {
+	Address string            `json:"address"`
+	Port    uint16            `json:"port"`
+	Users   []json.RawMessage `json:"users"`
+}
+
+type VLessOutbound struct {
+	Address string            `json:"address"`
+	Port    uint16            `json:"port"`
+	Users   []json.RawMessage `json:"users"`
+}
+
+type TrojanServer struct {
+	Address  string        `json:"address"`
+	Port     uint16        `json:"port"`
+	Password string        `json:"password"`
+	Email    string        `json:"email"`
+	Level    byte          `json:"level"`
+	Flow     string        `json:"flow"`
+}
+
+type ShadowsocksServer struct {
+	Address  string          `json:"address"`
+	Port     uint16          `json:"port"`
+	Cipher   string          `json:"method"`
+	Password string          `json:"password"`
+	Email    string          `json:"email"`
+	Level    byte            `json:"level"`
+	UoT      bool            `json:"uot"`
+}
+
 // OutboundBuilder build freedom outbound config for addOutbound
 func OutboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.OutboundHandlerConfig, error) {
 	outboundDetourConfig := &conf.OutboundDetourConfig{}
@@ -46,37 +77,6 @@ func OutboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.
 	return outboundDetourConfig.Build()
 }
 
-type VMessOutbound struct {
-	Address string            `json:"address"`
-	Port    uint16            `json:"port"`
-	Users   []json.RawMessage `json:"users"`
-}
-
-type VLessOutbound struct {
-	Address string            `json:"address"`
-	Port    uint16            `json:"port"`
-	Users   []json.RawMessage `json:"users"`
-}
-
-type TrojanServer struct {
-	Address  string        `json:"address"`
-	Port     uint16        `json:"port"`
-	Password string        `json:"password"`
-	Email    string        `json:"email"`
-	Level    byte          `json:"level"`
-	Flow     string        `json:"flow"`
-}
-
-type ShadowsocksServer struct {
-	Address  string          `json:"address"`
-	Port     uint16          `json:"port"`
-	Cipher   string          `json:"method"`
-	Password string          `json:"password"`
-	Email    string          `json:"email"`
-	Level    byte            `json:"level"`
-	UoT      bool            `json:"uot"`
-}
-
 func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string, Email string, Passwd string, UID int) (*core.OutboundHandlerConfig, error) {
 	outboundDetourConfig := &conf.OutboundDetourConfig{}
 	var (
@@ -90,41 +90,45 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 	switch nodeInfo.NodeType {
 		case "Vless":
 			protocol = "vless"
-			VlessUser := buildRVlessUser(tag, nodeInfo.Flow , UUID, Email)
-			User := []json.RawMessage{}
-			rawUser,err := json.Marshal(&VlessUser)
-			if err != nil {
-				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VlessUser, err)
-			}
-			
-			User = append(User, rawUser)
 			proxySetting = struct {
 				Vnext []*VLessOutbound `json:"vnext"`
 			}{
 				Vnext: []*VLessOutbound{&VLessOutbound{
 						Address: nodeInfo.Address,
 						Port: uint16(nodeInfo.Port),
-						Users: User,
+						Users: []*protocol.User{
+							{
+								Level: 0,
+								Email: fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
+								Account: serial.ToTypedMessage(&vless.Account{
+									Id: UUID,
+									Flow: nodeInfo.Flow,
+									Encryption: "none",
+								}),
+							},
+						},
 					},
 				},
 			}
 		case "Vmess":
-			protocol = "vmess"
-			VmessUser := buildRVmessUser(tag, UUID, Email)
-			User := []json.RawMessage{}
-			rawUser,err := json.Marshal(&VmessUser)
-			if err != nil {
-				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VmessUser, err)
-			}
-			
-			User = append(User, rawUser)					
+			protocol = "vmess"		
+			vmessAccount := &conf.VMessAccount{
+				ID: UUID,
+				Security: "auto",
+			}			
 			proxySetting = struct {
 				Receivers []*VMessOutbound `json:"vnext"`
 			}{
 				Receivers: []*VMessOutbound{&VMessOutbound{
 						Address: nodeInfo.Address,
 						Port: uint16(nodeInfo.Port),
-						Users: User,
+						Users:  []*protocol.User{
+							{
+								Level:   0,
+								Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID), 
+								Account: serial.ToTypedMessage(vmessAccount.Build()),
+							},
+						},
 					},
 				},
 			}
@@ -179,13 +183,13 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 	}
 
 	switch networkType {
-	case "tcp":
+	case "tcp", "raw":
 		tcpSetting := &conf.TCPConfig{
 			AcceptProxyProtocol: nodeInfo.ProxyProtocol,
 			HeaderConfig: nodeInfo.Header,
 		}
 		streamSetting.TCPSettings = tcpSetting
-	case "websocket":
+	case "websocket", "ws":
 		wsSettings := &conf.WebSocketConfig{
 			AcceptProxyProtocol: nodeInfo.ProxyProtocol,
 			Path: nodeInfo.Path,
@@ -213,14 +217,14 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 		grpcSettings := &conf.GRPCConfig{
 			ServiceName: nodeInfo.ServiceName,
 			Authority: nodeInfo.Authority,
-			UserAgent:   "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/123.0.6312.52 Mobile/15E148 Safari/604.1",
+			UserAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/123.0.6312.52 Mobile/15E148 Safari/604.1",
 		}
 		streamSetting.GRPCSettings = grpcSettings
 	case "mkcp":
 		kcpSettings := &conf.KCPConfig{
-			HeaderConfig:   nodeInfo.Header,
-			Congestion:      &nodeInfo.Congestion,
-			Seed:  &nodeInfo.Seed,
+			HeaderConfig: nodeInfo.Header,
+			Congestion: &nodeInfo.Congestion,
+			Seed: &nodeInfo.Seed,
 		}
 		streamSetting.KCPSettings = kcpSettings	
 	}
@@ -250,7 +254,7 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 		streamSetting.REALITYSettings = realitySettings
 	}
 	
-	outboundDetourConfig.Tag = fmt.Sprintf("%s_%d", tag,UID)
+	outboundDetourConfig.Tag = fmt.Sprintf("%s_%d", tag, UID)
 	
 	if nodeInfo.SendIP != "" {
 		outboundDetourConfig.SendThrough = &nodeInfo.SendIP
@@ -258,29 +262,4 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 	outboundDetourConfig.StreamSetting = streamSetting
 	
 	return outboundDetourConfig.Build()
-}
-
-func buildRVmessUser(tag string, UUID string, Email string) *protocol.User {
-	vmessAccount := &conf.VMessAccount{
-		ID:  UUID,
-		Security: "auto",
-	}
-	return &protocol.User{
-		Level:   0,
-		Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID), 
-		Account: serial.ToTypedMessage(vmessAccount.Build()),
-	}
-}
-
-func buildRVlessUser(tag string, Flow string, UUID string, Email string)  *protocol.User {
-	vlessAccount := &vless.Account{
-		Id:   UUID,
-		Flow: Flow,
-		Encryption: "none",
-	}
-	return &protocol.User{
-		Level:   0,
-		Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
-		Account: serial.ToTypedMessage(vlessAccount),
-	}
 }

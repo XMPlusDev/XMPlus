@@ -37,7 +37,7 @@ type Controller struct {
 	stm          stats.Manager
 	dispatcher   *xdispatcher.DefaultDispatcher
 	startAt      time.Time
-	rdispatcher  *router.Router
+	routerule   *router.Router
 	RelayTag     string
 	Relay        bool
 	relaynodeInfo *api.RelayNodeInfo
@@ -58,7 +58,7 @@ func New(server *core.Instance, api api.API, config *Config) *Controller {
 		obm:        server.GetFeature(outbound.ManagerType()).(outbound.Manager),
 		stm:        server.GetFeature(stats.ManagerType()).(stats.Manager),
 		dispatcher: server.GetFeature(routing.DispatcherType()).(*xdispatcher.DefaultDispatcher),
-		rdispatcher: server.GetFeature(routing.RouterType()).(*router.Router),
+		routerule:  server.GetFeature(routing.RouterType()).(*router.Router),
 		startAt:    time.Now(),
 	}
 

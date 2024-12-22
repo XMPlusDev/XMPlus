@@ -160,10 +160,10 @@ func (c *Controller) GetDetectResult(tag string) (*[]api.DetectResult, error) {
 }
 
 func (c *Controller) AddUserRule(tag string, email []string) {
-	c.rdispatcher.AddUserRule(tag, email)
+	c.routerule.AddUserRule(tag, email)
 }
 
 func (c *Controller) RemoveUserRule(email []string)  {
-	c.rdispatcher.RemoveUserRule(email)
+	c.routerule.RemoveUserRule(email)
 	return
 }

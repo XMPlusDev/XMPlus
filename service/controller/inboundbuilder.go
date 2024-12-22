@@ -171,7 +171,7 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 	}
 
 	switch networkType {
-	case "tcp":
+	case "tcp", "raw":
 		tcpSetting := &conf.TCPConfig{
 			AcceptProxyProtocol: nodeInfo.ProxyProtocol,
 			HeaderConfig:  nodeInfo.Header,

@@ -27,7 +27,7 @@ import (
 
 	"github.com/XMPlusDev/XMPlus/utility/limiter"
 	"github.com/XMPlusDev/XMPlus/utility/rule"
-	router_ru "github.com/xmplusdev/xray-core/v24/app/router"
+	routerule "github.com/xmplusdev/xray-core/v24/app/router"
 )
 
 var errSniffingTimeout =  errors.New("timeout on sniffing")
@@ -101,7 +101,7 @@ type DefaultDispatcher struct {
 	fdns        dns.FakeDNSEngine
 	Limiter     *limiter.Limiter
 	RuleManager *rule.Manager
-	RouterRule  *router_ru.Router
+	RouterRule  *routerule.Router
 }
 
 func init() {
@@ -127,7 +127,7 @@ func (d *DefaultDispatcher) Init(config *Config, om outbound.Manager, router rou
 	d.stats = sm
 	d.Limiter = limiter.New()
 	d.RuleManager = rule.New()
-	d.RouterRule = router_ru.NewRouter()
+	d.RouterRule = routerule.NewRouter()
 	d.dns = dns
 	return nil
 }
@@ -172,12 +172,12 @@ func (d *DefaultDispatcher) getLink(ctx context.Context, network net.Network) (*
 		// Speed Limit and Device Limit
 		bucket, ok, reject := d.Limiter.GetUserBucket(sessionInbound.Tag, user.Email, sessionInbound.Source.Address.IP().String())
 		if reject {
-			errors.LogWarning(ctx, "Service ", user.Email, " has exceeded allowed IP(s) limit")
+			errors.LogWarning(ctx, "Subscription ", user.Email, " has exceeded allowed IP limit")
 			common.Close(outboundLink.Writer)
 			common.Close(inboundLink.Writer)
 			common.Interrupt(outboundLink.Reader)
 			common.Interrupt(inboundLink.Reader)
-			return nil, nil, errors.New("Service ", user.Email, " has exceeded allowed IP(s) limit")
+			return nil, nil, errors.New("Subscription ", user.Email, " has exceeded allowed IP limit")
 		}
 		if ok {
 			inboundLink.Writer = d.Limiter.RateWriter(inboundLink.Writer, bucket)
