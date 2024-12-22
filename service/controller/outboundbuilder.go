@@ -90,22 +90,13 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 	switch nodeInfo.NodeType {
 		case "Vless":
 			protocol = "vless"
-			user, err := json.Marshal(&protocol.User{
-				{
-					Level: 0,
-					Email: fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
-					Account: serial.ToTypedMessage(&vless.Account{
-						Id: UUID,
-						Flow: nodeInfo.Flow,
-						Encryption: "none",
-					}),
-				},
-			})
+			VlessUser := vlessUser(tag, nodeInfo.Flow , UUID, Email)
+			userVless, err := json.Marshal(&VlessUser)
 			if err != nil {
 				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VlessUser, err)
 			}
-			vlessUser := []json.RawMessage{}
-			vlessUser = append(vlessUser, user)
+			User := []json.RawMessage{}
+			User = append(User, userVless)
 			
 			proxySetting = struct {
 				Vnext []*VLessOutbound `json:"vnext"`
@@ -113,28 +104,19 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 				Vnext: []*VLessOutbound{&VLessOutbound{
 						Address: nodeInfo.Address,
 						Port: uint16(nodeInfo.Port),
-						Users: vlessUser,
+						Users: User,
 					},
 				},
 			}
 		case "Vmess":
 			protocol = "vmess"		
-			vmessAccount := &conf.VMessAccount{
-				ID: UUID,
-				Security: "auto",
-			}		
-			user, err := json.Marshal(&protocol.User{
-				{
-					Level:   0,
-					Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID), 
-					Account: serial.ToTypedMessage(vmessAccount.Build()),
-				},
-			})
+			VmessUser := vmessUser(tag, UUID, Email)		
+			userVmess, err := json.Marshal(&VmessUser)
 			if err != nil {
-				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VlessUser, err)
+				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VmessUser, err)
 			}
-			vmessUser := []json.RawMessage{}
-			vmessUser = append(vmessUser, user)
+			User := []json.RawMessage{}
+			User = append(User, userVmess)
 			
 			proxySetting = struct {
 				Receivers []*VMessOutbound `json:"vnext"`
@@ -142,7 +124,7 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 				Receivers: []*VMessOutbound{&VMessOutbound{
 						Address: nodeInfo.Address,
 						Port: uint16(nodeInfo.Port),
-						Users: vmessUser,
+						Users: User,
 					},
 				},
 			}
@@ -276,4 +258,29 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 	outboundDetourConfig.StreamSetting = streamSetting
 	
 	return outboundDetourConfig.Build()
+}
+
+func vmessUser(tag string, UUID string, Email string) *protocol.User {
+	vmessAccount := &conf.VMessAccount{
+		ID:  UUID,
+		Security: "auto",
+	}
+	return &protocol.User{
+		Level:   0,
+		Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID), 
+		Account: serial.ToTypedMessage(vmessAccount.Build()),
+	}
+}
+
+func vlessUser(tag string, Flow string, UUID string, Email string)  *protocol.User {
+	vlessAccount := &vless.Account{
+		Id:   UUID,
+		Flow: Flow,
+		Encryption: "none",
+	}
+	return &protocol.User{
+		Level:   0,
+		Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
+		Account: serial.ToTypedMessage(vlessAccount),
+	}
 }
