@@ -90,23 +90,30 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 	switch nodeInfo.NodeType {
 		case "Vless":
 			protocol = "vless"
+			user, err := json.Marshal(&protocol.User{
+				{
+					Level: 0,
+					Email: fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
+					Account: serial.ToTypedMessage(&vless.Account{
+						Id: UUID,
+						Flow: nodeInfo.Flow,
+						Encryption: "none",
+					}),
+				},
+			})
+			if err != nil {
+				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VlessUser, err)
+			}
+			vlessUser := []json.RawMessage{}
+			vlessUser = append(vlessUser, user)
+			
 			proxySetting = struct {
 				Vnext []*VLessOutbound `json:"vnext"`
 			}{
 				Vnext: []*VLessOutbound{&VLessOutbound{
 						Address: nodeInfo.Address,
 						Port: uint16(nodeInfo.Port),
-						Users: []&protocol.User{
-							{
-								Level: 0,
-								Email: fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
-								Account: serial.ToTypedMessage(&vless.Account{
-									Id: UUID,
-									Flow: nodeInfo.Flow,
-									Encryption: "none",
-								}),
-							},
-						},
+						Users: vlessUser,
 					},
 				},
 			}
@@ -115,20 +122,27 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 			vmessAccount := &conf.VMessAccount{
 				ID: UUID,
 				Security: "auto",
-			}			
+			}		
+			user, err := json.Marshal(&protocol.User{
+				{
+					Level:   0,
+					Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID), 
+					Account: serial.ToTypedMessage(vmessAccount.Build()),
+				},
+			})
+			if err != nil {
+				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VlessUser, err)
+			}
+			vmessUser := []json.RawMessage{}
+			vmessUser = append(vmessUser, user)
+			
 			proxySetting = struct {
 				Receivers []*VMessOutbound `json:"vnext"`
 			}{
 				Receivers: []*VMessOutbound{&VMessOutbound{
 						Address: nodeInfo.Address,
 						Port: uint16(nodeInfo.Port),
-						Users:  []&protocol.User{
-							{
-								Level:   0,
-								Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID), 
-								Account: serial.ToTypedMessage(vmessAccount.Build()),
-							},
-						},
+						Users: vmessUser,
 					},
 				},
 			}
