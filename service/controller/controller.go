@@ -7,20 +7,20 @@ import (
 	"time"
 	"strings"
 	
-	"github.com/xmplusdev/xray-core/v24/common/protocol"
-	"github.com/xmplusdev/xray-core/v24/common/task"
-	"github.com/xmplusdev/xray-core/v24/core"
-	"github.com/xmplusdev/xray-core/v24/features/inbound"
-	"github.com/xmplusdev/xray-core/v24/features/outbound"
-	"github.com/xmplusdev/xray-core/v24/features/routing"
-	"github.com/xmplusdev/xray-core/v24/features/stats"
-	"github.com/xmplusdev/xray-core/v24/app/router"
+	"github.com/xmplusdev/xray-core/v25/common/protocol"
+	"github.com/xmplusdev/xray-core/v25/common/task"
+	"github.com/xmplusdev/xray-core/v25/core"
+	"github.com/xmplusdev/xray-core/v25/features/inbound"
+	"github.com/xmplusdev/xray-core/v25/features/outbound"
+	"github.com/xmplusdev/xray-core/v25/features/routing"
+	"github.com/xmplusdev/xray-core/v25/features/stats"
+	"github.com/xmplusdev/xray-core/v25/app/router"
 	"github.com/XMPlusDev/XMPlus/api"
 	"github.com/XMPlusDev/XMPlus/app/xdispatcher"
 	"github.com/XMPlusDev/XMPlus/utility/mylego"
 	C "github.com/sagernet/sing/common"
 	"github.com/sagernet/sing-shadowsocks/shadowaead_2022"
-	"github.com/xmplusdev/xray-core/v24/infra/conf"
+	"github.com/xmplusdev/xray-core/v25/infra/conf"
 )
 
 type Controller struct {
@@ -135,7 +135,7 @@ func (c *Controller) Start() error {
 	// Add periodic tasks
 	c.tasks = append(c.tasks,
 		periodicTask{
-			tag: "node",
+			tag: "server",
 			Periodic: &task.Periodic{
 				Interval: time.Duration(60) * time.Second,
 				Execute:  c.nodeInfoMonitor,
@@ -219,7 +219,10 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 	}
 	
 	if c.Relay && updateRelay {
-		c.removeRules(c.Tag, c.subscriptionList)
+		err := c.RemoveRule(c.RelayTag, c.subscriptionList)
+		if err != nil {
+			log.Print(err)
+		}	
 	}
 	
 	// If nodeInfo changed
@@ -320,7 +323,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 				for i, u := range deleted {
 					deletedEmail[i] = fmt.Sprintf("%s|%s|%d", c.Tag, u.Email, u.UID)
 				}
-				err := c.removeSubscriptions(deletedEmail, c.Tag)
+				err := c.removeInboundSubscriptions(deletedEmail, c.Tag)
 				if err != nil {
 					log.Print(err)
 				}
@@ -351,10 +354,14 @@ func (c *Controller) removeRelayTag(tag string, subscriptionInfo *[]api.Subscrip
 	return nil
 }
 
-func (c *Controller) removeRules(tag string, subscriptionInfo *[]api.SubscriptionInfo){
+func (c *Controller) RemoveRule(tag string, subscriptionInfo *[]api.SubscriptionInfo)(err error){
 	for _, subscription := range *subscriptionInfo {
-		c.RemoveUserRule([]string{c.buildUserTag(&subscription)})			
-	}	
+		err = c.RemoveRouterRule(fmt.Sprintf("%s_%d", tag, subscription.UID))
+		if err != nil {
+			return err
+		}	
+	}
+	return nil
 }
 
 func (c *Controller) addNewRelayTag(newRelayNodeInfo *api.RelayNodeInfo, subscriptionInfo *[]api.SubscriptionInfo) (err error) {
@@ -371,7 +378,8 @@ func (c *Controller) addNewRelayTag(newRelayNodeInfo *api.RelayNodeInfo, subscri
 			} else {
 				Key = subscription.Passwd
 			}
-			RelayTagConfig, err := OutboundRelayBuilder(newRelayNodeInfo, c.RelayTag, subscription.UUID, subscription.Email, Key, subscription.UID)
+			
+			RelayTagConfig, err := OutboundRelayBuilder(newRelayNodeInfo, c.RelayTag, &subscription, Key)
 			if err != nil {
 				return err
 			}
@@ -380,7 +388,16 @@ func (c *Controller) addNewRelayTag(newRelayNodeInfo *api.RelayNodeInfo, subscri
 			if err != nil {
 				return err
 			}
-			c.AddUserRule(fmt.Sprintf("%s_%d", c.RelayTag, subscription.UID), []string{c.buildUserTag(&subscription)})		
+			
+			RouterConfig, err := RouterBuilder(c.Tag, c.RelayTag, &subscription)
+			if err != nil {
+				return err
+			}
+			
+			err = c.AddRouterRule(RouterConfig, true)
+			if err != nil {
+				return err
+			}		
 		}
 	}
 	return nil
@@ -436,7 +453,7 @@ func (c *Controller) addNewSubscription(subscriptionInfo *[]api.SubscriptionInfo
 		return fmt.Errorf("unsupported node type: %s", nodeInfo.NodeType)
 	}
 
-	err = c.addSubscriptions(subscriptions, c.Tag)
+	err = c.addInboundSubscriptions(subscriptions, c.Tag)
 	if err != nil {
 		return err
 	}

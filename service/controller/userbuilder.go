@@ -7,13 +7,13 @@ import (
 
 	"github.com/sagernet/sing-shadowsocks/shadowaead_2022"
 	C "github.com/sagernet/sing/common"
-	"github.com/xmplusdev/xray-core/v24/common/protocol"
-	"github.com/xmplusdev/xray-core/v24/common/serial"
-	"github.com/xmplusdev/xray-core/v24/infra/conf"
-	"github.com/xmplusdev/xray-core/v24/proxy/shadowsocks"
-	"github.com/xmplusdev/xray-core/v24/proxy/shadowsocks_2022"
-	"github.com/xmplusdev/xray-core/v24/proxy/trojan"
-	"github.com/xmplusdev/xray-core/v24/proxy/vless"
+	"github.com/xmplusdev/xray-core/v25/common/protocol"
+	"github.com/xmplusdev/xray-core/v25/common/serial"
+	"github.com/xmplusdev/xray-core/v25/infra/conf"
+	"github.com/xmplusdev/xray-core/v25/proxy/shadowsocks"
+	"github.com/xmplusdev/xray-core/v25/proxy/shadowsocks_2022"
+	"github.com/xmplusdev/xray-core/v25/proxy/trojan"
+	"github.com/xmplusdev/xray-core/v25/proxy/vless"
 	"github.com/XMPlusDev/XMPlus/api"
 )
 

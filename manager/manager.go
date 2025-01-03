@@ -10,11 +10,11 @@ import (
 
 	"dario.cat/mergo"
 	"github.com/r3labs/diff/v2"
-	"github.com/xmplusdev/xray-core/v24/app/proxyman"
-	"github.com/xmplusdev/xray-core/v24/app/stats"
-	"github.com/xmplusdev/xray-core/v24/common/serial"
-	"github.com/xmplusdev/xray-core/v24/core"
-	"github.com/xmplusdev/xray-core/v24/infra/conf"
+	"github.com/xmplusdev/xray-core/v25/app/proxyman"
+	"github.com/xmplusdev/xray-core/v25/app/stats"
+	"github.com/xmplusdev/xray-core/v25/common/serial"
+	"github.com/xmplusdev/xray-core/v25/core"
+	"github.com/xmplusdev/xray-core/v25/infra/conf"
 
 	"github.com/XMPlusDev/XMPlus/api"
 	"github.com/XMPlusDev/XMPlus/api/xmplus"
@@ -25,7 +25,7 @@ import (
 
 // Manager Structure
 type Manager struct {
-	access      sync.Mutex
+	statusLock   sync.Mutex
 	managerConfig *Config
 	Server      *core.Instance
 	Service     []service.Service
@@ -159,8 +159,8 @@ func (m *Manager) loadCore(managerConfig *Config) *core.Instance {
 
 // Start the manager
 func (m *Manager) Start() {
-	m.access.Lock()
-	defer m.access.Unlock()
+	m.statusLock.Lock()
+	defer m.statusLock.Unlock()
 	// Load Core
 	server := m.loadCore(m.managerConfig)
 	if err := server.Start(); err != nil {
@@ -199,8 +199,8 @@ func (m *Manager) Start() {
 
 // Close the manager
 func (m *Manager) Close() {
-	m.access.Lock()
-	defer m.access.Unlock()
+	m.statusLock.Lock()
+	defer m.statusLock.Unlock()
 	for _, s := range m.Service {
 		err := s.Close()
 		if err != nil {

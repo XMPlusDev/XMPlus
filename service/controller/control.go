@@ -4,12 +4,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/xmplusdev/xray-core/v24/common/protocol"
-	"github.com/xmplusdev/xray-core/v24/core"
-	"github.com/xmplusdev/xray-core/v24/features/inbound"
-	"github.com/xmplusdev/xray-core/v24/features/outbound"
-	"github.com/xmplusdev/xray-core/v24/features/stats"
-	"github.com/xmplusdev/xray-core/v24/proxy"
+	"github.com/xmplusdev/xray-core/v25/common/protocol"
+	"github.com/xmplusdev/xray-core/v25/common/serial"
+	"github.com/xmplusdev/xray-core/v25/core"
+	"github.com/xmplusdev/xray-core/v25/features/inbound"
+	"github.com/xmplusdev/xray-core/v25/features/outbound"
+	"github.com/xmplusdev/xray-core/v25/features/stats"
+	"github.com/xmplusdev/xray-core/v25/proxy"
+	"github.com/xmplusdev/xray-core/v25/app/router"
 	"github.com/XMPlusDev/XMPlus/api"
 	"github.com/XMPlusDev/XMPlus/utility/limiter"
 )
@@ -54,7 +56,7 @@ func (c *Controller) addOutbound(config *core.OutboundHandlerConfig) error {
 	return nil
 }
 
-func (c *Controller) addSubscriptions(users []*protocol.User, tag string) error {
+func (c *Controller) addInboundSubscriptions(users []*protocol.User, tag string) error {
 	handler, err := c.ibm.GetHandler(context.Background(), tag)
 	if err != nil {
 		return fmt.Errorf("no such inbound tag: %s", err)
@@ -81,7 +83,7 @@ func (c *Controller) addSubscriptions(users []*protocol.User, tag string) error 
 	return nil
 }
 
-func (c *Controller) removeSubscriptions(users []string, tag string) error {
+func (c *Controller) removeInboundSubscriptions(users []string, tag string) error {
 	handler, err := c.ibm.GetHandler(context.Background(), tag)
 	if err != nil {
 		return fmt.Errorf("no such inbound tag: %s", err)
@@ -159,11 +161,12 @@ func (c *Controller) GetDetectResult(tag string) (*[]api.DetectResult, error) {
 	return c.dispatcher.RuleManager.GetDetectResult(tag)
 }
 
-func (c *Controller) AddUserRule(tag string, email []string) {
-	c.routerule.AddUserRule(tag, email)
+func (c *Controller) AddRouterRule(config *router.Config, shouldAppend bool) error{
+	err := c.routerule.AddRule(serial.ToTypedMessage(config), shouldAppend)
+	return err
 }
 
-func (c *Controller) RemoveUserRule(email []string)  {
-	c.routerule.RemoveUserRule(email)
-	return
+func (c *Controller) RemoveRouterRule(tag string) error{
+	err := c.routerule.RemoveRule(tag)
+	return err
 }

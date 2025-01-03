@@ -1,8 +1,9 @@
 # Build go
-FROM golang:1.22.6-alpine AS builder
+FROM golang:1.23.4-alpine AS builder
 WORKDIR /app
 COPY . .
 ENV CGO_ENABLED=0
+RUN go mod tidy
 RUN go mod download
 RUN go build -v -o XMPlus -trimpath -ldflags "-s -w -buildid=" 
 

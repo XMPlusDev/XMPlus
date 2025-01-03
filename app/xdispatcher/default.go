@@ -1,6 +1,6 @@
 package xdispatcher  
 
-//go:generate go run github.com/xmplusdev/xray-core/v24/common/errors/errorgen
+//go:generate go run github.com/xmplusdev/xray-core/v25/common/errors/errorgen
 
 import (
 	"context"
@@ -8,26 +8,25 @@ import (
 	"sync"
 	"time"
 
-	"github.com/xmplusdev/xray-core/v24/common"
-	"github.com/xmplusdev/xray-core/v24/common/buf"
-	"github.com/xmplusdev/xray-core/v24/common/log"
-	"github.com/xmplusdev/xray-core/v24/common/net"
-	"github.com/xmplusdev/xray-core/v24/common/protocol"
-	"github.com/xmplusdev/xray-core/v24/common/session"
-	"github.com/xmplusdev/xray-core/v24/core"
-	"github.com/xmplusdev/xray-core/v24/features/dns"
-	"github.com/xmplusdev/xray-core/v24/features/outbound"
-	"github.com/xmplusdev/xray-core/v24/features/policy"
-	"github.com/xmplusdev/xray-core/v24/features/routing"
-	routingSession "github.com/xmplusdev/xray-core/v24/features/routing/session"
-	"github.com/xmplusdev/xray-core/v24/features/stats"
-	"github.com/xmplusdev/xray-core/v24/transport"
-	"github.com/xmplusdev/xray-core/v24/transport/pipe"
-	"github.com/xmplusdev/xray-core/v24/common/errors"
+	"github.com/xmplusdev/xray-core/v25/common"
+	"github.com/xmplusdev/xray-core/v25/common/buf"
+	"github.com/xmplusdev/xray-core/v25/common/log"
+	"github.com/xmplusdev/xray-core/v25/common/net"
+	"github.com/xmplusdev/xray-core/v25/common/protocol"
+	"github.com/xmplusdev/xray-core/v25/common/session"
+	"github.com/xmplusdev/xray-core/v25/core"
+	"github.com/xmplusdev/xray-core/v25/features/dns"
+	"github.com/xmplusdev/xray-core/v25/features/outbound"
+	"github.com/xmplusdev/xray-core/v25/features/policy"
+	"github.com/xmplusdev/xray-core/v25/features/routing"
+	routingSession "github.com/xmplusdev/xray-core/v25/features/routing/session"
+	"github.com/xmplusdev/xray-core/v25/features/stats"
+	"github.com/xmplusdev/xray-core/v25/transport"
+	"github.com/xmplusdev/xray-core/v25/transport/pipe"
+	"github.com/xmplusdev/xray-core/v25/common/errors"
 
 	"github.com/XMPlusDev/XMPlus/utility/limiter"
 	"github.com/XMPlusDev/XMPlus/utility/rule"
-	routerule "github.com/xmplusdev/xray-core/v24/app/router"
 )
 
 var errSniffingTimeout =  errors.New("timeout on sniffing")
@@ -101,14 +100,13 @@ type DefaultDispatcher struct {
 	fdns        dns.FakeDNSEngine
 	Limiter     *limiter.Limiter
 	RuleManager *rule.Manager
-	RouterRule  *routerule.Router
 }
 
 func init() {
 	common.Must(common.RegisterConfig((*Config)(nil), func(ctx context.Context, config interface{}) (interface{}, error) {
 		d := new(DefaultDispatcher)
 		if err := core.RequireFeatures(ctx, func(om outbound.Manager, router routing.Router, pm policy.Manager, sm stats.Manager, dc dns.Client) error {
-			core.RequireFeatures(ctx, func(fdns dns.FakeDNSEngine) {
+			core.OptionalFeatures(ctx, func(fdns dns.FakeDNSEngine) {
 				d.fdns = fdns
 			})
 			return d.Init(config.(*Config), om, router, pm, sm, dc)
@@ -127,7 +125,6 @@ func (d *DefaultDispatcher) Init(config *Config, om outbound.Manager, router rou
 	d.stats = sm
 	d.Limiter = limiter.New()
 	d.RuleManager = rule.New()
-	d.RouterRule = routerule.NewRouter()
 	d.dns = dns
 	return nil
 }

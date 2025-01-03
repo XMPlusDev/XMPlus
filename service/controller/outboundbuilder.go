@@ -4,44 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/xmplusdev/xray-core/v24/core"
-	"github.com/xmplusdev/xray-core/v24/infra/conf"
-	"github.com/xmplusdev/xray-core/v24/common/protocol"
-	"github.com/xmplusdev/xray-core/v24/common/serial"
-	"github.com/xmplusdev/xray-core/v24/proxy/vless"
+	"github.com/xmplusdev/xray-core/v25/core"
+	"github.com/xmplusdev/xray-core/v25/infra/conf"
+	"github.com/xmplusdev/xray-core/v25/common/net"
+	"github.com/xmplusdev/xray-core/v25/common/protocol"
+	"github.com/xmplusdev/xray-core/v25/common/serial"
+	"github.com/xmplusdev/xray-core/v25/proxy/vless"
 	"github.com/XMPlusDev/XMPlus/api"
 )
-
-type VMessOutbound struct {
-	Address string            `json:"address"`
-	Port    uint16            `json:"port"`
-	Users   []json.RawMessage `json:"users"`
-}
-
-type VLessOutbound struct {
-	Address string            `json:"address"`
-	Port    uint16            `json:"port"`
-	Users   []json.RawMessage `json:"users"`
-}
-
-type TrojanServer struct {
-	Address  string        `json:"address"`
-	Port     uint16        `json:"port"`
-	Password string        `json:"password"`
-	Email    string        `json:"email"`
-	Level    byte          `json:"level"`
-	Flow     string        `json:"flow"`
-}
-
-type ShadowsocksServer struct {
-	Address  string          `json:"address"`
-	Port     uint16          `json:"port"`
-	Cipher   string          `json:"method"`
-	Password string          `json:"password"`
-	Email    string          `json:"email"`
-	Level    byte            `json:"level"`
-	UoT      bool            `json:"uot"`
-}
 
 // OutboundBuilder build freedom outbound config for addOutbound
 func OutboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.OutboundHandlerConfig, error) {
@@ -77,7 +47,7 @@ func OutboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.
 	return outboundDetourConfig.Build()
 }
 
-func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string, Email string, Passwd string, UID int) (*core.OutboundHandlerConfig, error) {
+func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, subscription *api.SubscriptionInfo, Passwd string) (*core.OutboundHandlerConfig, error) {
 	outboundDetourConfig := &conf.OutboundDetourConfig{}
 	var (
 		protocol      string
@@ -90,19 +60,20 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 	switch nodeInfo.NodeType {
 		case "Vless":
 			protocol = "vless"
-			VlessUser := vlessUser(tag, nodeInfo.Flow , UUID, Email)
-			userVless, err := json.Marshal(&VlessUser)
+			VUser := vlessUser(tag, nodeInfo.Flow , subscription)
+			userVless, err := json.Marshal(&VUser)
 			if err != nil {
-				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VlessUser, err)
+				return nil, fmt.Errorf("Marshal Vless User %s config fialed: %s", VUser, err)
 			}
+			
 			User := []json.RawMessage{}
 			User = append(User, userVless)
 			
 			proxySetting = struct {
-				Vnext []*VLessOutbound `json:"vnext"`
+				Vnext []*conf.VLessOutboundVnext `json:"vnext"`
 			}{
-				Vnext: []*VLessOutbound{&VLessOutbound{
-						Address: nodeInfo.Address,
+				Vnext: []*conf.VLessOutboundVnext{&conf.VLessOutboundVnext{
+						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.Address)},
 						Port: uint16(nodeInfo.Port),
 						Users: User,
 					},
@@ -110,19 +81,19 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 			}
 		case "Vmess":
 			protocol = "vmess"		
-			VmessUser := vmessUser(tag, UUID, Email)		
-			userVmess, err := json.Marshal(&VmessUser)
+			Vmser := vmessUser(tag, subscription)		
+			userVmess, err := json.Marshal(&Vmser)
 			if err != nil {
-				return nil, fmt.Errorf("Marshal users %s config fialed: %s", VmessUser, err)
+				return nil, fmt.Errorf("Marshal Vmess User %s config fialed: %s", Vmser, err)
 			}
 			User := []json.RawMessage{}
 			User = append(User, userVmess)
 			
 			proxySetting = struct {
-				Receivers []*VMessOutbound `json:"vnext"`
+				Receivers []*conf.VMessOutboundTarget `json:"vnext"`
 			}{
-				Receivers: []*VMessOutbound{&VMessOutbound{
-						Address: nodeInfo.Address,
+				Receivers: []*conf.VMessOutboundTarget{&conf.VMessOutboundTarget{
+						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.Address)},
 						Port: uint16(nodeInfo.Port),
 						Users: User,
 					},
@@ -131,30 +102,31 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 		case "Trojan":
 			protocol = "trojan"	
 			proxySetting = struct {
-				Servers []*TrojanServer `json:"servers"`
+				Servers []*conf.TrojanServerTarget `json:"servers"`
 			}{
-				Servers: []*TrojanServer{&TrojanServer{
-						Address: nodeInfo.Address,
-						Port:     uint16(nodeInfo.Port),
-						Password: UUID,
-						Email:    fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
-						Level:    0,
+				Servers: []*conf.TrojanServerTarget{&conf.TrojanServerTarget{
+						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.Address)},
+						Port:    uint16(nodeInfo.Port),
+						Password: subscription.UUID,
+						Email:  fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.UUID),
+						Level:  0,
+						Flow: "",
 					},
 				},
 			}
 		case "Shadowsocks":
 			protocol = "shadowsocks"
 			proxySetting = struct {
-				Servers []*ShadowsocksServer `json:"servers"`
+				Servers []*conf.ShadowsocksServerTarget `json:"servers"`
 			}{
-				Servers: []*ShadowsocksServer{&ShadowsocksServer{
-						Address: nodeInfo.Address,
-						Port:     uint16(nodeInfo.Port),
+				Servers: []*conf.ShadowsocksServerTarget{&conf.ShadowsocksServerTarget{
+						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.Address)},
+						Port:    uint16(nodeInfo.Port),
 						Password: Passwd,
-						Email:    fmt.Sprintf("%s|%s|%s", tag, Email, UID),
-						Level:    0,
-						Cipher:   nodeInfo.CypherMethod,
-						UoT:      true,
+						Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.UID),
+						Level:   0,
+						Cipher:  nodeInfo.CypherMethod,
+						UoT:     true,
 					},
 				},
 			}
@@ -250,7 +222,7 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 		streamSetting.REALITYSettings = realitySettings
 	}
 	
-	outboundDetourConfig.Tag = fmt.Sprintf("%s_%d", tag, UID)
+	outboundDetourConfig.Tag = fmt.Sprintf("%s_%d", tag, subscription.UID)
 	
 	if nodeInfo.SendIP != "" {
 		outboundDetourConfig.SendThrough = &nodeInfo.SendIP
@@ -260,27 +232,26 @@ func OutboundRelayBuilder(nodeInfo *api.RelayNodeInfo , tag string, UUID string,
 	return outboundDetourConfig.Build()
 }
 
-func vmessUser(tag string, UUID string, Email string) *protocol.User {
+func vmessUser(tag string, subscription *api.SubscriptionInfo) (*protocol.User) {
 	vmessAccount := &conf.VMessAccount{
-		ID:  UUID,
+		ID:  subscription.UUID,
 		Security: "auto",
 	}
 	return &protocol.User{
 		Level:   0,
-		Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID), 
+		Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.UUID), 
 		Account: serial.ToTypedMessage(vmessAccount.Build()),
 	}
 }
 
-func vlessUser(tag string, Flow string, UUID string, Email string)  *protocol.User {
-	vlessAccount := &vless.Account{
-		Id:   UUID,
-		Flow: Flow,
-		Encryption: "none",
-	}
+func vlessUser(tag string, Flow string, subscription *api.SubscriptionInfo) (*protocol.User) {
 	return &protocol.User{
 		Level:   0,
-		Email:   fmt.Sprintf("%s|%s|%s", tag, Email, UUID),
-		Account: serial.ToTypedMessage(vlessAccount),
+		Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.UUID),
+		Account: serial.ToTypedMessage(&vless.Account{
+			Id: subscription.UUID,
+			Flow: Flow,
+			Encryption: "none",
+		}),
 	}
 }
