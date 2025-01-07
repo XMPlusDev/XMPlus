@@ -1,6 +1,7 @@
 module github.com/XMPlusDev/XMPlus
 
 go 1.23
+
 toolchain go1.23.4
 
 require (
@@ -25,7 +26,7 @@ require (
 	golang.org/x/crypto v0.31.0
 	golang.org/x/net v0.33.0
 	golang.org/x/time v0.8.0
-	google.golang.org/protobuf v1.36.1
+	google.golang.org/protobuf v1.36.2
 	lukechampine.com/blake3 v1.3.0 // indirect
 )
 
