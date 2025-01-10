@@ -10,16 +10,19 @@ Type=simple
 LimitAS=infinity
 LimitRSS=infinity
 LimitCORE=infinity
-LimitNOFILE=999999
+LimitNPROC=10000
+LimitNOFILE=1000000
 WorkingDirectory=/usr/local/XMPlus/
 ExecStart=/usr/local/XMPlus/XMPlus --config /etc/XMPlus/config.yml
-ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
-RestartSec=5s
-Environment="XRAY_VMESS_AEAD_FORCED=false"
 RestartPreventExitStatus=23
-MemoryMax=120M
-CPUQuota=30%
+RestartSec=10s
+Environment="XRAY_VMESS_AEAD_FORCED=false"
+
+# Set port permissions capability
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
 
 [Install]
 WantedBy=multi-user.target
