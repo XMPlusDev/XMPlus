@@ -19,10 +19,5 @@ RestartPreventExitStatus=23
 RestartSec=10s
 Environment="XRAY_VMESS_AEAD_FORCED=false"
 
-# Set port permissions capability
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-NoNewPrivileges=true
-
 [Install]
 WantedBy=multi-user.target
