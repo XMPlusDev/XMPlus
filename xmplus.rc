@@ -8,7 +8,7 @@ command="/usr/local/XMPlus/XMPlus"
 command_args="run --config /etc/XMPlus/config.yml"
 
 pidfile="/run/$RC_SVCNAME.pid"
-required_files="/etc/XMPlus/config.json"
+required_files="/etc/XMPlus/config.yml"
 
 depend() {
 	want net
