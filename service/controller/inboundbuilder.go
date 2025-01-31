@@ -273,7 +273,7 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 	if nodeInfo.SocketStatus {
 		sockoptConfig := &conf.SocketConfig{}
 		// Support ProxyProtocol for any transport protocol
-		if networkType != "tcp" && networkType != "ws" && nodeInfo.AcceptProxyProtocol {
+		if networkType != "tcp" && networkType != "ws" && nodeInfo.ProxyProtocol {
 			sockoptConfig.AcceptProxyProtocol = nodeInfo.ProxyProtocol
 		}
 		if nodeInfo.DialerProxy != "" {
