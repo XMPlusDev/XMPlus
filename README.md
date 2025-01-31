@@ -79,15 +79,15 @@ Nodes:
     "type": "none"
   },
   "socketSettings" : {
-	"useSocket" : false,
-	"dialerProxy": "",
-	"DomainStrategy": "asis",
-	"tcpKeepAliveInterval": 0,
-	"tcpUserTimeout": 0,
-	"tcpMaxSeg": 0,
-	"tcpWindowClamp": 0,
-	"tcpKeepAliveIdle": 0,
-	"TcpMptcp": false
+    "useSocket" : false,
+    "dialerProxy": "",
+    "DomainStrategy": "asis",
+    "tcpKeepAliveInterval": 0,
+    "tcpUserTimeout": 0,
+    "tcpMaxSeg": 0,
+    "tcpWindowClamp": 0,
+    "tcpKeepAliveIdle": 0,
+    "TcpMptcp": false
   }
 }
 ```
@@ -106,15 +106,15 @@ Nodes:
     }
   },
   "socketSettings" : {
-	"useSocket" : false,
-	"dialerProxy": "",
-	"DomainStrategy": "asis",
-	"tcpKeepAliveInterval": 0,
-	"tcpUserTimeout": 0,
-	"tcpMaxSeg": 0,
-	"tcpWindowClamp": 0,
-	"tcpKeepAliveIdle": 0,
-	"TcpMptcp": false
+    "useSocket" : false,
+    "dialerProxy": "",
+    "DomainStrategy": "asis",
+    "tcpKeepAliveInterval": 0,
+    "tcpUserTimeout": 0,
+    "tcpMaxSeg": 0,
+    "tcpWindowClamp": 0,
+    "tcpKeepAliveIdle": 0,
+    "TcpMptcp": false
   }
 }
 ```
@@ -128,15 +128,15 @@ Nodes:
   "heartbeatperiod": 30,
   "custom_host": "fakedomain.com",
   "socketSettings" : {
-	"useSocket" : false,
-	"dialerProxy": "",
-	"DomainStrategy": "asis",
-	"tcpKeepAliveInterval": 0,
-	"tcpUserTimeout": 0,
-	"tcpMaxSeg": 0,
-	"tcpWindowClamp": 0,
-	"tcpKeepAliveIdle": 0,
-	"TcpMptcp": false
+    "useSocket" : false,
+    "dialerProxy": "",
+    "DomainStrategy": "asis",
+    "tcpKeepAliveInterval": 0,
+    "tcpUserTimeout": 0,
+    "tcpMaxSeg": 0,
+    "tcpWindowClamp": 0,
+    "tcpKeepAliveIdle": 0,
+    "TcpMptcp": false
   }
 }
 ```
@@ -149,15 +149,15 @@ Nodes:
   "serviceName": "xmplus",
   "authority": "hk1.xyz.com",
   "socketSettings" : {
-	"useSocket" : false,
-	"dialerProxy": "",
-	"DomainStrategy": "asis",
-	"tcpKeepAliveInterval": 0,
-	"tcpUserTimeout": 0,
-	"tcpMaxSeg": 0,
-	"tcpWindowClamp": 0,
-	"tcpKeepAliveIdle": 0,
-	"TcpMptcp": false
+    "useSocket" : false,
+    "dialerProxy": "",
+    "DomainStrategy": "asis",
+    "tcpKeepAliveInterval": 0,
+    "tcpUserTimeout": 0,
+    "tcpMaxSeg": 0,
+    "tcpWindowClamp": 0,
+    "tcpKeepAliveIdle": 0,
+    "TcpMptcp": false
   }
 }
 ```
@@ -174,15 +174,15 @@ Nodes:
   },
   "seed": "password",
   "socketSettings" : {
-	"useSocket" : false,
-	"dialerProxy": "",
-	"DomainStrategy": "asis",
-	"tcpKeepAliveInterval": 0,
-	"tcpUserTimeout": 0,
-	"tcpMaxSeg": 0,
-	"tcpWindowClamp": 0,
-	"tcpKeepAliveIdle": 0,
-	"TcpMptcp": false
+    "useSocket" : false,
+    "dialerProxy": "",
+    "DomainStrategy": "asis",
+    "tcpKeepAliveInterval": 0,
+    "tcpUserTimeout": 0,
+    "tcpMaxSeg": 0,
+    "tcpWindowClamp": 0,
+    "tcpKeepAliveIdle": 0,
+    "TcpMptcp": false
   }
 }
 ```
@@ -196,15 +196,15 @@ Nodes:
   "path": "/xmplus?ed=2560",
   "custom_host": "fakedomain.com",
   "socketSettings" : {
-	"useSocket" : false,
-	"dialerProxy": "",
-	"DomainStrategy": "asis",
-	"tcpKeepAliveInterval": 0,
-	"tcpUserTimeout": 0,
-	"tcpMaxSeg": 0,
-	"tcpWindowClamp": 0,
-	"tcpKeepAliveIdle": 0,
-	"TcpMptcp": false
+    "useSocket" : false,
+    "dialerProxy": "",
+    "DomainStrategy": "asis",
+    "tcpKeepAliveInterval": 0,
+    "tcpUserTimeout": 0,
+    "tcpMaxSeg": 0,
+    "tcpWindowClamp": 0,
+    "tcpKeepAliveIdle": 0,
+    "TcpMptcp": false
   }
 }
 ```
@@ -220,15 +220,15 @@ Nodes:
   "noGRPCHeader": true,
   "mode": "auto",
   "socketSettings" : {
-	"useSocket" : false,
-	"dialerProxy": "",
-	"DomainStrategy": "asis",
-	"tcpKeepAliveInterval": 0,
-	"tcpUserTimeout": 0,
-	"tcpMaxSeg": 0,
-	"tcpWindowClamp": 0,
-	"tcpKeepAliveIdle": 0,
-	"TcpMptcp": false
+    "useSocket" : false,
+    "dialerProxy": "",
+    "DomainStrategy": "asis",
+    "tcpKeepAliveInterval": 0,
+    "tcpUserTimeout": 0,
+    "tcpMaxSeg": 0,
+    "tcpWindowClamp": 0,
+    "tcpKeepAliveIdle": 0,
+    "TcpMptcp": false
   }
 }
 ```
