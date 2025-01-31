@@ -269,13 +269,42 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 		streamSetting.REALITYSettings = realitySettings
 	}
 
-	// Support ProxyProtocol for any transport protocol
-	if networkType != "tcp" && networkType != "ws" && nodeInfo.ProxyProtocol {
-		sockoptConfig := &conf.SocketConfig{
-			AcceptProxyProtocol: nodeInfo.ProxyProtocol,
+	// sockoptConfig
+	if nodeInfo.SocketStatus {
+		sockoptConfig := &conf.SocketConfig{}
+		// Support ProxyProtocol for any transport protocol
+		if networkType != "tcp" && networkType != "ws" && nodeInfo.AcceptProxyProtocol {
+			sockoptConfig.AcceptProxyProtocol = nodeInfo.ProxyProtocol
 		}
+		if nodeInfo.DialerProxy != "" {
+			sockoptConfig.DialerProxy = nodeInfo.DialerProxy
+		}
+		if nodeInfo.DomainStrategy != "" {
+			sockoptConfig.DomainStrategy = nodeInfo.DomainStrategy
+		}
+		if nodeInfo.TCPKeepAliveInterval > 0 {
+			sockoptConfig.TCPKeepAliveInterval = nodeInfo.TCPKeepAliveInterval
+		}
+		if nodeInfo.TCPWindowClamp > 0 {
+			sockoptConfig.TCPWindowClamp = nodeInfo.TCPWindowClamp
+		}
+		if nodeInfo.TCPMaxSeg > 0 {
+			sockoptConfig.TCPMaxSeg = nodeInfo.TCPMaxSeg
+		}
+		if nodeInfo.TCPUserTimeout > 0 {
+			sockoptConfig.TCPUserTimeout = nodeInfo.TCPUserTimeout
+		}
+		if nodeInfo.TCPKeepAliveIdle > 0 {
+			sockoptConfig.TCPKeepAliveIdle = nodeInfo.TCPKeepAliveIdle
+		}
+		if nodeInfo.TcpMptcp {
+			sockoptConfig.TcpMptcp = nodeInfo.TcpMptcp
+		}
+			
 		streamSetting.SocketSettings = sockoptConfig
 	}
+	
+	
 	inboundDetourConfig.StreamSetting = streamSetting
 
 	return inboundDetourConfig.Build()

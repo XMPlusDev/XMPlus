@@ -16,6 +16,7 @@ Log:
   Level: warning # Log level: none, error, warning, info, debug 
   AccessPath: # /etc/XMPlus/access.Log
   ErrorPath: # /etc/XMPlus/error.log
+  DNSLog: false # false or true
   MaskAddress: half # half, full, quarter
 DnsConfigPath:  #/etc/XMPlus/dns.json
 RouteConfigPath: # /etc/XMPlus/route.json
@@ -76,6 +77,17 @@ Nodes:
   "flow": "xtls-rprx-vision",
   "header": {
     "type": "none"
+  },
+  "socketSettings" : {
+	"useSocket" : false,
+	"dialerProxy": "",
+	"DomainStrategy": "asis",
+	"tcpKeepAliveInterval": 0,
+	"tcpUserTimeout": 0,
+	"tcpMaxSeg": 0,
+	"tcpWindowClamp": 0,
+	"tcpKeepAliveIdle": 0,
+	"TcpMptcp": false
   }
 }
 ```
@@ -92,6 +104,17 @@ Nodes:
         "Host": ["www.baidu.com", "www.taobao.com", "www.cloudflare.com"]
       }
     }
+  },
+  "socketSettings" : {
+	"useSocket" : false,
+	"dialerProxy": "",
+	"DomainStrategy": "asis",
+	"tcpKeepAliveInterval": 0,
+	"tcpUserTimeout": 0,
+	"tcpMaxSeg": 0,
+	"tcpWindowClamp": 0,
+	"tcpKeepAliveIdle": 0,
+	"TcpMptcp": false
   }
 }
 ```
@@ -103,7 +126,18 @@ Nodes:
   "path": "/xmplus?ed=2560",
   "host": "hk1.xyz.com",
   "heartbeatperiod": 30,
-  "custom_host": "fakedomain.com"
+  "custom_host": "fakedomain.com",
+  "socketSettings" : {
+	"useSocket" : false,
+	"dialerProxy": "",
+	"DomainStrategy": "asis",
+	"tcpKeepAliveInterval": 0,
+	"tcpUserTimeout": 0,
+	"tcpMaxSeg": 0,
+	"tcpWindowClamp": 0,
+	"tcpKeepAliveIdle": 0,
+	"TcpMptcp": false
+  }
 }
 ```
 
@@ -113,7 +147,18 @@ Nodes:
   "transport" : "grpc",
   "acceptProxyProtocol": false,
   "serviceName": "xmplus",
-  "authority": "hk1.xyz.com"
+  "authority": "hk1.xyz.com",
+  "socketSettings" : {
+	"useSocket" : false,
+	"dialerProxy": "",
+	"DomainStrategy": "asis",
+	"tcpKeepAliveInterval": 0,
+	"tcpUserTimeout": 0,
+	"tcpMaxSeg": 0,
+	"tcpWindowClamp": 0,
+	"tcpKeepAliveIdle": 0,
+	"TcpMptcp": false
+  }
 }
 ```
 
@@ -127,7 +172,18 @@ Nodes:
   "header": {
     "type": "none"
   },
-  "seed": "password"
+  "seed": "password",
+  "socketSettings" : {
+	"useSocket" : false,
+	"dialerProxy": "",
+	"DomainStrategy": "asis",
+	"tcpKeepAliveInterval": 0,
+	"tcpUserTimeout": 0,
+	"tcpMaxSeg": 0,
+	"tcpWindowClamp": 0,
+	"tcpKeepAliveIdle": 0,
+	"TcpMptcp": false
+  }
 }
 ```
 
@@ -138,7 +194,18 @@ Nodes:
   "acceptProxyProtocol": false,
   "host": "hk1.xyz.com",
   "path": "/xmplus?ed=2560",
-  "custom_host": "fakedomain.com"
+  "custom_host": "fakedomain.com",
+  "socketSettings" : {
+	"useSocket" : false,
+	"dialerProxy": "",
+	"DomainStrategy": "asis",
+	"tcpKeepAliveInterval": 0,
+	"tcpUserTimeout": 0,
+	"tcpMaxSeg": 0,
+	"tcpWindowClamp": 0,
+	"tcpKeepAliveIdle": 0,
+	"TcpMptcp": false
+  }
 }
 ```
 
@@ -151,7 +218,18 @@ Nodes:
   "path": "/",
   "noSSEHeader": false,
   "noGRPCHeader": true,
-  "mode": "auto" // "auto", "packet-up", "stream-up", "stream-one"
+  "mode": "auto",
+  "socketSettings" : {
+	"useSocket" : false,
+	"dialerProxy": "",
+	"DomainStrategy": "asis",
+	"tcpKeepAliveInterval": 0,
+	"tcpUserTimeout": 0,
+	"tcpMaxSeg": 0,
+	"tcpWindowClamp": 0,
+	"tcpKeepAliveIdle": 0,
+	"TcpMptcp": false
+  }
 }
 ```
 

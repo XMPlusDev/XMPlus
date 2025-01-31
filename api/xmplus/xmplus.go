@@ -343,12 +343,13 @@ func (c *APIClient) ReportNodeOnlineIPs(onlineSubscriptionList *[]api.OnlineIP) 
 
 func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	var (
-		path, host, serviceName, seed, Dest, PrivateKey, MinClientVer, MaxClientVer, Flow, Authority, CurvePreferences, mode string
+		path, host, serviceName, seed, Dest, PrivateKey, MinClientVer, MaxClientVer, Flow, Authority, CurvePreferences, mode, DomainStrategy, DialerProxy string
 		header  json.RawMessage
-		congestion ,RejectUnknownSni, Show, noSSEHeader, noGRPCHeader  bool
+		congestion ,RejectUnknownSni, Show, noSSEHeader, noGRPCHeader, TcpMptcp, SocketStatus  bool
 		MaxTimeDiff,ProxyProtocol  uint64 = 0, 0	
 		HeartbeatPeriod uint32 = 10
 		ServerNames,  ShortIds []string
+		TCPWindowClamp, TCPMaxSeg, TCPUserTimeout, TCPKeepAliveIdle, TCPKeepAliveInterval int32 = 0, 0, 0, 0, 0	
 	)
 		
 	if s.NetworkSettings.Flow == "xtls-rprx-vision" || s.NetworkSettings.Flow == "xtls-rprx-vision-udp443"{
@@ -448,10 +449,42 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	}
 	
 	NodeType := s.Type
-	if NodeType == "Shadowsocks"  && transportProtocol != "tcp" {
+	if NodeType == "Shadowsocks" && transportProtocol != "tcp" {
 		//NodeType = "Shadowsocks-Plugin"
 		return nil, errors.New("Shadowsocks-Plugin is deprecated in this version of XMPlus backend")
 	}
+	
+	//SocketSettings
+	DialerProxy = ""
+	if s.SocketSettings.DialerProxy != "" {
+		DialerProxy = s.SocketSettings.DialerProxy
+	}
+	DomainStrategy = ""
+	if s.SocketSettings.DomainStrategy != "" {
+		DomainStrategy = s.SocketSettings.DomainStrategy
+	}
+	if s.SocketSettings.TCPKeepAliveInterval > 0 {
+		TCPKeepAliveInterval = int32(s.SocketSettings.TCPKeepAliveInterval)
+	}
+	if s.SocketSettings.TCPKeepAliveIdle > 0 {
+		TCPKeepAliveIdle = int32(s.SocketSettings.TCPKeepAliveIdle)
+	}
+	if s.SocketSettings.TCPUserTimeout > 0 {
+		TCPUserTimeout = int32(s.SocketSettings.TCPUserTimeout)
+	}
+	if s.SocketSettings.TCPMaxSeg > 0 {
+		TCPMaxSeg = int32(s.SocketSettings.TCPMaxSeg)
+	}
+	if s.SocketSettings.TCPWindowClamp > 0 {
+		TCPWindowClamp = int32(s.SocketSettings.TCPWindowClamp)
+	}
+	if s.SocketSettings.TcpMptcp {
+		TcpMptcp = s.SocketSettings.TcpMptcp
+	}
+	if s.SocketSettings.SocketStatus {
+		SocketStatus = s.SocketSettings.SocketStatus
+	}
+	
 	
 	nodeInfo := &api.NodeInfo{
 		NodeType:          NodeType,
@@ -495,6 +528,15 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		NoSSEHeader:      noSSEHeader,
 		NoGRPCHeader:     noGRPCHeader,
 		Mode:             mode,
+		TcpMptcp:         TcpMptcp,
+		TCPWindowClamp:   TCPWindowClamp,
+		TCPMaxSeg:        TCPMaxSeg,
+		TCPUserTimeout:   TCPUserTimeout,
+		TCPKeepAliveIdle: TCPKeepAliveIdle,
+		TCPKeepAliveInterval: TCPKeepAliveInterval,
+		DomainStrategy:   DomainStrategy,
+		DialerProxy:      DialerProxy,
+		SocketStatus:     SocketStatus,
 	}
 	return nodeInfo, nil
 }

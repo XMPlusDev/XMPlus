@@ -62,6 +62,15 @@ type NodeInfo struct {
 	Mode              string
 	NoGRPCHeader      bool 
 	HeartbeatPeriod   uint32
+	DialerProxy       string
+	TCPKeepAliveInterval  int32
+	TCPKeepAliveIdle  int32
+	TCPUserTimeout    int32
+	TCPMaxSeg         int32
+	TcpMptcp          bool
+	TCPWindowClamp    int32
+	DomainStrategy    string
+	SocketStatus      bool
 }
 
 type RelayNodeInfo struct {

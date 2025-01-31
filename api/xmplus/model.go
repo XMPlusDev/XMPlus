@@ -57,6 +57,17 @@ type server struct {
 	Sniffing    bool 	   `json:"sniffing"`
 	Speedlimit  int        `json:"speedlimit"`
 	Type        string     `json:"type"`
+	SocketSettings struct {
+		SocketStatus   bool        `json:"useSocket"`
+		DialerProxy   string       `json:"dialerProxy"`
+		TCPKeepAliveInterval  int  `json:"tcpKeepAliveInterval"`
+		TCPKeepAliveIdle int       `json:"tcpKeepAliveIdle"`
+		TCPUserTimeout   int       `json:"tcpUserTimeout"`
+		TCPMaxSeg        int       `json:"tcpMaxSeg"`
+		TcpMptcp         bool      `json:"tcpMptcp"`
+		TCPWindowClamp   int       `json:"tcpWindowClamp"`
+		DomainStrategy   string    `json:"domainStrategy"`
+	} `json:"socketSettings"`	
 }
 
 type relay_server struct {
