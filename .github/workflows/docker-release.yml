@@ -50,9 +50,10 @@ jobs:
           mkdir -p /tmp/digests
           digest="${{ steps.build.outputs.digest }}"
           touch "/tmp/digests/${digest#sha256:}"          
-      - name: Merge Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: digests-${{ strategy.job-index }}
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -65,7 +66,9 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
+          pattern: digests-*
           path: /tmp/digests
+          merge-multiple: true
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Docker meta
