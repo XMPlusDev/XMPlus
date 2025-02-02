@@ -213,6 +213,7 @@ Nodes:
 ```
 {
   "transport" : "splithttp",
+  "acceptProxyProtocol": false,
   "host": "hk1.xyz.com",
   "custom_host": "fakedomain.com",
   "path": "/",
