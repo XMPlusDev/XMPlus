@@ -343,9 +343,9 @@ func (c *APIClient) ReportNodeOnlineIPs(onlineSubscriptionList *[]api.OnlineIP) 
 
 func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	var (
-		path, host, serviceName, seed, Dest, PrivateKey, MinClientVer, MaxClientVer, Flow, Authority, CurvePreferences, mode, DomainStrategy, DialerProxy string
+		path, host, serviceName, seed, Dest, PrivateKey, MinClientVer, MaxClientVer, Flow, Authority, CurvePreferences, mode, DomainStrategy, ServerNameToVerify string
 		header  json.RawMessage
-		congestion ,RejectUnknownSni, Show, noSSEHeader, noGRPCHeader, TcpMptcp, SocketStatus  bool
+		congestion ,RejectUnknownSni, Show, noSSEHeader, noGRPCHeader, TcpMptcp, SocketStatus, Insecure  bool
 		MaxTimeDiff,ProxyProtocol  uint64 = 0, 0	
 		HeartbeatPeriod uint32 = 10
 		ServerNames,  ShortIds []string
@@ -370,6 +370,13 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		if s.SecuritySettings.CurvePreferences != "" {
 			CurvePreferences = s.SecuritySettings.CurvePreferences
 		}
+		
+		ServerNameToVerify = ""
+		if s.SecuritySettings.ServerNameToVerify != "" {
+			ServerNameToVerify = s.SecuritySettings.ServerNameToVerify
+		}
+		
+		Insecure = s.SecuritySettings.Insecure
 	}
 	
 	if s.Security == "reality" {
@@ -455,10 +462,6 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 	}
 	
 	//SocketSettings
-	DialerProxy = ""
-	if s.SocketSettings.DialerProxy != "" {
-		DialerProxy = s.SocketSettings.DialerProxy
-	}
 	DomainStrategy = ""
 	if s.SocketSettings.DomainStrategy != "" {
 		DomainStrategy = s.SocketSettings.DomainStrategy
@@ -535,8 +538,9 @@ func (c *APIClient) parseNodeResponse(s *serverConfig) (*api.NodeInfo, error) {
 		TCPKeepAliveIdle: TCPKeepAliveIdle,
 		TCPKeepAliveInterval: TCPKeepAliveInterval,
 		DomainStrategy:   DomainStrategy,
-		DialerProxy:      DialerProxy,
 		SocketStatus:     SocketStatus,
+		ServerNameToVerify: ServerNameToVerify,
+		Insecure:        Insecure,         
 	}
 	return nodeInfo, nil
 }

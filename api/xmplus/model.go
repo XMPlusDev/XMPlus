@@ -50,6 +50,8 @@ type server struct {
 		ProxyProtocol int       `json:"proxyprotocol"`
 		ServerNames   []string  `json:"serverNames"`
 		ShortIds      []string  `json:"shortids"`
+		ServerNameToVerify string  `json:"serverNameToVerify"`
+		Insecure      bool      `json:"allowInsecure"`
 	} `json:"securitySettings"`	
 	Relayid     int        `json:"relayid"`
 	SendThrough string     `json:"sendthrough"`
@@ -59,7 +61,6 @@ type server struct {
 	Type        string     `json:"type"`
 	SocketSettings struct {
 		SocketStatus   bool        `json:"useSocket"`
-		DialerProxy   string       `json:"dialerProxy"`
 		TCPKeepAliveInterval  int  `json:"tcpKeepAliveInterval"`
 		TCPKeepAliveIdle int       `json:"tcpKeepAliveIdle"`
 		TCPUserTimeout   int       `json:"tcpUserTimeout"`

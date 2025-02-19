@@ -227,14 +227,17 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 			if err != nil {
 				return nil, err
 			}
-			tlsSettings := &conf.TLSConfig{
-				RejectUnknownSNI: nodeInfo.RejectUnknownSNI,
-			}
 			
+			tlsSettings := &conf.TLSConfig{}
+			tlsSettings.Certs = append(tlsSettings.Certs, &conf.TLSCertConfig{CertFile: certFile, KeyFile: keyFile, OcspStapling: 3600})
+			tlsSettings.Insecure = nodeInfo.Insecure
+			tlsSettings.RejectUnknownSNI = nodeInfo.RejectUnknownSNI
 			curvepreferences := conf.StringList{nodeInfo.CurvePreferences}
 			tlsSettings.CurvePreferences = &curvepreferences
 			tlsSettings.Fingerprint = nodeInfo.Fingerprint
-			tlsSettings.Certs = append(tlsSettings.Certs, &conf.TLSCertConfig{CertFile: certFile, KeyFile: keyFile, OcspStapling: 3600})
+			if nodeInfo.ServerNameToVerify != "" {
+				tlsSettings.ServerNameToVerify = nodeInfo.ServerNameToVerify
+			}
 
 			streamSetting.TLSSettings = tlsSettings
 		}
@@ -275,9 +278,6 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 		// Support ProxyProtocol for any transport protocol
 		if networkType != "tcp" && networkType != "ws" && nodeInfo.ProxyProtocol {
 			sockoptConfig.AcceptProxyProtocol = nodeInfo.ProxyProtocol
-		}
-		if nodeInfo.DialerProxy != "" {
-			sockoptConfig.DialerProxy = nodeInfo.DialerProxy
 		}
 		if nodeInfo.DomainStrategy != "" {
 			sockoptConfig.DomainStrategy = nodeInfo.DomainStrategy

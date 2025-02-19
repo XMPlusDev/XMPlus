@@ -80,7 +80,6 @@ Nodes:
   },
   "socketSettings" : {
     "useSocket" : false,
-    "dialerProxy": "",
     "DomainStrategy": "asis",
     "tcpKeepAliveInterval": 0,
     "tcpUserTimeout": 0,
@@ -107,7 +106,6 @@ Nodes:
   },
   "socketSettings" : {
     "useSocket" : false,
-    "dialerProxy": "",
     "DomainStrategy": "asis",
     "tcpKeepAliveInterval": 0,
     "tcpUserTimeout": 0,
@@ -129,7 +127,6 @@ Nodes:
   "custom_host": "fakedomain.com",
   "socketSettings" : {
     "useSocket" : false,
-    "dialerProxy": "",
     "DomainStrategy": "asis",
     "tcpKeepAliveInterval": 0,
     "tcpUserTimeout": 0,
@@ -150,7 +147,6 @@ Nodes:
   "authority": "hk1.xyz.com",
   "socketSettings" : {
     "useSocket" : false,
-    "dialerProxy": "",
     "DomainStrategy": "asis",
     "tcpKeepAliveInterval": 0,
     "tcpUserTimeout": 0,
@@ -175,7 +171,6 @@ Nodes:
   "seed": "password",
   "socketSettings" : {
     "useSocket" : false,
-    "dialerProxy": "",
     "DomainStrategy": "asis",
     "tcpKeepAliveInterval": 0,
     "tcpUserTimeout": 0,
@@ -197,7 +192,6 @@ Nodes:
   "custom_host": "fakedomain.com",
   "socketSettings" : {
     "useSocket" : false,
-    "dialerProxy": "",
     "DomainStrategy": "asis",
     "tcpKeepAliveInterval": 0,
     "tcpUserTimeout": 0,
@@ -222,7 +216,6 @@ Nodes:
   "mode": "auto",
   "socketSettings" : {
     "useSocket" : false,
-    "dialerProxy": "",
     "DomainStrategy": "asis",
     "tcpKeepAliveInterval": 0,
     "tcpUserTimeout": 0,
@@ -249,7 +242,8 @@ Nodes:
   "alpn": [
     "h2",
     "http/1.1"
-  ]
+  ],
+  "serverNameToVerify" : ""
 }
 ```
 #### REALITY
