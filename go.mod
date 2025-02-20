@@ -12,7 +12,7 @@ require (
 	github.com/eko/gocache/store/go_cache/v4 v4.2.2
 	github.com/eko/gocache/store/redis/v4 v4.2.2
 	github.com/fsnotify/fsnotify v1.8.0
-	github.com/go-acme/lego/v4 v4.21.0
+	github.com/go-acme/lego/v4 v4.22.2
 	github.com/go-resty/resty/v2 v2.16.5
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/r3labs/diff/v2 v2.15.1
@@ -78,7 +78,6 @@ require (
 	github.com/civo/civogo v0.3.63 // indirect
 	github.com/cloudflare/circl v1.6.0 // indirect
 	github.com/cloudflare/cloudflare-go v0.112.0 // indirect
-	github.com/cpu/goacmedns v0.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgryski/go-metro v0.0.0-20211217172704-adc40b04c140 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
@@ -254,6 +253,7 @@ require (
 	github.com/exoscale/egoscale/v3 v3.1.7 // indirect
 	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.128 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
+	github.com/nrdcg/goacmedns v0.2.0 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/peterhellberg/link v1.2.0 // indirect
 	github.com/quic-go/quic-go v0.49.0 // indirect
