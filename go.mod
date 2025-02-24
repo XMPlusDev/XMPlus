@@ -1,7 +1,6 @@
 module github.com/XMPlusDev/XMPlus
 
 go 1.23
-
 toolchain go1.23.4
 
 require (
@@ -23,7 +22,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
 	github.com/xmplusdev/xray-core/v25 v25.1.30
-	golang.org/x/crypto v0.33.0
+	golang.org/x/crypto v0.34.0
 	golang.org/x/net v0.35.0
 	golang.org/x/time v0.10.0
 	google.golang.org/protobuf v1.36.5
