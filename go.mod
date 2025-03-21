@@ -1,7 +1,7 @@
 module github.com/XMPlusDev/XMPlus
 
 go 1.23
-toolchain go1.23.4
+toolchain go1.24.1
 
 require (
 	dario.cat/mergo v1.0.1
@@ -15,7 +15,7 @@ require (
 	github.com/go-resty/resty/v2 v2.16.5
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/r3labs/diff/v2 v2.15.1
-	github.com/redis/go-redis/v9 v9.7.1
+	github.com/redis/go-redis/v9 v9.7.3
 	github.com/sagernet/sing v0.6.3
 	github.com/sagernet/sing-shadowsocks v0.2.7
 	github.com/spf13/cobra v1.9.1
