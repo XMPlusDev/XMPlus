@@ -1,7 +1,7 @@
 version: '3'
 services: 
   xmplus: 
-    image: ghcr.io/xmplusdev/xmplus:latest
+    image: ghcr.io/hadimousavi79/xmplus:latest
     volumes:
       - /etc/XMPlus/:/etc/XMPlus/
     restart: always
