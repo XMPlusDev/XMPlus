@@ -1,0 +1,8 @@
+{
+  "bridges": [
+    {"tag": "test-bridge", "domain": "test-bridge.example.com"}
+  ],
+  "portals": [
+    {"tag": "test-portal", "domain": "test-portal.example.com"}
+  ]
+}
