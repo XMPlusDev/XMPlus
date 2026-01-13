@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"errors"
 	"reflect"
+	
+	"resty.dev/v3"
 )
 
 func (c *Client) parseSubscriptionResponse(res *resty.Response, err error) (*SubscriptionResponse, error) {
@@ -25,7 +27,7 @@ func (c *Client) parseSubscriptionResponse(res *resty.Response, err error) (*Sub
 func (c *Client) GetSubscriptionList() (SubscriptionList *[]SubscriptionInfo, err error) {
 	res, err := c.client.R().
 		SetHeader("If-None-Match", c.eTags["subscriptions"]).
-		SetPathParam("serverId", c.NodeID).
+		SetPathParam("serverId", String(c.NodeID)).
 		SetResult(&SubscriptionResponse{}).
 		ForceContentType("application/json").
 		Post("/api/server/subscription/lists/{serverId}")
@@ -115,7 +117,7 @@ func (c *Client) ReportTraffic(subscriptionTraffic *[]SubscriptionTraffic) error
 	postData := &PostData{Data: data}
 	res, err := c.client.R().
 		SetBody(postData).
-		SetPathParam("serverId", c.NodeID).
+		SetPathParam("serverId", String(c.NodeID)).
 		ForceContentType("application/json").
 		Post("/api/server/subscription/traffic/{serverId}")
 	_, err = c.checkResponse(res, err)
@@ -145,7 +147,7 @@ func (c *Client) ReportOnlineIPs(onlineSubscriptionList *[]OnlineIP) error {
 	postData := &PostData{Data: data}
 	res, err := c.client.R().
 		SetBody(postData).
-		SetPathParam("serverId", c.NodeID).
+		SetPathParam("serverId", String(c.NodeID)).
 		SetResult(&Response{}).
 		ForceContentType("application/json").
 		Post("/api/server/subscription/onlineip/{serverId}")

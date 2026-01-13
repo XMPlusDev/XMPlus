@@ -8,7 +8,7 @@ import (
 	"sync"
 	"fmt"
 	
-	"github.com/go-resty/resty/v2"
+	"resty.dev/v3"
 	"github.com/bitly/go-simplejson"
 )
 
@@ -52,7 +52,7 @@ func New(apiConfig *Config) *Client {
 	})
 	
 	client.SetBaseURL(apiConfig.APIHost)
-	client.SetBody(map[string]string{key : apiConfig.Key})
+	client.SetBody({"key" : apiConfig.Key})
 	//client.SetQueryParam("key", apiConfig.Key)
 	
 	apiClient := &Client{

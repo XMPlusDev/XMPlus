@@ -7,14 +7,13 @@ import (
 	"errors"
 
 	"github.com/bitly/go-simplejson"
-	"github.com/go-resty/resty/v2"
 )
 
 func (c *Client) GetNodeInfo() (nodeInfo *NodeInfo, err error) {
 	server := new(serverConfig)
 	res, err := c.client.R().
 		ForceContentType("application/json").
-		SetPathParam("serverId", c.NodeID).
+		SetPathParam("serverId", String(c.NodeID)).
 		SetHeader("If-None-Match", c.eTags["server"]).
 		Post("/api/server/info/{serverId}")
 
@@ -70,7 +69,7 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		nodeInfo.Sniffing = transportData.Get("sniffing").MustBool()
 		nodeInfo.ListeningIP = transportData.Get("listeningIP").MustString()
 		nodeInfo.ListeningPort = transportData.Get("listeningPort").MustString()
-		nodeInfo.SendThrough = transportData.Get("sendThroughIP").MustString()
+		nodeInfo.SendThroughIP = transportData.Get("sendThroughIP").MustString()
 		
 		if nodeInfo.NodeType == "vless" {
 			nodeInfo.Decryption = transportData.Get("decryption").MustString()
@@ -165,12 +164,13 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		
 		if socketSettings, ok := transportData.CheckGet("socketSettings"); ok {
 			nodeInfo.SocketSettings = &SocketSettings{}
+			
 			nodeInfo.UseSocket = bool(true)
-			nodeInfo.SocketSettings.TCPKeepAliveInterval =  int32(socketSettings.Get("tCPKeepAliveInterval").Int())
-			nodeInfo.SocketSettings.TCPKeepAliveIdle = int32(socketSettings.Get("tCPKeepAliveIdle").Int())
-			nodeInfo.SocketSettings.TCPUserTimeout = int32(socketSettings.Get("tCPUserTimeout").Int())
-			nodeInfo.SocketSettings.TCPMaxSeg = int32(socketSettings.Get("tCPMaxSeg").Int())
-			nodeInfo.SocketSettings.TCPWindowClamp = int32(socketSettings.Get("tCPWindowClamp").Int())
+			nodeInfo.SocketSettings.TCPKeepAliveInterval =  int32(socketSettings.Get("tCPKeepAliveInterval"))
+			nodeInfo.SocketSettings.TCPKeepAliveIdle = int32(socketSettings.Get("tCPKeepAliveIdle"))
+			nodeInfo.SocketSettings.TCPUserTimeout = int32(socketSettings.Get("tCPUserTimeout"))
+			nodeInfo.SocketSettings.TCPMaxSeg = int32(socketSettings.Get("tCPMaxSeg"))
+			nodeInfo.SocketSettings.TCPWindowClamp = int32(socketSettings.Get("tCPWindowClamp"))
 			nodeInfo.SocketSettings.TcpMptcp = socketSettings.Get("tcpMptcp").Bool()
 			nodeInfo.SocketSettings.DomainStrategy = socketSettings.Get("domainStrategy").String()
 		}
@@ -350,7 +350,7 @@ func (c *Client) TransitNodeResponse() (*RelayNodeInfo, error) {
 		nodeInfo.Address = s.RAddress
 		
 		nodeInfo.ListeningPort = transportData.Get("listeningPort").MustString()
-		nodeInfo.SendThrough = transportData.Get("sendThroughIP").MustString()
+		nodeInfo.SendThroughIP = transportData.Get("sendThroughIP").MustString()
 		
 		if nodeInfo.NodeType == "vless" {
 			nodeInfo.Encryption = transportData.Get("encryption").MustString()

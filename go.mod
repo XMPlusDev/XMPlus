@@ -11,7 +11,6 @@ require (
 	github.com/eko/gocache/store/redis/v4 v4.2.2
 	github.com/fsnotify/fsnotify v1.9.0
 	github.com/go-acme/lego/v4 v4.22.2
-	github.com/go-resty/resty/v2 v2.16.5
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/r3labs/diff/v2 v2.15.1
 	github.com/redis/go-redis/v9 v9.17.2
@@ -26,6 +25,7 @@ require (
 	golang.org/x/time v0.11.0
 	google.golang.org/protobuf v1.36.11
 	lukechampine.com/blake3 v1.4.1 
+	resty.dev/v3 v3.0.0-beta.6
 )
 
 require (
