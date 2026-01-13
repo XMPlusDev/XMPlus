@@ -14,8 +14,8 @@ func (c *Client) parseSubscriptionResponse(res *resty.Response, err error) (*Sub
 		return nil, fmt.Errorf("Failed to subscription lists request: %s", err)
 	}
 
-	if res.StatusCode() > 400 {
-		body := res.Body()
+	if res.StatusCode() >= 400 {
+		body := res.Result()
 		return nil, fmt.Errorf("Subscription request error: %s, %v", string(body), err)
 	}
 	
@@ -26,10 +26,11 @@ func (c *Client) parseSubscriptionResponse(res *resty.Response, err error) (*Sub
 
 func (c *Client) GetSubscriptionList() (SubscriptionList *[]SubscriptionInfo, err error) {
 	res, err := c.client.R().
+		SetBody(map[string]string{"key": c.Key}).
 		SetHeader("If-None-Match", c.eTags["subscriptions"]).
-		SetPathParam("serverId", String(c.NodeID)).
+		SetPathParam("serverId", string(c.NodeID)).
 		SetResult(&SubscriptionResponse{}).
-		ForceContentType("application/json").
+		SetForceResponseContentType("application/json").
 		Post("/api/server/subscription/lists/{serverId}")
 	
 	if res.StatusCode() == 304 {
@@ -109,16 +110,19 @@ func (c *Client) ReportTraffic(subscriptionTraffic *[]SubscriptionTraffic) error
 	for i, traffic := range *subscriptionTraffic {
 		data[i] = SubscriptionTraffic{
 			Id:  traffic.Id,
-			U:   traffic.u,
-			D:   traffic.d,
+			U:   traffic.U,
+			D:   traffic.D,
 		}
 	}
 	
-	postData := &PostData{Data: data}
+	postData := &PostData{
+		Key:  c.Key,
+		Data: data,
+	}
 	res, err := c.client.R().
 		SetBody(postData).
-		SetPathParam("serverId", String(c.NodeID)).
-		ForceContentType("application/json").
+		SetPathParam("serverId", string(c.NodeID)).
+		SetForceResponseContentType("application/json").
 		Post("/api/server/subscription/traffic/{serverId}")
 	_, err = c.checkResponse(res, err)
 	if err != nil {
@@ -144,12 +148,15 @@ func (c *Client) ReportOnlineIPs(onlineSubscriptionList *[]OnlineIP) error {
 	}
 	c.LastReportOnline = reportOnline 
 
-	postData := &PostData{Data: data}
+	postData := &PostData{
+		Key:  c.Key,
+		Data: data,
+	}
 	res, err := c.client.R().
 		SetBody(postData).
-		SetPathParam("serverId", String(c.NodeID)).
+		SetPathParam("serverId", string(c.NodeID)).
 		SetResult(&Response{}).
-		ForceContentType("application/json").
+		SetForceResponseContentType("application/json").
 		Post("/api/server/subscription/onlineip/{serverId}")
 
 	_, err = c.checkResponse(res, err)

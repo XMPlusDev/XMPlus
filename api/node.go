@@ -12,8 +12,9 @@ import (
 func (c *Client) GetNodeInfo() (nodeInfo *NodeInfo, err error) {
 	server := new(serverConfig)
 	res, err := c.client.R().
-		ForceContentType("application/json").
-		SetPathParam("serverId", String(c.NodeID)).
+		SetBody(map[string]string{"key": c.Key}).
+		SetForceResponseContentType("application/json").
+		SetPathParam("serverId", string(c.NodeID)).
 		SetHeader("If-None-Match", c.eTags["server"]).
 		Post("/api/server/info/{serverId}")
 
@@ -165,14 +166,28 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		if socketSettings, ok := transportData.CheckGet("socketSettings"); ok {
 			nodeInfo.SocketSettings = &SocketSettings{}
 			
-			nodeInfo.UseSocket = bool(true)
-			nodeInfo.SocketSettings.TCPKeepAliveInterval =  int32(socketSettings.Get("tCPKeepAliveInterval"))
-			nodeInfo.SocketSettings.TCPKeepAliveIdle = int32(socketSettings.Get("tCPKeepAliveIdle"))
-			nodeInfo.SocketSettings.TCPUserTimeout = int32(socketSettings.Get("tCPUserTimeout"))
-			nodeInfo.SocketSettings.TCPMaxSeg = int32(socketSettings.Get("tCPMaxSeg"))
-			nodeInfo.SocketSettings.TCPWindowClamp = int32(socketSettings.Get("tCPWindowClamp"))
-			nodeInfo.SocketSettings.TcpMptcp = socketSettings.Get("tcpMptcp").Bool()
-			nodeInfo.SocketSettings.DomainStrategy = socketSettings.Get("domainStrategy").String()
+			nodeInfo.UseSocket = true
+			if tCPKeepAliveInterval, err := socketSettings.Get("tCPKeepAliveInterval").Int(); err == nil {
+				nodeInfo.SocketSettings.TCPKeepAliveInterval =  int32(tCPKeepAliveInterval)
+			}
+			if tCPKeepAliveIdle, err := socketSettings.Get("tCPKeepAliveIdle").Int(); err == nil {
+				nodeInfo.SocketSettings.TCPKeepAliveIdle = int32(tCPKeepAliveIdle)
+			}
+			if tCPUserTimeout, err := socketSettings.Get("tCPUserTimeout").Int(); err == nil {
+				nodeInfo.SocketSettings.TCPUserTimeout = int32(tCPUserTimeout)
+			}
+			if tCPMaxSeg, err := socketSettings.Get("tCPMaxSeg").Int(); err == nil {
+				nodeInfo.SocketSettings.TCPMaxSeg = int32(tCPMaxSeg)
+			}
+			if tCPWindowClamp, err := socketSettings.Get("tCPWindowClamp").Int(); err == nil {
+				nodeInfo.SocketSettings.TCPWindowClamp = int32(tCPWindowClamp)
+			}
+			if tcpMptcp, err := socketSettings.Get("tcpMptcp").Bool(); err == nil {
+				nodeInfo.SocketSettings.TcpMptcp = tcpMptcp
+			}
+			if domainStrategy, err := socketSettings.Get("domainStrategy").String(); err == nil {
+				nodeInfo.SocketSettings.DomainStrategy = domainStrategy
+			}
 		}
 	}
 	

@@ -16,13 +16,14 @@ type Response struct {
 }
 
 type PostData struct {
+	Key  string      `json:"key"`
 	Data interface{} `json:"data"`
 }
 
 type serverConfig struct {
 	server          `json:"server"`
 	transitServer   `json:"transit_server"`
-	updateInterval  `json:"update_interval"`
+	updateInterval   int `json:"update_interval"`
 	apiVersion       string  `json:"version"`
 	blockingRules   *json.RawMessage `json:"rules"`
 }

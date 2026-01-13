@@ -52,7 +52,6 @@ func New(apiConfig *Config) *Client {
 	})
 	
 	client.SetBaseURL(apiConfig.APIHost)
-	client.SetBody(map[string]string{"key": apiConfig.Key})
 	//client.SetQueryParam("key", apiConfig.Key)
 	
 	apiClient := &Client{
@@ -80,12 +79,12 @@ func (c *Client) checkResponse(res *resty.Response, err error) (*simplejson.Json
 		return nil, fmt.Errorf("A request error occured: %s", err)
 	}
 
-	if res.StatusCode() > 400 {
-		body := res.Body()
+	if res.StatusCode() >= 400 {
+		body := res.Result()
 		return nil, fmt.Errorf("A request error occured: %s, %v", string(body), err)
 	}
 	
-	result, err := simplejson.NewJson(res.Body())
+	result, err := simplejson.NewJson(res.Result())
 	
 	if err != nil {
 		return nil, fmt.Errorf("%s", res.String())
