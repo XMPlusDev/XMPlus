@@ -80,11 +80,10 @@ func (c *Client) checkResponse(res *resty.Response, err error) (*simplejson.Json
 	}
 
 	if res.StatusCode() >= 400 {
-		body := res.Result()
-		return nil, fmt.Errorf("A request error occured: %s, %v", string(body), err)
+		return nil, fmt.Errorf("A request error occured: %v", err)
 	}
 	
-	result, err := simplejson.NewJson(res.Result())
+	result, err := simplejson.NewJson(res.Body())
 	
 	if err != nil {
 		return nil, fmt.Errorf("%s", res.String())

@@ -49,7 +49,8 @@ func (c *Client) GetNodeInfo() (nodeInfo *NodeInfo, err error) {
 }
 
 func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
-	// transport settings
+	nodeInfo := &NodeInfo{}
+	
 	if transport, err := s.NetworkSettings.MarshalJSON(); err != nil {
 		return nil, err
 	} else {
@@ -58,7 +59,6 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			return nil, err
 		}
 		
-		nodeInfo := &NodeInfo{}
 		nodeInfo.NetworkType = ""
 		nodeInfo.NodeType = strings.ToLower(s.Type)
 		nodeInfo.NodeID = c.NodeID
@@ -191,7 +191,6 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		}
 	}
 	
-	// security settings
 	if security, err := s.SecuritySettings.MarshalJSON(); err != nil {
 		return nil, err
 	} else {
@@ -349,6 +348,8 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 func (c *Client) TransitNodeResponse() (*RelayNodeInfo, error) {
 	s := c.resp.Load().(*serverConfig)
 	
+	nodeInfo := &RelayNodeInfo{}
+	
 	// transport settings
 	if transport, err := s.RNetworkSettings.MarshalJSON(); err != nil {
 		return nil, err
@@ -358,7 +359,6 @@ func (c *Client) TransitNodeResponse() (*RelayNodeInfo, error) {
 			return nil, err
 		}
 		
-		nodeInfo := &RelayNodeInfo{}
 		nodeInfo.NetworkType = ""
 		nodeInfo.NodeType = s.RType
 		nodeInfo.NodeID = s.NodeId

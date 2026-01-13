@@ -15,8 +15,7 @@ func (c *Client) parseSubscriptionResponse(res *resty.Response, err error) (*Sub
 	}
 
 	if res.StatusCode() >= 400 {
-		body := res.Result()
-		return nil, fmt.Errorf("Subscription request error: %s, %v", string(body), err)
+		return nil, fmt.Errorf("Subscription request error: %v", err)
 	}
 	
 	response := res.Result().(*SubscriptionResponse)
