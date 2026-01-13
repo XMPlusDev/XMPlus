@@ -1,4 +1,4 @@
-package controller
+package node
 
 import (
 	"github.com/XMPlusDev/XMPlus/helper/cert"

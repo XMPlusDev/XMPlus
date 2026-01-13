@@ -1,4 +1,3 @@
-// node/node.go
 package node
 
 import (

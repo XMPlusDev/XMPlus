@@ -1,4 +1,4 @@
-package controller
+package subscription
 
 import "github.com/xmplusdev/xray-core/v26/common/errors"
 
