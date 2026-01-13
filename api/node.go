@@ -238,7 +238,7 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 						alpnStrings = append(alpnStrings, str)
 					}
 				}
-				nodeInfo.TlsSettings.Alpn = strings.Join(alpnStrings, ",")
+				nodeInfo.TlsSettings.Alpn = alpnStrings  // Changed from strings.Join(alpnStrings, ",")
 			}
 		}
 		
@@ -289,22 +289,9 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			if mldsa65Seed, err := realitySettings.Get("Mldsa65Seed").String(); err == nil {
 				nodeInfo.RealitySettings.Mldsa65Seed = mldsa65Seed
 			}
-			
-			// transit
-			if publicKey, err := realitySettings.Get("publickey").String(); err == nil {
-				nodeInfo.RealitySettings.PublicKey = publicKey
-			}
-			nodeInfo.RealitySettings.ServerName = realitySettings.Get("serverName").String()
-			nodeInfo.RealitySettings.ShortId = realitySettings.Get("shortid").String()
-			if spiderX, err := realitySettings.Get("spiderX").String(); err == nil {
-				nodeInfo.RealitySettings.SpiderX = spiderX
-			}
-			if fingerprint, err := realitySettings.Get("fingerprint").String(); err == nil {
-				nodeInfo.RealitySettings.Fingerprint = fingerprint
-			}
-			if mldsa65Verify, err := realitySettings.Get("mldsa65Verify").String(); err == nil {
-				nodeInfo.RealitySettings.Mldsa65Verify = mldsa65Verify
-			}  	
+			if privateKey, err := realitySettings.Get("privateKey").String(); err == nil {
+				nodeInfo.RealitySettings.PrivateKey = privateKey
+			}	
 		}
 	}
 	
@@ -319,16 +306,42 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		nodeInfo.BlockingRules = &BlockingRules{}
 		
 		if ipData, ipKeyExists := ruleData.CheckGet("ip"); ipKeyExists {
-			nodeInfo.BlockingRules.IP = ipData
+			if ipArray, err := ipData.Array(); err == nil {
+				var ipStrings []string
+				for _, v := range ipArray {
+					if str, ok := v.(string); ok {
+						ipStrings = append(ipStrings, str)
+					}
+				}
+				nodeInfo.BlockingRules.IP = ipStrings
+			}
 		}
 		if domainData, domainKeyExists := ruleData.CheckGet("domain"); domainKeyExists {
-			nodeInfo.BlockingRules.Domain = domainData
+			if domainArray, err := domainData.Array(); err == nil {
+				var domainStrings []string
+				for _, v := range domainArray {
+					if str, ok := v.(string); ok {
+						domainStrings = append(domainStrings, str)
+					}
+				}
+				nodeInfo.BlockingRules.Domain = domainStrings
+			}
 		}
 		if portData, portKeyExists := ruleData.CheckGet("port"); portKeyExists {
-			nodeInfo.BlockingRules.Port = portData
+			if portStr, err := portData.String(); err == nil {
+				nodeInfo.BlockingRules.Port = portStr
+			}
 		}
 		if protocolData, protocolKeyExists := ruleData.CheckGet("protocol"); protocolKeyExists {
-			nodeInfo.BlockingRules.Protocol = protocolData
+			if protocolArray, err := protocolData.Array(); err == nil {
+				var protocolStrings []string
+				for _, v := range protocolArray {
+					if str, ok := v.(string); ok {
+						protocolStrings = append(protocolStrings, str)
+					}
+				}
+				nodeInfo.BlockingRules.Protocol = protocolStrings
+			}
 		}
 	}
 	
@@ -487,9 +500,15 @@ func (c *Client) TransitNodeResponse() (*RelayNodeInfo, error) {
 			if show, err := realitySettings.Get("show").Bool(); err == nil {
 				nodeInfo.RealitySettings.Show = show
 			}
-			nodeInfo.RealitySettings.PublicKey = realitySettings.Get("publickey").String()
-			nodeInfo.RealitySettings.ServerName = realitySettings.Get("serverName").String()
-			nodeInfo.RealitySettings.ShortId = realitySettings.Get("shortid").String()
+			if publicKey, err := realitySettings.Get("publickey").String(); err == nil {
+				nodeInfo.RealitySettings.PublicKey = publicKey
+			}
+			if serverName, err := realitySettings.Get("serverName").String(); err == nil {
+				nodeInfo.RealitySettings.ServerName = serverName
+			}
+			if shortid, err := realitySettings.Get("shortid").String(); err == nil {
+				nodeInfo.RealitySettings.ShortId = shortid
+			}
 			if spiderX, err := realitySettings.Get("spiderX").String(); err == nil {
 				nodeInfo.RealitySettings.SpiderX = spiderX
 			}
