@@ -7,7 +7,7 @@ import (
 	"time"
 	"strings"
 	
-	"github.com/xmplusdev/xray-core/v25/core"
+	"github.com/xmplusdev/xray-core/v26/core"
 	
 	"github.com/XMPlusDev/XMPlus/api"
 	"github.com/XMPlusDev/XMPlus/node"

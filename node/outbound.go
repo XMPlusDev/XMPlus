@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/xmplusdev/xray-core/v25/core"
-	"github.com/xmplusdev/xray-core/v25/infra/conf"
-	"github.com/xmplusdev/xray-core/v25/common/net"
-	"github.com/xmplusdev/xray-core/v25/common/protocol"
-	"github.com/xmplusdev/xray-core/v25/common/serial"
-	"github.com/xmplusdev/xray-core/v25/proxy/vless"
+	"github.com/xmplusdev/xray-core/v26/core"
+	"github.com/xmplusdev/xray-core/v26/infra/conf"
+	"github.com/xmplusdev/xray-core/v26/common/net"
+	"github.com/xmplusdev/xray-core/v26/common/protocol"
+	"github.com/xmplusdev/xray-core/v26/common/serial"
+	"github.com/xmplusdev/xray-core/v26/proxy/vless"
 	
 	"github.com/XMPlusDev/XMPlus/api"
 )

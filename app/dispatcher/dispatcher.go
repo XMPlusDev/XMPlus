@@ -1,4 +1,4 @@
 // Package mydispatcher Package dispatcher implement the rate limiter and the online device counter
 package dispatcher 
 
-//go:generate go run github.com/xmplusdev/xray-core/v25/common/errors/errorgen
+//go:generate go run github.com/xmplusdev/xray-core/v26/common/errors/errorgen

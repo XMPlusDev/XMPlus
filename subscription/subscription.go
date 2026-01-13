@@ -8,12 +8,12 @@ import (
 	"github.com/XMPlusDev/XMPlus/api"
 	"github.com/XMPlusDev/XMPlus/app/dispatcher"
 	
-	"github.com/xmplusdev/xray-core/v25/common/protocol"
-	"github.com/xmplusdev/xray-core/v25/proxy"
-	"github.com/xmplusdev/xray-core/v25/core"
-	"github.com/xmplusdev/xray-core/v25/features/inbound"
-	"github.com/xmplusdev/xray-core/v25/features/stats"
-	"github.com/xmplusdev/xray-core/v25/features/routing"
+	"github.com/xmplusdev/xray-core/v26/common/protocol"
+	"github.com/xmplusdev/xray-core/v26/proxy"
+	"github.com/xmplusdev/xray-core/v26/core"
+	"github.com/xmplusdev/xray-core/v26/features/inbound"
+	"github.com/xmplusdev/xray-core/v26/features/stats"
+	"github.com/xmplusdev/xray-core/v26/features/routing"
 )
 
 // Manager handles subscription-related operations

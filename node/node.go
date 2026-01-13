@@ -12,12 +12,12 @@ import (
 	"github.com/XMPlusDev/XMPlus/app/dispatcher"
 	"github.com/XMPlusDev/XMPlus/subscription"
 	
-	"github.com/xmplusdev/xray-core/v25/core"
-	"github.com/xmplusdev/xray-core/v25/features/inbound"
-	"github.com/xmplusdev/xray-core/v25/features/outbound"
-	"github.com/xmplusdev/xray-core/v25/features/routing"
-	"github.com/xmplusdev/xray-core/v25/app/router"
-	"github.com/xmplusdev/xray-core/v25/common/serial"
+	"github.com/xmplusdev/xray-core/v26/core"
+	"github.com/xmplusdev/xray-core/v26/features/inbound"
+	"github.com/xmplusdev/xray-core/v26/features/outbound"
+	"github.com/xmplusdev/xray-core/v26/features/routing"
+	"github.com/xmplusdev/xray-core/v26/app/router"
+	"github.com/xmplusdev/xray-core/v26/common/serial"
 	
 	C "github.com/sagernet/sing/common"
 	"github.com/sagernet/sing-shadowsocks/shadowaead_2022"

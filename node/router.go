@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	
-	"github.com/xmplusdev/xray-core/v25/app/router"
-	"github.com/xmplusdev/xray-core/v25/infra/conf"
+	"github.com/xmplusdev/xray-core/v26/app/router"
+	"github.com/xmplusdev/xray-core/v26/infra/conf"
 	"github.com/XMPlusDev/XMPlus/api"
 )
 

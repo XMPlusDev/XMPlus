@@ -11,9 +11,9 @@ import (
 
 	"github.com/sagernet/sing-shadowsocks/shadowaead_2022"
 	C "github.com/sagernet/sing/common"
-	"github.com/xmplusdev/xray-core/v25/common/net"
-	"github.com/xmplusdev/xray-core/v25/core"
-	"github.com/xmplusdev/xray-core/v25/infra/conf"
+	"github.com/xmplusdev/xray-core/v26/common/net"
+	"github.com/xmplusdev/xray-core/v26/core"
+	"github.com/xmplusdev/xray-core/v26/infra/conf"
 	
 	"github.com/XMPlusDev/XMPlus/api"
 	"github.com/XMPlusDev/XMPlus/helper/cert"

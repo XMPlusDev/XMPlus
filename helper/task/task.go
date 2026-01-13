@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/xmplusdev/xray-core/v25/common/task"
+	"github.com/xmplusdev/xray-core/v26/common/task"
 )
 
 // PeriodicTask wraps the xray task.Periodic with a tag identifier

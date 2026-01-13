@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/XMPlusDev/XMPlus/api"
-	"github.com/xmplusdev/xray-core/v25/core"
+	"github.com/xmplusdev/xray-core/v26/core"
 )
 
 // Builder interface for creating node configurations

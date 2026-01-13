@@ -8,11 +8,11 @@ import (
 
 	"dario.cat/mergo"
 	"github.com/r3labs/diff/v2"
-	"github.com/xmplusdev/xray-core/v25/app/proxyman"
-	"github.com/xmplusdev/xray-core/v25/app/stats"
-	"github.com/xmplusdev/xray-core/v25/common/serial"
-	"github.com/xmplusdev/xray-core/v25/core"
-	"github.com/xmplusdev/xray-core/v25/infra/conf"
+	"github.com/xmplusdev/xray-core/v26/app/proxyman"
+	"github.com/xmplusdev/xray-core/v26/app/stats"
+	"github.com/xmplusdev/xray-core/v26/common/serial"
+	"github.com/xmplusdev/xray-core/v26/core"
+	"github.com/xmplusdev/xray-core/v26/infra/conf"
 
 	"github.com/XMPlusDev/XMPlus/api"
 	"github.com/XMPlusDev/XMPlus/controller"
