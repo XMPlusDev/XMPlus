@@ -81,7 +81,7 @@ func BuildTrojanUsers(subscriptionInfo *[]api.SubscriptionInfo, tag string) []*p
 // BuildShadowsocksUsers builds Shadowsocks protocol users from subscription info
 func BuildShadowsocksUsers(subscriptionInfo *[]api.SubscriptionInfo, method string, tag string) []*protocol.User {
 	cypherMethod := "aes-128-gcm"
-	if method {
+	if method != "" {  // Fixed: method is a string, not a boolean
 		cypherMethod = method
 	}
 	
@@ -93,6 +93,7 @@ func BuildShadowsocksUsers(subscriptionInfo *[]api.SubscriptionInfo, method stri
 			password = subscription.Passwd
 			userKey, err := checkShadowsocksPassword(subscription.Passwd, method)
 			if err != nil {
+				// Assuming newError is a logging function - if not, use log.Printf
 				newError(fmt.Errorf("[UID: %d] %s", subscription.Id, err)).AtError()
 				continue
 			}
@@ -101,9 +102,9 @@ func BuildShadowsocksUsers(subscriptionInfo *[]api.SubscriptionInfo, method stri
 				Level: 0,
 				Email: m.buildUserTag(tag, &subscription),
 				Account: serial.ToTypedMessage(&shadowsocks_2022.Account{
-					Key:  userKey,
+					Key: userKey,
 				}),
-			}
+			})  
 		} else {
 			users = append(users, &protocol.User{
 				Level: 0,
@@ -112,7 +113,7 @@ func BuildShadowsocksUsers(subscriptionInfo *[]api.SubscriptionInfo, method stri
 					Password:   subscription.Passwd,
 					CipherType: getCipherType(method),
 				}),
-			}
+			}) 
 		}
 	}
 

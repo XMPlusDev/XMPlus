@@ -88,7 +88,7 @@ func (m *Manager) RemoveTag(tag string) error {
 
 // AddRelayTag adds relay outbounds and routing for all subscriptions
 func (m *Manager) AddRelayTag(
-	relayNodeInfo *api.NodeInfo.RelayNodeInfo,
+	relayNodeInfo *api.NodeInfo,
 	relayTag string,
 	mainTag string,
 	subscriptionInfo *[]api.SubscriptionInfo,
@@ -101,12 +101,12 @@ func (m *Manager) AddRelayTag(
 		var key string
 
 		// Handle Shadowsocks 2022 key generation
-		if C.Contains(shadowaead_2022.List, strings.ToLower(relayNodeInfo.Cipher)) {
-			userKey, err := checkShadowsocksPassword(subscription.Passwd, relayNodeInfo.Cipher)
+		if C.Contains(shadowaead_2022.List, strings.ToLower(relayNodeInfo.RelayNodeInfo.Cipher)) {
+			userKey, err := checkShadowsocksPassword(subscription.Passwd, relayNodeInfo.RelayNodeInfo.Cipher)
 			if err != nil {
 				continue
 			}
-			key = fmt.Sprintf("%s:%s", relayNodeInfo.ServerKey, userKey)
+			key = fmt.Sprintf("%s:%s", relayNodeInfo.RelayNodeInfo.ServerKey, userKey)
 		} else {
 			key = subscription.Passwd
 		}
@@ -256,13 +256,13 @@ func (m *Manager) addOutbound(config *core.OutboundHandlerConfig) error {
 	return nil
 }
 
-func (m *Manager) AddRouterRule(config *router.Config, shouldAppend bool) error{
+func (m *Manager) addRouterRule(config *router.Config, shouldAppend bool) error{
 	err := m.router.AddRule(serial.ToTypedMessage(config), shouldAppend)
 	log.Printf("Adding router rule (prepend=%v)", prepend)
 	return err
 }
 
-func (m *Manager) RemoveRouterRule(tag string) error{
+func (m *Manager) removeRouterRule(tag string) error{
 	err := m.router.RemoveRule(tag)
 	log.Printf("Removing router rule: %s", tag)
 	return err

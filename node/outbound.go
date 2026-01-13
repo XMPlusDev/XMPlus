@@ -59,7 +59,7 @@ func OutboundBuilder(tag string) (*core.OutboundHandlerConfig, error) {
 }
 
 
-func OutboundRelayBuilder(nodeInfo *api.NodeInfo.RelayNodeInfo , tag string, subscription *api.SubscriptionInfo, Passwd string) (*core.OutboundHandlerConfig, error) {
+func OutboundRelayBuilder(nodeInfo *api.NodeInfo , tag string, subscription *api.SubscriptionInfo, Passwd string) (*core.OutboundHandlerConfig, error) {
 	outboundDetourConfig := &conf.OutboundDetourConfig{}
 	
 	var (
@@ -70,7 +70,7 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo.RelayNodeInfo , tag string, sub
 
 	var proxySetting any
 	
-	switch nodeInfo.NodeType {
+	switch nodeInfo.RelayNodeInfo.NodeType {
 		case "vless":
 			protocol = "vless"
 			account := &protocol.User{
@@ -78,8 +78,8 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo.RelayNodeInfo , tag string, sub
 				Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.Passwd),
 				Account: serial.ToTypedMessage(&vless.Account{
 					Id: subscription.Passwd,
-					Flow: nodeInfo.Flow,
-					Encryption: nodeInfo.Encryption,
+					Flow: nodeInfo.RelayNodeInfo.Flow,
+					Encryption: nodeInfo.RelayNodeInfo.Encryption,
 				}),
 			}
 			vUser, err := json.Marshal(&account)
@@ -93,8 +93,8 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo.RelayNodeInfo , tag string, sub
 				Vnext []*conf.VLessOutboundVnext `json:"vnext"`
 			}{
 				Vnext: []*conf.VLessOutboundVnext{&conf.VLessOutboundVnext{
-						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.Address)},
-						Port: uint16(nodeInfo.ListeningPort),
+						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.RelayNodeInfo.Address)},
+						Port: uint16(nodeInfo.RelayNodeInfo.ListeningPort),
 						Users: User,
 					},
 				},
@@ -121,8 +121,8 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo.RelayNodeInfo , tag string, sub
 				Receivers []*conf.VMessOutboundTarget `json:"vnext"`
 			}{
 				Receivers: []*conf.VMessOutboundTarget{&conf.VMessOutboundTarget{
-						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.Address)},
-						Port: uint16(nodeInfo.ListeningPort),
+						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.RelayNodeInfo.Address)},
+						Port: uint16(nodeInfo.RelayNodeInfo.ListeningPort),
 						Users: User,
 					},
 				},
@@ -133,8 +133,8 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo.RelayNodeInfo , tag string, sub
 				Servers []*conf.TrojanServerTarget `json:"servers"`
 			}{
 				Servers: []*conf.TrojanServerTarget{&conf.TrojanServerTarget{
-						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.Address)},
-						Port:    uint16(nodeInfo.ListeningPort),
+						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.RelayNodeInfo.Address)},
+						Port:    uint16(nodeInfo.RelayNodeInfo.ListeningPort),
 						Password: subscription.Passwd,
 						Email:  fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.Passwd),
 						Level:  0,
@@ -148,30 +148,30 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo.RelayNodeInfo , tag string, sub
 				Servers []*conf.ShadowsocksServerTarget `json:"servers"`
 			}{
 				Servers: []*conf.ShadowsocksServerTarget{&conf.ShadowsocksServerTarget{
-						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.Address)},
-						Port:    uint16(nodeInfo.ListeningPort),
+						Address: &conf.Address{Address: net.ParseAddress(nodeInfo.RelayNodeInfo.Address)},
+						Port:    uint16(nodeInfo.RelayNodeInfo.ListeningPort),
 						Password: Passwd,
 						Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.Passwd),
 						Level:   0,
-						Cipher:  nodeInfo.Cipher,
+						Cipher:  nodeInfo.RelayNodeInfo.Cipher,
 						UoT:     true,
 					},
 				},
 			}
 		default:
-			return nil, fmt.Errorf("Unsupported Relay Node Type: %s", nodeInfo.NodeType)		
+			return nil, fmt.Errorf("Unsupported Relay Node Type: %s", nodeInfo.RelayNodeInfo.NodeType)		
 	}
 	
 	setting, err := json.Marshal(proxySetting)
 	if err != nil {
-		return nil, fmt.Errorf("marshal proxy %s config fialed: %s", nodeInfo.NodeType, err)
+		return nil, fmt.Errorf("marshal proxy %s config fialed: %s", nodeInfo.RelayNodeInfo.NodeType, err)
 	}
 	
 	outboundDetourConfig.Protocol = protocol
 	outboundDetourConfig.Settings = &setting
 	
 	streamSetting = new(conf.StreamConfig)
-	transportProtocol := conf.TransportProtocol(nodeInfo.NetworkType)
+	transportProtocol := conf.TransportProtocol(nodeInfo.RelayNodeInfo.NetworkType)
 	networkType, err := transportProtocol.Build()
 	if err != nil {
 		return nil, fmt.Errorf("convert TransportProtocol failed: %s", err)
@@ -180,79 +180,78 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo.RelayNodeInfo , tag string, sub
 	switch networkType {
 	case "tcp", "raw":
 		tcpSetting := &conf.TCPConfig{
-			AcceptProxyProtocol: nodeInfo.AcceptProxyProtocol,
-			HeaderConfig: nodeInfo.RawSettings.Header,
+			AcceptProxyProtocol: nodeInfo.RelayNodeInfo.AcceptProxyProtocol,
+			HeaderConfig: nodeInfo.RelayNodeInfo.RawSettings.Header,
 		}
 		streamSetting.TCPSettings = tcpSetting
 	case "websocket", "ws":
 		wsSettings := &conf.WebSocketConfig{
-			AcceptProxyProtocol: nodeInfo.AcceptProxyProtocol,
-			Path: nodeInfo.WsSettings.Path,
-			Host: nodeInfo.WsSettings.Host,
-			HeartbeatPeriod: nodeInfo.WsSettings.HeartbeatPeriod,
+			AcceptProxyProtocol: nodeInfo.RelayNodeInfo.AcceptProxyProtocol,
+			Path: nodeInfo.RelayNodeInfo.WsSettings.Path,
+			Host: nodeInfo.RelayNodeInfo.WsSettings.Host,
+			HeartbeatPeriod: nodeInfo.RelayNodeInfo.WsSettings.HeartbeatPeriod,
 		}
 		streamSetting.WSSettings = wsSettings
 	case "httpupgrade":
 		httpupgradeSettings := &conf.HttpUpgradeConfig{
-		    AcceptProxyProtocol: nodeInfo.AcceptProxyProtocol,
-			Host: nodeInfo.HttpSettings.Host,
-			Path: nodeInfo.HttpSettings.Path,
+		    AcceptProxyProtocol: nodeInfo.RelayNodeInfo.AcceptProxyProtocol,
+			Host: nodeInfo.RelayNodeInfo.HttpSettings.Host,
+			Path: nodeInfo.RelayNodeInfo.HttpSettings.Path,
 		}
 		streamSetting.HTTPUPGRADESettings = httpupgradeSettings	
 	case "xhttp":
 		xhttpSettings := &conf.SplitHTTPConfig{
-			Host: nodeInfo.XhttpSettings.Host,
-			Path: nodeInfo.XhttpSettings.Path,
-			Mode: nodeInfo.XhttpSettings.Mode,
-			NoSSEHeader: nodeInfo.XhttpSettings.NoSSEHeader,
-			NoGRPCHeader: nodeInfo.XhttpSettings.NoGRPCHeader,
+			Host: nodeInfo.RelayNodeInfo.XhttpSettings.Host,
+			Path: nodeInfo.RelayNodeInfo.XhttpSettings.Path,
+			Mode: nodeInfo.RelayNodeInfo.XhttpSettings.Mode,
+			NoSSEHeader: nodeInfo.RelayNodeInfo.XhttpSettings.NoSSEHeader,
+			NoGRPCHeader: nodeInfo.RelayNodeInfo.XhttpSettings.NoGRPCHeader,
 		}
 		streamSetting.XHTTPSettings = xhttpSettings		
 	case "grpc":
 		grpcSettings := &conf.GRPCConfig{
-			ServiceName: nodeInfo.GrpcSettings.ServiceName,
-			Authority: nodeInfo.GrpcSettings.Authority,
+			ServiceName: nodeInfo.RelayNodeInfo.GrpcSettings.ServiceName,
+			Authority: nodeInfo.RelayNodeInfo.GrpcSettings.Authority,
 			UserAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/123.0.6312.52 Mobile/15E148 Safari/604.1",
 		}
 		streamSetting.GRPCSettings = grpcSettings
 	case "mkcp":
 		kcpSettings := &conf.KCPConfig{
-			HeaderConfig: nodeInfo.KcpSettings.Header,
-			Congestion: &nodeInfo.KcpSettings.Congestion,
-			Seed: &nodeInfo.KcpSettings.Seed,
+			HeaderConfig: nodeInfo.RelayNodeInfo.KcpSettings.Header,
+			Congestion: &nodeInfo.RelayNodeInfo.KcpSettings.Congestion,
+			Seed: &nodeInfo.RelayNodeInfo.KcpSettings.Seed,
 		}
 		streamSetting.KCPSettings = kcpSettings	
 	}
 	
 	streamSetting.Network = &transportProtocol
 	
-	if nodeInfo.SecurityType == "tls" {
+	if nodeInfo.RelayNodeInfo.SecurityType == "tls" {
 		streamSetting.Security = "tls"
 		tlsSettings := &conf.TLSConfig{
 			Insecure: true,
-			Fingerprint: nodeInfo.TlsSettings.Fingerprint,
+			Fingerprint: nodeInfo.RelayNodeInfo.TlsSettings.Fingerprint,
 		}
 		streamSetting.TLSSettings = tlsSettings	
 	}
 	
-	if nodeInfo.SecurityType == "reality" {
+	if nodeInfo.RelayNodeInfo.SecurityType == "reality" {
 		streamSetting.Security = "reality"		
 		realitySettings :=  &conf.REALITYConfig{
-			Show:         nodeInfo.RealitySettings.Show,
-			ServerName:   nodeInfo.RealitySettings.ServerName,
-			PublicKey:    nodeInfo.RealitySettings.PublicKey,
-			Fingerprint:  nodeInfo.RealitySettings.Fingerprint,
-			ShortId:      nodeInfo.RealitySettings.ShortId,
-			SpiderX:      nodeInfo.RealitySettings.SpiderX,
-			SpiderX:      nodeInfo.RealitySettings.SpiderX,
-			Mldsa65Verify: nodeInfo.RealitySettings.Mldsa65Verify,
+			Show:         nodeInfo.RelayNodeInfo.RealitySettings.Show,
+			ServerName:   nodeInfo.RelayNodeInfo.RealitySettings.ServerName,
+			PublicKey:    nodeInfo.RelayNodeInfo.RealitySettings.PublicKey,
+			Fingerprint:  nodeInfo.RelayNodeInfo.RealitySettings.Fingerprint,
+			ShortId:      nodeInfo.RelayNodeInfo.RealitySettings.ShortId,
+			SpiderX:      nodeInfo.RelayNodeInfo.RealitySettings.SpiderX,
+			Mldsa65Verify: nodeInfo.RelayNodeInfo.RealitySettings.Mldsa65Verify,
 		}
 		streamSetting.REALITYSettings = realitySettings
 	}
 	
 	outboundDetourConfig.Tag = fmt.Sprintf("%s_%d", tag, subscription.Id)
-	if nodeInfo.SendThroughIP != "" {
-		outboundDetourConfig.SendThrough = &nodeInfo.SendThroughIP
+	if nodeInfo.RelayNodeInfo.SendThroughIP != "" {
+		outboundDetourConfig.SendThrough = &nodeInfo.RelayNodeInfo.SendThroughIP
 	}
 	outboundDetourConfig.StreamSetting = streamSetting
 	

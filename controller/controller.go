@@ -46,7 +46,7 @@ func New(server *core.Instance, api api.API, config *node.Config) *Controller {
 		startAt:     time.Now(),
 		taskManager: task.NewManager(), 
 		nodeManager: node.NewManager(server)
-		subManager:  subscription.NewManager(server),
+		subManager:  subscription.NewManager(server, api),
 	}
 
 	return controller
@@ -97,7 +97,6 @@ func (c *Controller) Start() error {
 	c.Relay = false
 	// Add new relay tag
 	if c.nodeInfo.RelayType == 1 && c.nodeInfo.RelayNodeID > 0 {
-		c.relaynodeInfo = newNodeInfo.RelayNodeInfo
 		c.RelayTag = c.buildRNodeTag()
 		
 		err = c.nodeManager.AddRelayTag(
@@ -279,7 +278,6 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 	
 	// Update new Relay tag
 	if c.nodeInfo.RelayType == 1 && c.nodeInfo.RelayNodeID > 0 && updateRelay {
-		c.relaynodeInfo = newNodeInfo.RelayNodeInfo
 		c.RelayTag = c.buildRNodeTag()
 		
 		err := c.nodeManager.AddRelayTag(
@@ -386,7 +384,7 @@ func (c *Controller) buildNodeTag() string {
 func (c *Controller) buildRNodeTag() string {
 	return fmt.Sprintf("Relay_%d_%s_%d_%d", 
 		c.nodeInfo.NodeID, 
-		c.relaynodeInfo.NodeType, 
-		c.relaynodeInfo.ListeningPort, 
-		c.relaynodeInfo.NodeID)
+		c.nodeInfo.RelayNodeInfo.NodeType, 
+		c.nodeInfo.RelayNodeInfo.ListeningPort, 
+		c.nodeInfo.RelayNodeInfo.NodeID)
 }

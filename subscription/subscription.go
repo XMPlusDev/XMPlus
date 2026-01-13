@@ -19,6 +19,7 @@ import (
 // Manager handles subscription-related operations
 type Manager struct {
 	server *core.Instance
+	client  *api.API  
 	ibm    inbound.Manager
 	stm    stats.Manager
 	dispatcher   *dispatcher.DefaultDispatcher
@@ -28,9 +29,10 @@ type Manager struct {
 type UserBuilder func(subscriptionInfo *[]api.SubscriptionInfo, additionalParam ...interface{}) []*protocol.User
 
 // NewManager creates a new subscription manager
-func NewManager(server *core.Instance) *Manager {
+func NewManager(server *core.Instance, client *api.API) *Manager {
 	return &Manager{
 		server: server,
+		client: client,
 		ibm:    server.GetFeature(inbound.ManagerType()).(inbound.Manager),
 		stm:    server.GetFeature(stats.ManagerType()).(stats.Manager),
 		dispatcher:  server.GetFeature(routing.DispatcherType()).(*dispatcher.DefaultDispatcher),
@@ -160,8 +162,8 @@ func Compare(old, new *[]api.SubscriptionInfo) (deleted, added []api.Subscriptio
 func (m *Manager) subscriptionMonitor(
 	subscriptionList *[]api.SubscriptionInfo,
 	tag string,
-	logPrefix string
-) (err error) {
+	logPrefix string,
+) (err error) {  // Added closing parenthesis here
 	// Get Subscription traffic
 	var subscriptionTraffic []api.SubscriptionTraffic
 	var upCounterList []stats.Counter
@@ -171,10 +173,10 @@ func (m *Manager) subscriptionMonitor(
 		up, down, upCounter, downCounter := m.getTraffic(m.buildUserTag(tag, &subscription))
 		if up > 0 || down > 0 {
 			subscriptionTraffic = append(subscriptionTraffic, api.SubscriptionTraffic{
-				Id:     subscription.Id,
-				U:   up,
-				D: down
-			})
+				Id: subscription.Id,
+				U:  up,
+				D:  down,
+			})  // Added closing brace and parenthesis here
 
 			if upCounter != nil {
 				upCounterList = append(upCounterList, upCounter)

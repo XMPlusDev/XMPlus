@@ -77,7 +77,7 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 	switch nodeInfo.NodeType {
 		case "vless":
 			protocol = "vless"
-			if nodeInfo.Decryption == 'none' && config.EnableFallback {
+			if nodeInfo.Decryption == "none" && config.EnableFallback {
 				fallbackConfigs, err := buildVlessFallbacks(config.FallBackConfigs)
 				if err == nil {
 					proxySetting = &conf.VLessInboundConfig{
@@ -114,27 +114,26 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 			protocol = "shadowsocks"
 			cipher := strings.ToLower(nodeInfo.Cipher)
 
-			proxySetting = &conf.ShadowsocksServerConfig{
+			shadowsocksSetting := &conf.ShadowsocksServerConfig{  // Fixed: removed duplicate declaration
 				Cipher:   cipher,
 				Password: nodeInfo.ServerKey, // shadowsocks2022 shareKey
 			}
-
-			proxySetting, _ := proxySetting.(*conf.ShadowsocksServerConfig)
 
 			b := make([]byte, 32)
 			rand.Read(b)
 			randPasswd := hex.EncodeToString(b)
 			if C.Contains(shadowaead_2022.List, cipher) {
-				proxySetting.Users = append(proxySetting.Users, &conf.ShadowsocksUserConfig{
+				shadowsocksSetting.Users = append(shadowsocksSetting.Users, &conf.ShadowsocksUserConfig{
 					Password: base64.StdEncoding.EncodeToString(b),
 				})
 			} else {
-				proxySetting.Password = randPasswd
+				shadowsocksSetting.Password = randPasswd
 			}
 
-			proxySetting.NetworkList = &conf.NetworkList{"tcp", "udp"}
-			proxySetting.IVCheck = false
-
+			shadowsocksSetting.NetworkList = &conf.NetworkList{"tcp", "udp"}
+			shadowsocksSetting.IVCheck = false
+			
+			proxySetting = shadowsocksSetting
 		case "dokodemo-door":
 			protocol = "dokodemo-door"
 			proxySetting = struct {
@@ -223,11 +222,11 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 		tlsSettings.Certs = append(tlsSettings.Certs, &conf.TLSCertConfig{CertFile: certFile, KeyFile: keyFile, OcspStapling: 3600})
 		tlsSettings.Insecure = nodeInfo.TlsSettings.AllowInsecure
 		tlsSettings.RejectUnknownSNI = nodeInfo.TlsSettings.RejectUnknownSni
-		tlsSettings.serverName = nodeInfo.TlsSettings.ServerName
+		tlsSettings.ServerName = nodeInfo.TlsSettings.ServerName
 		tlsSettings.ALPN = &conf.StringList{nodeInfo.TlsSettings.Alpn}
 		tlsSettings.CurvePreferences = &conf.StringList{nodeInfo.TlsSettings.CurvePreferences}
 		tlsSettings.Fingerprint = nodeInfo.TlsSettings.FingerPrint
-		if nodeInfo.ServerNameToVerify != "" {
+		if nodeInfo.TlsSettings.ServerNameToVerify != "" {
 			tlsSettings.ServerNameToVerify = nodeInfo.TlsSettings.ServerNameToVerify
 		}
 
@@ -239,7 +238,7 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 		
 		realitySettings :=  &conf.REALITYConfig{}
 		
-		realitySettings.Target = nodeInfo..RealitySettings.Dest
+		realitySettings.Target = nodeInfo.RealitySettings.Dest
 		realitySettings.Show = nodeInfo.RealitySettings.Show
 		realitySettings.Xver = nodeInfo.RealitySettings.Xver
 		realitySettings.ServerNames = nodeInfo.RealitySettings.ServerNames
