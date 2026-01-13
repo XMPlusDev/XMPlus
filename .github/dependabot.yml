@@ -8,4 +8,4 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "cron"
-      cronjob: "*/5 * * * *"
+      cronjob: "* * * * *"
