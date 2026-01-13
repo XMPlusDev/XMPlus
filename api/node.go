@@ -104,7 +104,7 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			if _, proxyProtocolExists := transportData.CheckGet("acceptProxyProtocol"); proxyProtocolExists {
 				nodeInfo.AcceptProxyProtocol = transportData.Get("acceptProxyProtocol").MustBool()
 			}
-			header, headerExist := rawSettings.CheckGet("header"); headerExist {
+			if header, headerExist := rawSettings.CheckGet("header"); headerExist {
 				headerBytes, err := header.MarshalJSON()
 				if err != nil {
 					return nil, err
@@ -119,7 +119,7 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			
 			nodeInfo.KcpSettings.Seed = kcpSettings.Get("seed").MustString()
 			nodeInfo.KcpSettings.Congestion = kcpSettings.Get("congestion").MustBool()
-			header, headerExist := kcpSettings.CheckGet("header"); headerExist {
+			if header, headerExist := kcpSettings.CheckGet("header"); headerExist {
 				headerBytes, err := header.MarshalJSON()
 				if err != nil {
 					return nil, err
@@ -379,7 +379,7 @@ func (c *Client) TransitNodeResponse() (*RelayNodeInfo, error) {
 			if _, proxyProtocolExists := transportData.CheckGet("acceptProxyProtocol"); proxyProtocolExists {
 				nodeInfo.AcceptProxyProtocol = transportData.Get("acceptProxyProtocol").MustBool()
 			}
-			header, headerExist := rawSettings.CheckGet("header"); headerExist {
+			if header, headerExist := rawSettings.CheckGet("header"); headerExist {
 				headerBytes, err := header.MarshalJSON()
 				if err != nil {
 					return nil, err
@@ -394,7 +394,7 @@ func (c *Client) TransitNodeResponse() (*RelayNodeInfo, error) {
 			
 			nodeInfo.KcpSettings.Seed = kcpSettings.Get("seed").MustString()
 			nodeInfo.KcpSettings.Congestion = kcpSettings.Get("congestion").MustBool()
-			header, headerExist := kcpSettings.CheckGet("header"); headerExist {
+			if header, headerExist := kcpSettings.CheckGet("header"); headerExist {
 				headerBytes, err := header.MarshalJSON()
 				if err != nil {
 					return nil, err
