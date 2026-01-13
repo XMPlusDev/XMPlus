@@ -3,7 +3,6 @@ package api
 import (
 	"log"
 	"sync/atomic"
-	"encoding/json"
 	"time"
 	"sync"
 	"fmt"
