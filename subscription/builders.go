@@ -11,9 +11,11 @@ import (
 	"github.com/xmplusdev/xray-core/v26/common/protocol"
 	"github.com/xmplusdev/xray-core/v26/common/serial"
 	"github.com/xmplusdev/xray-core/v26/proxy/shadowsocks"
+	"github.com/xmplusdev/xray-core/v25/proxy/shadowsocks_2022"
 	"github.com/xmplusdev/xray-core/v26/proxy/trojan"
 	"github.com/xmplusdev/xray-core/v26/proxy/vless"
 	"github.com/xmplusdev/xray-core/v26/proxy/vmess"
+	"github.com/xmplusdev/xray-core/v26/infra/conf"
 	
 	C "github.com/sagernet/sing/common"
 	"github.com/sagernet/sing-shadowsocks/shadowaead_2022"
@@ -31,7 +33,7 @@ func BuildVmessUsers(subscriptionInfo *[]api.SubscriptionInfo, tag string) []*pr
 
 		users = append(users, &protocol.User{
 			Level:   0,
-			Email:   m.buildUserTag(tag, &subscription),
+			Email:   buildUserTag(tag, &subscription),
 			Account: serial.ToTypedMessage(vmessAccount),
 		})
 	}
@@ -51,7 +53,7 @@ func BuildVlessUsers(subscriptionInfo *[]api.SubscriptionInfo, flow string, tag 
 
 		users = append(users, &protocol.User{
 			Level:   0,
-			Email:   m.buildUserTag(tag, &subscription),
+			Email:   buildUserTag(tag, &subscription),
 			Account: serial.ToTypedMessage(vlessAccount),
 		})
 	}
@@ -70,7 +72,7 @@ func BuildTrojanUsers(subscriptionInfo *[]api.SubscriptionInfo, tag string) []*p
 
 		users = append(users, &protocol.User{
 			Level:   0,
-			Email:   m.buildUserTag(tag, &subscription),
+			Email:   buildUserTag(tag, &subscription),
 			Account: serial.ToTypedMessage(trojanAccount),
 		})
 	}
@@ -88,9 +90,7 @@ func BuildShadowsocksUsers(subscriptionInfo *[]api.SubscriptionInfo, method stri
 	users := make([]*protocol.User, 0, len(*subscriptionInfo))
 	
 	for _, subscription := range *subscriptionInfo {
-		var password string
 		if C.Contains(shadowaead_2022.List, strings.ToLower(cypherMethod)) {
-			password = subscription.Passwd
 			userKey, err := checkShadowsocksPassword(subscription.Passwd, method)
 			if err != nil {
 				// Assuming newError is a logging function - if not, use log.Printf
@@ -100,7 +100,7 @@ func BuildShadowsocksUsers(subscriptionInfo *[]api.SubscriptionInfo, method stri
 			
 			users = append(users, &protocol.User{
 				Level: 0,
-				Email: m.buildUserTag(tag, &subscription),
+				Email: buildUserTag(tag, &subscription),
 				Account: serial.ToTypedMessage(&shadowsocks_2022.Account{
 					Key: userKey,
 				}),
@@ -108,7 +108,7 @@ func BuildShadowsocksUsers(subscriptionInfo *[]api.SubscriptionInfo, method stri
 		} else {
 			users = append(users, &protocol.User{
 				Level: 0,
-				Email: m.buildUserTag(tag, &subscription),
+				Email: buildUserTag(tag, &subscription),
 				Account: serial.ToTypedMessage(&shadowsocks.Account{
 					Password:   subscription.Passwd,
 					CipherType: getCipherType(method),
@@ -128,12 +128,6 @@ func getCipherType(method string) shadowsocks.CipherType {
 		return shadowsocks.CipherType_AES_256_GCM
 	case "chacha20-poly1305", "chacha20-ietf-poly1305":
 		return shadowsocks.CipherType_CHACHA20_POLY1305
-	case "2022-blake3-aes-128-gcm":
-		return shadowsocks.CipherType_BLAKE3_AES_128_GCM
-	case "2022-blake3-aes-256-gcm":
-		return shadowsocks.CipherType_BLAKE3_AES_256_GCM
-	case "2022-blake3-chacha20-poly1305":
-		return shadowsocks.CipherType_BLAKE3_CHACHA20_POLY1305
 	default:
 		log.Printf("Warning: unknown cipher method %s, defaulting to AES_128_GCM", method)
 		return shadowsocks.CipherType_AES_128_GCM

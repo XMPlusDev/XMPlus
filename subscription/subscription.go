@@ -170,7 +170,7 @@ func (m *Manager) subscriptionMonitor(
 	var downCounterList []stats.Counter
 
 	for _, subscription := range *subscriptionList {
-		up, down, upCounter, downCounter := m.getTraffic(m.buildUserTag(tag, &subscription))
+		up, down, upCounter, downCounter := m.getTraffic(buildUserTag(tag, &subscription))
 		if up > 0 || down > 0 {
 			subscriptionTraffic = append(subscriptionTraffic, api.SubscriptionTraffic{
 				Id: subscription.Id,
@@ -226,7 +226,7 @@ func FormatEmails(subscriptions []api.SubscriptionInfo, tag string) []string {
 	return emails
 }
 
-func (M *Manager) buildUserTag(tag string, subscription *api.SubscriptionInfo) string {
+func buildUserTag(tag string, subscription *api.SubscriptionInfo) string {
 	return fmt.Sprintf("%s|%s|%d", tag, subscription.Email, subscription.Id)
 }
 

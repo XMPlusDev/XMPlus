@@ -43,7 +43,7 @@ func NewManager(server *core.Instance) *Manager {
 }
 
 // AddTag adds both inbound and outbound for a node
-func (m *Manager) AddTag(nodeInfo *api.NodeInfo, tag string, config Config) error {
+func (m *Manager) AddTag(nodeInfo *api.NodeInfo, tag string, config *Config) error {
 	if nodeInfo.NodeType == "Shadowsocks-Plugin" {
 		return nil // Skip for Shadowsocks-Plugin
 	}
@@ -258,27 +258,25 @@ func (m *Manager) addOutbound(config *core.OutboundHandlerConfig) error {
 
 func (m *Manager) addRouterRule(config *router.Config, shouldAppend bool) error{
 	err := m.router.AddRule(serial.ToTypedMessage(config), shouldAppend)
-	log.Printf("Adding router rule (prepend=%v)", prepend)
 	return err
 }
 
 func (m *Manager) removeRouterRule(tag string) error{
 	err := m.router.RemoveRule(tag)
-	log.Printf("Removing router rule: %s", tag)
 	return err
 }
 
 func (m *Manager) AddInboundLimiter(tag string, nodeSpeedLimit uint64, subscriptionList *[]api.SubscriptionInfo, redisConfig *limiter.RedisConfig) error {
-	err := m.dispatcher.Limiter.AddInboundLimiter(tag, nodeSpeedLimit, subscriptionList, redisConfig)
+	err := m.dispatcher.limiter.AddInboundLimiter(tag, nodeSpeedLimit, subscriptionList, redisConfig)
 	return err
 }
 
 func (m *Manager) UpdateInboundLimiter(tag string, updatedSubscriptionList *[]api.SubscriptionInfo) error {
-	err := m.dispatcher.Limiter.UpdateInboundLimiter(tag, updatedSubscriptionList)
+	err := m.dispatcher.limiter.UpdateInboundLimiter(tag, updatedSubscriptionList)
 	return err
 }
 
 func (m *Manager) DeleteInboundLimiter(tag string) error {
-	err := m.dispatcher.Limiter.DeleteInboundLimiter(tag)
+	err := m.dispatcher.limiter.DeleteInboundLimiter(tag)
 	return err
 }

@@ -49,7 +49,7 @@ func OutboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.
 	return outboundDetourConfig.Build()	
 }
 
-func OutboundBuilder(tag string) (*core.OutboundHandlerConfig, error) {
+func BlackholeOutboundBuilder(tag string) (*core.OutboundHandlerConfig, error) {
 	outboundDetourConfig := &conf.OutboundDetourConfig{}
 	
 	outboundDetourConfig.Protocol = "blackhole"
@@ -73,15 +73,7 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo , tag string, subscription *api
 	switch nodeInfo.RelayNodeInfo.NodeType {
 		case "vless":
 			protocol = "vless"
-			account := &protocol.User{
-				Level:   0,
-				Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.Passwd),
-				Account: serial.ToTypedMessage(&vless.Account{
-					Id: subscription.Passwd,
-					Flow: nodeInfo.RelayNodeInfo.Flow,
-					Encryption: nodeInfo.RelayNodeInfo.Encryption,
-				}),
-			}
+			account := vlessUser(tag, nodeInfo.RelayNodeInfo.Flow , subscription)
 			vUser, err := json.Marshal(&account)
 			if err != nil {
 				return nil, fmt.Errorf("Marshal Vless User %s config fialed: %s", account, err)
@@ -101,15 +93,7 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo , tag string, subscription *api
 			}
 		case "vmess":
 			protocol = "vmess"		
-			vmessAccount := &conf.VMessAccount{
-				ID:  subscription.Passwd,
-				Security: "auto",
-			}
-			account :=  &protocol.User{
-				Level:   0,
-				Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.Passwd), 
-				Account: serial.ToTypedMessage(vmessAccount.Build()),
-			}			
+			account :=  vmessUser(tag, subscription)			
 			userVmess, err := json.Marshal(&account)
 			if err != nil {
 				return nil, fmt.Errorf("Marshal Vmess User %s config fialed: %s", account, err)
@@ -256,4 +240,28 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo , tag string, subscription *api
 	outboundDetourConfig.StreamSetting = streamSetting
 	
 	return outboundDetourConfig.Build()
+}
+
+func vmessUser(tag string, subscription *api.SubscriptionInfo) (*protocol.User) {
+	vmessAccount := &conf.VMessAccount{
+		ID:  subscription.Passwd,
+		Security: "auto",
+	}
+	return &protocol.User{
+		Level:   0,
+		Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.Passwd), 
+		Account: serial.ToTypedMessage(vmessAccount.Build()),
+	}
+}
+
+func vlessUser(tag string, Flow string, subscription *api.SubscriptionInfo) (*protocol.User) {
+	return &protocol.User{
+		Level:   0,
+		Email:   fmt.Sprintf("%s|%s|%s", tag, subscription.Email, subscription.Passwd),
+		Account: serial.ToTypedMessage(&vless.Account{
+			Id: subscription.Passwd,
+			Flow: Flow,
+			Encryption: "none",
+		}),
+	}
 }
