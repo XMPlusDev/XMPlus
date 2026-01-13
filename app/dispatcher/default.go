@@ -213,7 +213,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 	return inboundLink, outboundLink, nil
 }
 
-func WrapLink(ctx context.Context, policyManager policy.Manager, statsManager stats.Manager, link *transport.Link) (*transport.Link, error) {
+func WrapLink(ctx context.Context, policyManager policy.Manager, statsManager stats.Manager, link *transport.Link) *transport.Link {
 	sessionInbound := session.InboundFromContext(ctx)
 	var user *protocol.MemoryUser
 	if sessionInbound != nil {
@@ -223,19 +223,6 @@ func WrapLink(ctx context.Context, policyManager policy.Manager, statsManager st
 	link.Reader = &buf.TimeoutWrapperReader{Reader: link.Reader}
 
 	if user != nil && len(user.Email) > 0 {
-		bucket, ok, reject := d.limiter.GetUserBucket(sessionInbound.Tag, user.Email, sessionInbound.Source.Address.IP().String())
-		if reject {
-			common.Close(outboundLink.Writer)
-			common.Close(inboundLink.Writer)
-			common.Interrupt(outboundLink.Reader)
-			common.Interrupt(inboundLink.Reader)
-			return nil, errors.New("Subscription ", user.Email, " limited by IP")
-		}
-		if ok {
-			inboundLink.Writer = d.limiter.RateWriter(inboundLink.Writer, bucket)
-			outboundLink.Writer = d.limiter.RateWriter(outboundLink.Writer, bucket)
-		}
-		
 		p := policyManager.ForLevel(user.Level)
 		if p.Stats.UserUplink {
 			name := "user>>>" + user.Email + ">>>traffic>>>uplink"
@@ -264,7 +251,7 @@ func WrapLink(ctx context.Context, policyManager policy.Manager, statsManager st
 		}
 	}
 
-	return link, nil
+	return link
 }
 
 func (d *DefaultDispatcher) shouldOverride(ctx context.Context, result SniffResult, request session.SniffingRequest, destination net.Destination) bool {
@@ -390,10 +377,7 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 		content = new(session.Content)
 		ctx = session.ContextWithContent(ctx, content)
 	}
-	outbound, err = WrapLink(ctx, d.policy, d.stats, outbound)
-	if err != nil {
-		return err
-	}
+	outbound = WrapLink(ctx, d.policy, d.stats, outbound)
 	sniffingRequest := content.SniffingRequest
 	if !sniffingRequest.Enabled {
 		d.routedDispatch(ctx, outbound, destination)
