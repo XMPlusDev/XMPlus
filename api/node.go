@@ -231,12 +231,13 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		if realitySettings, ok := securityData.CheckGet("realitySettings"); ok {
 			nodeInfo.SecurityType = "reality"
 			nodeInfo.RealitySettings = &RealitySettings{}
-    
+			
 			if dest, err := realitySettings.Get("dest").String(); err == nil {
-				target, err := dest.MarshalJSON(); err != nil {
+				destBytes, err := json.Marshal(dest)
+				if err != nil {
 					return nil, err
 				}
-				nodeInfo.RealitySettings.Dest = target
+				nodeInfo.RealitySettings.Dest = json.RawMessage(destBytes)
 			}
 			if show, err := realitySettings.Get("show").Bool(); err == nil {
 				nodeInfo.RealitySettings.Show = show
@@ -276,7 +277,9 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			}
 			
 			// transit
-			nodeInfo.RealitySettings.PublicKey = realitySettings.Get("publickey").String()
+			if publicKey, err := realitySettings.Get("publickey").String(); err == nil {
+				nodeInfo.RealitySettings.PublicKey = publicKey
+			}
 			nodeInfo.RealitySettings.ServerName = realitySettings.Get("serverName").String()
 			nodeInfo.RealitySettings.ShortId = realitySettings.Get("shortid").String()
 			if spiderX, err := realitySettings.Get("spiderX").String(); err == nil {
@@ -299,7 +302,7 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			return nil, err
 		}
 		
-		nodeInfo.BlockingRules := &BlockingRules{}
+		nodeInfo.BlockingRules = &BlockingRules{}
 		
 		if ipData, ipKeyExists := ruleData.CheckGet("ip"); ipKeyExists {
 			nodeInfo.BlockingRules.IP = ipData
