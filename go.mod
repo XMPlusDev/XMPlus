@@ -16,7 +16,7 @@ require (
 	github.com/go-resty/resty/v2 v2.16.5
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/r3labs/diff/v2 v2.15.1
-	github.com/redis/go-redis/v9 v9.7.1
+	github.com/redis/go-redis/v9 v9.17.2
 	github.com/sagernet/sing v0.7.14
 	github.com/sagernet/sing-shadowsocks v0.2.7
 	github.com/spf13/cobra v1.9.1
