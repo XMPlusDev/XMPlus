@@ -52,7 +52,7 @@ func New(apiConfig *Config) *Client {
 	})
 	
 	client.SetBaseURL(apiConfig.APIHost)
-	client.SetBody({"key" : apiConfig.Key})
+	client.SetBody(map[string]string{"key": apiConfig.Key})
 	//client.SetQueryParam("key", apiConfig.Key)
 	
 	apiClient := &Client{
