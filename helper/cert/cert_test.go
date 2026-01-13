@@ -3,18 +3,18 @@ package cert
 import (
 	"testing"
 
-	"github.com/XMPlusDev/XMPlus/utility/mylego"
+	"github.com/XMPlusDev/XMPlus/helper/cert"
 )
 
 func TestLegoClient(t *testing.T) {
-	_, err := mylego.New(&mylego.CertConfig{})
+	_, err := cert.New(&cert.CertConfig{})
 	if err != nil {
 		t.Error(err)
 	}
 }
 
 func TestLegoDNSCert(t *testing.T) {
-	lego, err := mylego.New(&mylego.CertConfig{
+	lego, err := cert.New(&cert.CertConfig{
 		CertDomain: "node1.test.com",
 		Provider:   "alidns",
 		Email:      "test@gmail.com",
@@ -37,7 +37,7 @@ func TestLegoDNSCert(t *testing.T) {
 }
 
 func TestLegoHTTPCert(t *testing.T) {
-	lego, err := mylego.New(&mylego.CertConfig{
+	lego, err := cert.New(&cert.CertConfig{
 		CertMode:   "http",
 		CertDomain: "node1.test.com",
 		Email:      "test@gmail.com",
@@ -55,7 +55,7 @@ func TestLegoHTTPCert(t *testing.T) {
 }
 
 func TestLegoRenewCert(t *testing.T) {
-	lego, err := mylego.New(&mylego.CertConfig{
+	lego, err := cert.New(&cert.CertConfig{
 		CertDomain: "node1.test.com",
 		Email:      "test@gmail.com",
 		Provider:   "alidns",
