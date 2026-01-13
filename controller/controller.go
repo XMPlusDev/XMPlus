@@ -38,7 +38,7 @@ type Controller struct {
 }
 
 // New return a Controller service with default parameters.
-func New(server *core.Instance, api api.API, config *Config) *Controller {
+func New(server *core.Instance, api api.API, config *node.Config) *Controller {
 	controller := &Controller{
 		server:      server,
 		config:      config,

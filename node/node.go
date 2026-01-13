@@ -3,14 +3,14 @@ package node
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"strings"
 
 	"github.com/XMPlusDev/XMPlus/api"
 	"github.com/XMPlusDev/XMPlus/helper/limiter"
-	"github.com/XMPlusDev/XMPlus/app/dispatcher"
-	"github.com/XMPlusDev/XMPlus/subscription"
+	"github.com/XMPlusDev/XMPlus/app/dispatcher" 
 	
 	"github.com/xmplusdev/xray-core/v26/core"
 	"github.com/xmplusdev/xray-core/v26/features/inbound"
@@ -103,7 +103,7 @@ func (m *Manager) AddRelayTag(
 
 		// Handle Shadowsocks 2022 key generation
 		if C.Contains(shadowaead_2022.List, strings.ToLower(relayNodeInfo.Cipher)) {
-			userKey, err := subscription.checkShadowsocksPassword(subscription.Passwd, relayNodeInfo.Cipher)
+			userKey, err := checkShadowsocksPassword(subscription.Passwd, relayNodeInfo.Cipher)
 			if err != nil {
 				continue
 			}
@@ -134,6 +134,27 @@ func (m *Manager) AddRelayTag(
 	}
 
 	return nil
+}
+
+func checkShadowsocksPassword(password string, method string) (string, error) {
+	var userKey string
+	if len(password) < 16 {
+		return "", fmt.Errorf("shadowsocks2022 key's length must be greater than 16")
+	}
+	
+	switch strings.ToLower(method) {
+		case "2022-blake3-aes-128-gcm":
+			userKey = password[:16]
+		case "2022-blake3-aes-256-gcm", "2022-blake3-chacha20-poly1305":
+			if len(password) < 32 {
+				return "", fmt.Errorf("shadowsocks2022 key's length must be greater than 32")
+			}
+			userKey = password[:32]
+		default:
+			return "", fmt.Errorf("unsupported SS2022 method: %s", method)	
+	}
+	
+	return base64.StdEncoding.EncodeToString([]byte(userKey)), nil
 }
 
 // RemoveRelayTag removes all relay outbounds for subscriptions
