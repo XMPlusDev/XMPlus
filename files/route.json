@@ -1,0 +1,24 @@
+{
+  "domainStrategy": "IPOnDemand",
+  "rules": [
+    {
+      "type": "field",
+      "outboundTag": "block",
+      "ip": [
+        "geoip:private"
+      ]
+    },
+    {
+      "type": "field",
+      "outboundTag": "block",
+      "protocol": [
+        "bittorrent"
+      ]
+    },
+    {
+      "type": "field",
+      "outboundTag": "Warp",
+      "network": "udp,tcp"
+    }
+  ]
+}
