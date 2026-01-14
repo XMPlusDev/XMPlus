@@ -156,7 +156,9 @@ func (c *Controller) Start() error {
 	c.taskManager.Add(task.NewWithInterval(
 		"subscriptions",
 		time.Duration(c.nodeInfo.UpdateTime)*time.Second,
-		c.subManager.SubscriptionMonitor(c.subscriptionList, c.Tag, c.LogPrefix),
+		func() error {
+			return c.subManager.SubscriptionMonitor(c.subscriptionList, c.Tag, c.LogPrefix)
+		},
 	))
 	
 	// Check cert service if needed
