@@ -14,7 +14,6 @@ import (
 	"github.com/xmplusdev/xray-core/v25/proxy/shadowsocks_2022"
 	"github.com/xmplusdev/xray-core/v26/proxy/trojan"
 	"github.com/xmplusdev/xray-core/v26/proxy/vless"
-	"github.com/xmplusdev/xray-core/v26/proxy/vmess"
 	"github.com/xmplusdev/xray-core/v26/infra/conf"
 	
 	C "github.com/sagernet/sing/common"
@@ -34,7 +33,7 @@ func BuildVmessUsers(subscriptionInfo *[]api.SubscriptionInfo, tag string) []*pr
 		users = append(users, &protocol.User{
 			Level:   0,
 			Email:   buildUserTag(tag, &subscription),
-			Account: serial.ToTypedMessage(vmessAccount),
+			Account: serial.ToTypedMessage(vmessAccount.Build()),
 		})
 	}
 

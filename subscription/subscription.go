@@ -19,7 +19,7 @@ import (
 // Manager handles subscription-related operations
 type Manager struct {
 	server *core.Instance
-	client  *api.API  
+	client  api.API  
 	ibm    inbound.Manager
 	stm    stats.Manager
 	dispatcher   *dispatcher.DefaultDispatcher
@@ -29,7 +29,7 @@ type Manager struct {
 type UserBuilder func(subscriptionInfo *[]api.SubscriptionInfo, additionalParam ...interface{}) []*protocol.User
 
 // NewManager creates a new subscription manager
-func NewManager(server *core.Instance, client *api.API) *Manager {
+func NewManager(server *core.Instance, client api.API) *Manager {
 	return &Manager{
 		server: server,
 		client: client,

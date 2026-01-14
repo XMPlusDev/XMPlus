@@ -267,16 +267,16 @@ func (m *Manager) removeRouterRule(tag string) error{
 }
 
 func (m *Manager) AddInboundLimiter(tag string, nodeSpeedLimit uint64, subscriptionList *[]api.SubscriptionInfo, redisConfig *limiter.RedisConfig) error {
-	err := m.dispatcher.limiter.AddInboundLimiter(tag, nodeSpeedLimit, subscriptionList, redisConfig)
+	err := m.dispatcher.Limiter.AddInboundLimiter(tag, nodeSpeedLimit, subscriptionList, redisConfig)
 	return err
 }
 
 func (m *Manager) UpdateInboundLimiter(tag string, updatedSubscriptionList *[]api.SubscriptionInfo) error {
-	err := m.dispatcher.limiter.UpdateInboundLimiter(tag, updatedSubscriptionList)
+	err := m.dispatcher.Limiter.UpdateInboundLimiter(tag, updatedSubscriptionList)
 	return err
 }
 
 func (m *Manager) DeleteInboundLimiter(tag string) error {
-	err := m.dispatcher.limiter.DeleteInboundLimiter(tag)
+	err := m.dispatcher.Limiter.DeleteInboundLimiter(tag)
 	return err
 }

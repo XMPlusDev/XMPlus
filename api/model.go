@@ -181,7 +181,7 @@ type RelayNodeInfo struct {
 	NodeType        string
 	NodeID          int
 	Address         string
-	ListeningPort   string
+	ListeningPort   uint16
 	SendThroughIP   string
 	SecurityType    string
 	NetworkType     string

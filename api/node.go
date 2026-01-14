@@ -232,13 +232,7 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 				nodeInfo.TlsSettings.ServerNameToVerify = serverNameToVerify
 			}
 			if alpnArray, err := tlsSettings.Get("alpn").Array(); err == nil {
-				var alpnStrings []string
-				for _, v := range alpnArray {
-					if str, ok := v.(string); ok {
-						alpnStrings = append(alpnStrings, str)
-					}
-				}
-				nodeInfo.TlsSettings.Alpn = alpnStrings  // Changed from strings.Join(alpnStrings, ",")
+				nodeInfo.TlsSettings.Alpn = alpnArray 
 			}
 		}
 		
@@ -269,22 +263,10 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 				nodeInfo.RealitySettings.Xver = uint64(xver)
 			}
 			if serverNamesArray, err := realitySettings.Get("serverNames").Array(); err == nil {
-				var serverNames []string
-				for _, v := range serverNamesArray {
-					if str, ok := v.(string); ok {
-						serverNames = append(serverNames, str)
-					}
-				}
-				nodeInfo.RealitySettings.ServerNames = serverNames
+				nodeInfo.RealitySettings.ServerNames = serverNamesArray
 			}
 			if shortIdsArray, err := realitySettings.Get("shortids").Array(); err == nil {
-				var shortIds []string
-				for _, v := range shortIdsArray {
-					if str, ok := v.(string); ok {
-						shortIds = append(shortIds, str)
-					}
-				}
-				nodeInfo.RealitySettings.ShortIds = shortIds
+				nodeInfo.RealitySettings.ShortIds = shortIdsArray
 			}
 			if mldsa65Seed, err := realitySettings.Get("Mldsa65Seed").String(); err == nil {
 				nodeInfo.RealitySettings.Mldsa65Seed = mldsa65Seed
@@ -307,24 +289,12 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		
 		if ipData, ipKeyExists := ruleData.CheckGet("ip"); ipKeyExists {
 			if ipArray, err := ipData.Array(); err == nil {
-				var ipStrings []string
-				for _, v := range ipArray {
-					if str, ok := v.(string); ok {
-						ipStrings = append(ipStrings, str)
-					}
-				}
-				nodeInfo.BlockingRules.IP = ipStrings
+				nodeInfo.BlockingRules.IP = ipArray
 			}
 		}
 		if domainData, domainKeyExists := ruleData.CheckGet("domain"); domainKeyExists {
 			if domainArray, err := domainData.Array(); err == nil {
-				var domainStrings []string
-				for _, v := range domainArray {
-					if str, ok := v.(string); ok {
-						domainStrings = append(domainStrings, str)
-					}
-				}
-				nodeInfo.BlockingRules.Domain = domainStrings
+				nodeInfo.BlockingRules.Domain = domainArray
 			}
 		}
 		if portData, portKeyExists := ruleData.CheckGet("port"); portKeyExists {
@@ -334,13 +304,7 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		}
 		if protocolData, protocolKeyExists := ruleData.CheckGet("protocol"); protocolKeyExists {
 			if protocolArray, err := protocolData.Array(); err == nil {
-				var protocolStrings []string
-				for _, v := range protocolArray {
-					if str, ok := v.(string); ok {
-						protocolStrings = append(protocolStrings, str)
-					}
-				}
-				nodeInfo.BlockingRules.Protocol = protocolStrings
+				nodeInfo.BlockingRules.Protocol = protocolArray
 			}
 		}
 	}
@@ -377,7 +341,7 @@ func (c *Client) TransitNodeResponse() (*RelayNodeInfo, error) {
 		nodeInfo.NodeID = s.NodeId
 		nodeInfo.Address = s.RAddress
 		
-		nodeInfo.ListeningPort = transportData.Get("listeningPort").MustString()
+		nodeInfo.ListeningPort = uint16(transportData.Get("listeningPort").MustString())
 		nodeInfo.SendThroughIP = transportData.Get("sendThroughIP").MustString()
 		
 		if nodeInfo.NodeType == "vless" {

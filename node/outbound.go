@@ -214,7 +214,7 @@ func OutboundRelayBuilder(nodeInfo *api.NodeInfo , tag string, subscription *api
 		streamSetting.Security = "tls"
 		tlsSettings := &conf.TLSConfig{
 			Insecure: true,
-			Fingerprint: nodeInfo.RelayNodeInfo.TlsSettings.Fingerprint,
+			Fingerprint: nodeInfo.RelayNodeInfo.TlsSettings.FingerPrint,
 		}
 		streamSetting.TLSSettings = tlsSettings	
 	}

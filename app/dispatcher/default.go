@@ -101,7 +101,7 @@ type DefaultDispatcher struct {
 	policy policy.Manager
 	stats  stats.Manager
 	fdns   dns.FakeDNSEngine
-	limiter *limiter.Limiter
+	Limiter *limiter.Limiter
 }
 
 func init() {
@@ -125,7 +125,7 @@ func (d *DefaultDispatcher) Init(config *Config, om outbound.Manager, router rou
 	d.router = router
 	d.policy = pm
 	d.stats = sm
-	d.limiter = limiter.New()
+	d.Limiter = limiter.New()
 	return nil
 }
 
@@ -164,7 +164,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 	}
 
 	if user != nil && len(user.Email) > 0 {
-		bucket, ok, reject := d.limiter.GetUserBucket(sessionInbound.Tag, user.Email, sessionInbound.Source.Address.IP().String())
+		bucket, ok, reject := d.Limiter.GetUserBucket(sessionInbound.Tag, user.Email, sessionInbound.Source.Address.IP().String())
 		if reject {
 			common.Close(outboundLink.Writer)
 			common.Close(inboundLink.Writer)
@@ -173,8 +173,8 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			return nil, nil, errors.New("Subscription ", user.Email, " limited by IP")
 		}
 		if ok {
-			inboundLink.Writer = d.limiter.RateWriter(inboundLink.Writer, bucket)
-			outboundLink.Writer = d.limiter.RateWriter(outboundLink.Writer, bucket)
+			inboundLink.Writer = d.Limiter.RateWriter(inboundLink.Writer, bucket)
+			outboundLink.Writer = d.Limiter.RateWriter(outboundLink.Writer, bucket)
 		}
 		
 		p := d.policy.ForLevel(user.Level)
