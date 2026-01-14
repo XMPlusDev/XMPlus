@@ -173,9 +173,9 @@ func (m *Manager) subscriptionMonitor(
 		up, down, upCounter, downCounter := m.getTraffic(buildUserTag(tag, &subscription))
 		if up > 0 || down > 0 {
 			subscriptionTraffic = append(subscriptionTraffic, api.SubscriptionTraffic{
-				Id: subscription.Id,
-				U:  up,
-				D:  down,
+				id: subscription.Id,
+				u:  up,
+				d:  down,
 			})  // Added closing brace and parenthesis here
 
 			if upCounter != nil {

@@ -105,12 +105,12 @@ func (c *Client) ParseSubscriptionList(subscriptionResponse *[]Subscription) (*[
 }
 
 func (c *Client) ReportTraffic(subscriptionTraffic *[]SubscriptionTraffic) error {
-	data := make([]SubscriptionTraffic, len(*subscriptionTraffic))	
+	data := make([]Traffic, len(*subscriptionTraffic))	
 	for i, traffic := range *subscriptionTraffic {
-		data[i] = SubscriptionTraffic{
-			Id:  traffic.Id,
-			U:   traffic.U,
-			D:   traffic.D,
+		data[i] = Traffic{
+			id:  traffic.id,
+			u:   traffic.u,
+			d:   traffic.d,
 		}
 	}
 	

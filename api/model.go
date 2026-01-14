@@ -53,6 +53,12 @@ type SubscriptionResponse struct {
 	Data json.RawMessage `json:"subscriptions"`
 }
 
+type Traffic struct {
+	id  int   `json:"subscription_id"`
+	u   int64 `json:"u"`
+	d   int64 `json:"d"`
+}
+
 type Subscription struct {
 	Id         int    `json:"id"`
 	Email      string `json:"email"`
@@ -214,7 +220,7 @@ type OnlineIP struct {
 }
 
 type SubscriptionTraffic struct {
-	Id  int
-	U   int64
-	D   int64
+	id  int
+	u   int64
+	d   int64
 }

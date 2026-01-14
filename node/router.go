@@ -30,7 +30,7 @@ func RouterBuilder(nodeInfo *api.NodeInfo, tag string) (*router.Config, error) {
 		IP: &nodeInfo.BlockingRules.IP,
 		Protocols: &nodeInfo.BlockingRules.Protocol,
 		Port: &conf.PortList{
-			Range: []conf.PortRange{{From: nodeInfo.BlockingRules.Port, To: nodeInfo.BlockingRules.Port}}
+			Range: []conf.PortRange{{From: nodeInfo.BlockingRules.Port, To: nodeInfo.BlockingRules.Port}},
 		},
 	}
 	
