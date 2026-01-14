@@ -45,7 +45,7 @@ func New(server *core.Instance, api api.API, config *node.Config) *Controller {
 		client:      api,
 		startAt:     time.Now(),
 		taskManager: task.NewManager(), 
-		nodeManager: node.NewManager(server)
+		nodeManager: node.NewManager(server),
 		subManager:  subscription.NewManager(server, api),
 	}
 
@@ -87,7 +87,7 @@ func (c *Controller) Start() error {
 	
 	err := c.nodeManager.BlockingRuleTag(
 		c.nodeInfo, 
-		c.Tag
+		c.Tag,
 	)
 	if err != nil {
 		log.Panic(err)
@@ -103,7 +103,7 @@ func (c *Controller) Start() error {
 			newRelayNodeInfo,
 			c.RelayTag,
 			c.Tag,
-			c.subscriptionList
+			c.subscriptionList,
 		)
 		if err != nil {
 			log.Panic(err)
@@ -116,7 +116,7 @@ func (c *Controller) Start() error {
 	err = c.nodeManager.AddTag(
 		c.nodeInfo, 
 		c.Tag, 
-		c.config
+		c.config,
 	)
 	if err != nil {
 		log.Panic(err)
@@ -127,7 +127,7 @@ func (c *Controller) Start() error {
 	err = c.subManager.addNewSubscription(
 		subscriptionInfo, 
 		newNodeInfo,
-		c.Tag
+		c.Tag,
 	)
 	if err != nil {
 		return err
@@ -138,7 +138,7 @@ func (c *Controller) Start() error {
 		c.Tag, 
 		newNodeInfo.SpeedLimit, 
 		subscriptionInfo, 
-		c.config.RedisConfig
+		c.config.RedisConfig,
 	) 
 	if err != nil {
 		log.Print(err)
@@ -212,7 +212,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 	if c.Relay && updateRelay {
 		err := c.nodeManager.RemoveRelayRules(
 			c.RelayTag, 
-			c.subscriptionList
+			c.subscriptionList,
 		)
 		if err != nil {
 			log.Print(err)
@@ -284,7 +284,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 			newRelayNodeInfo,
 			c.RelayTag,
 			c.Tag,
-			newSubscriptionInfo
+			newSubscriptionInfo,
 		)
 		if err != nil {
 			log.Panic(err)
@@ -297,7 +297,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 		err := c.subManager.addNewSubscription(
 			newSubscriptionInfo, 
 			newNodeInfo, 
-			c.Tag
+			c.Tag,
 		)
 		if err != nil {
 			log.Print(err)
@@ -308,7 +308,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 			c.Tag, 
 			newNodeInfo.SpeedLimit, 
 			newSubscriptionInfo, 
-			c.config.IPLimit
+			c.config.IPLimit,
 		)
 		if err != nil {
 			log.Print(err)
