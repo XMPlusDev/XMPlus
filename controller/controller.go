@@ -5,7 +5,6 @@ import (
 	"log"
 	"reflect"
 	"time"
-	"strings"
 	
 	"github.com/xmplusdev/xray-core/v26/core"
 	
@@ -27,6 +26,7 @@ type Controller struct {
 	client       api.API
 	nodeInfo     *api.NodeInfo
 	Tag          string
+	LogPrefix    string
 	RelayTag     string
 	Relay        bool
 	subscriptionList  *[]api.SubscriptionInfo
@@ -144,6 +144,8 @@ func (c *Controller) Start() error {
 		log.Print(err)
 	}
 	
+	c.LogPrefix = c.logPrefix()
+	
 	// Add periodic tasks using the task manager
 	c.taskManager.Add(task.NewWithInterval(
 		"server",
@@ -154,7 +156,7 @@ func (c *Controller) Start() error {
 	c.taskManager.Add(task.NewWithInterval(
 		"subscriptions",
 		time.Duration(c.nodeInfo.UpdateTime)*time.Second,
-		c.subManager.SubscriptionMonitor(c.subscriptionList, c.Tag, c.logPrefix),
+		c.subManager.SubscriptionMonitor(c.subscriptionList, c.Tag, c.LogPrefix),
 	))
 	
 	// Check cert service if needed
@@ -304,11 +306,11 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 			return nil
 		}
 		
-		err := c.nodeManager.AddInboundLimiter(
+		err = c.nodeManager.AddInboundLimiter(
 			c.Tag, 
 			newNodeInfo.SpeedLimit, 
 			newSubscriptionInfo, 
-			c.config.IPLimit,
+			c.config.RedisConfig,
 		)
 		if err != nil {
 			log.Print(err)
