@@ -37,14 +37,18 @@ func executeMLKEM768() error {
 	var seed [64]byte
 	
 	if mlkem768Seed != "" {
-		s, _ := base64.RawURLEncoding.DecodeString(mlkem768Seed)
-		if len(s) != 64 {
-			fmt.Println("Invalid length of ML-KEM-768 seed.")
-			return
+		s, err := base64.RawURLEncoding.DecodeString(mlkem768Seed)
+		if err != nil {
+			return fmt.Errorf("failed to decode seed: %w", err)
 		}
-		seed = [64]byte(s)
+		if len(s) != 64 {
+			return fmt.Errorf("invalid seed length: expected 64 bytes, got %d", len(s))
+		}
+		copy(seed[:], s)
 	} else {
-		rand.Read(seed[:])
+		if _, err := rand.Read(seed[:]); err != nil {
+			return fmt.Errorf("failed to generate random seed: %w", err)
+		}
 	}
 
 	seed, client, hash32 := genMLKEM768(&seed)
