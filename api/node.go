@@ -231,8 +231,8 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			if serverNameToVerify, err := tlsSettings.Get("serverNameToVerify").String(); err == nil {
 				nodeInfo.TlsSettings.ServerNameToVerify = serverNameToVerify
 			}
-			if alpnArray, err := tlsSettings.Get("alpn").Array(); err == nil {
-				nodeInfo.TlsSettings.Alpn = alpnArray 
+			if alpnArray, err := tlsSettings.Get("alpn").StringArray(); err == nil {
+				nodeInfo.TlsSettings.Alpn = alpnArray
 			}
 		}
 		
@@ -262,10 +262,10 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			if xver, err := realitySettings.Get("xver").Int(); err == nil {
 				nodeInfo.RealitySettings.Xver = uint64(xver)
 			}
-			if serverNamesArray, err := realitySettings.Get("serverNames").Array(); err == nil {
+			if serverNamesArray, err := realitySettings.Get("serverNames").StringArray(); err == nil {
 				nodeInfo.RealitySettings.ServerNames = serverNamesArray
 			}
-			if shortIdsArray, err := realitySettings.Get("shortids").Array(); err == nil {
+			if shortIdsArray, err := realitySettings.Get("shortids").StringArray(); err == nil {
 				nodeInfo.RealitySettings.ShortIds = shortIdsArray
 			}
 			if mldsa65Seed, err := realitySettings.Get("Mldsa65Seed").String(); err == nil {
@@ -288,12 +288,12 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 		nodeInfo.BlockingRules = &BlockingRules{}
 		
 		if ipData, ipKeyExists := ruleData.CheckGet("ip"); ipKeyExists {
-			if ipArray, err := ipData.Array(); err == nil {
+			if ipArray, err := ipData.StringArray(); err == nil {
 				nodeInfo.BlockingRules.IP = ipArray
 			}
 		}
 		if domainData, domainKeyExists := ruleData.CheckGet("domain"); domainKeyExists {
-			if domainArray, err := domainData.Array(); err == nil {
+			if domainArray, err := domainData.StringArray(); err == nil {
 				nodeInfo.BlockingRules.Domain = domainArray
 			}
 		}
@@ -303,7 +303,7 @@ func (c *Client) NodeResponse(s *serverConfig) (*NodeInfo, error) {
 			}
 		}
 		if protocolData, protocolKeyExists := ruleData.CheckGet("protocol"); protocolKeyExists {
-			if protocolArray, err := protocolData.Array(); err == nil {
+			if protocolArray, err := protocolData.StringArray(); err == nil {
 				nodeInfo.BlockingRules.Protocol = protocolArray
 			}
 		}
@@ -341,7 +341,7 @@ func (c *Client) TransitNodeResponse() (*RelayNodeInfo, error) {
 		nodeInfo.NodeID = s.NodeId
 		nodeInfo.Address = s.RAddress
 		
-		nodeInfo.ListeningPort = uint16(transportData.Get("listeningPort").MustString())
+		nodeInfo.ListeningPort = uint16(transportData.Get("listeningPort").MustInt())
 		nodeInfo.SendThroughIP = transportData.Get("sendThroughIP").MustString()
 		
 		if nodeInfo.NodeType == "vless" {

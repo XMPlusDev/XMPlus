@@ -62,6 +62,13 @@ type Subscription struct {
 	Ipcount    int    `json:"alive_ip_count"`
 }
 
+type BlockingRules struct {
+	Domain      []string
+	IP          []string
+	Port        string
+	Protocol    []string
+}
+
 type TlsSettings struct {
 	CertMode           string
 	ServerName         string 
@@ -136,13 +143,6 @@ type KcpSettings struct {
 	Seed           string
 	Congestion     bool
 	Header         json.RawMessage
-}
-
-type BlockingRules struct {
-	Domain      []string
-	IP          []string
-	Port        string
-	Protocol    []string
 }
 
 type NodeInfo struct {
