@@ -36,17 +36,25 @@ func executeMLDSA65() error {
 	var seed [32]byte
 	
 	if mldsa65Seed != "" {
-		s, _ := base64.RawURLEncoding.DecodeString(mldsa65Seed)
-		if len(s) != 32 {
-			fmt.Println("Invalid length of ML-DSA-65 seed.")
-			return
+		s, err := base64.RawURLEncoding.DecodeString(mldsa65Seed)
+		if err != nil {
+			return fmt.Errorf("failed to decode seed: %w", err)
 		}
-		seed = [32]byte(s)
+		if len(s) != 32 {
+			return fmt.Errorf("invalid seed length: expected 32 bytes, got %d", len(s))
+		}
+		copy(seed[:], s)
 	} else {
-		rand.Read(seed[:])
+		if _, err := rand.Read(seed[:]); err != nil {
+			return fmt.Errorf("failed to generate random seed: %w", err)
+		}
 	}
 	
-	pub, _ := mldsa65.NewKeyFromSeed(&seed)
+	pub, err := mldsa65.NewKeyFromSeed(&seed)
+	if err != nil {
+		return fmt.Errorf("failed to generate key from seed: %w", err)
+	}
+	
 	output := fmt.Sprintf("\n  Seed: %v\nVerify: %v",
 		base64.RawURLEncoding.EncodeToString(seed[:]),
 		base64.RawURLEncoding.EncodeToString(pub.Bytes()))

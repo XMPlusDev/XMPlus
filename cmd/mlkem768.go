@@ -57,7 +57,7 @@ func executeMLKEM768() error {
 	return nil
 }
 
-func genMLKEM768(inputSeed *[64]byte) (seed [64]byte, client []byte, hash32 [32]byte, err error) {
+func genMLKEM768(inputSeed *[64]byte) (seed [64]byte, client []byte, hash32 [32]byte) {
 	if inputSeed == nil {
 		rand.Read(seed[:])
 	} else {

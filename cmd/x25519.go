@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"encoding/base64"
-	"errors"
 	"fmt"
 	
 	"github.com/spf13/cobra"
