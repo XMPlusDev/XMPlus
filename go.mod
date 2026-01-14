@@ -23,7 +23,7 @@ require (
 	github.com/xmplusdev/xray-core/v25 v25.1.30
 	golang.org/x/crypto v0.47.0
 	golang.org/x/net v0.49.0
-	golang.org/x/time v0.12.0
+	golang.org/x/time v0.14.0
 	google.golang.org/protobuf v1.36.11
 	lukechampine.com/blake3 v1.3.0 // indirect
 )
