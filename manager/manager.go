@@ -172,8 +172,8 @@ func (m *Manager) Start() {
 
 	// Load Nodes config
 	for _, nodeConfig := range m.managerConfig.NodesConfig {
-		var apiClient api.API
-		apiClient = api.New(nodeConfig.ApiConfig)
+		var client api.API
+		client = api.New(nodeConfig.ApiConfig)
 		
 		var controllerService controller.ControllerInterface
 		// Register controller service
@@ -183,7 +183,7 @@ func (m *Manager) Start() {
 				log.Panicf("Read Controller Config Failed")
 			}
 		}
-		controllerService = controller.New(server, apiClient, controllerConfig)
+		controllerService = controller.New(server, client, controllerConfig)
 		
 		// Set manager reference if controller supports it
 		if ctrl, ok := controllerService.(interface{ SetManager(ManagerInterface) }); ok {
