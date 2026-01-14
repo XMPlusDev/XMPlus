@@ -214,6 +214,11 @@ type SubscriptionInfo struct {
 	IPLimit      int
 }
 
+type AliveIP struct {
+	Id int    `json:"subscription_id"`
+	IP  string `json:"ip"`
+}
+
 type OnlineIP struct {
 	Id  int
 	IP  string
