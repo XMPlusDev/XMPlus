@@ -26,10 +26,12 @@ func RouterBuilder(nodeInfo *api.NodeInfo, tag string) (*router.Config, error) {
 		Type: "field",
 		RuleTag: fmt.Sprintf("%s_blackhole", tag),
 		OutboundTag: fmt.Sprintf("%s_blackhole", tag),
-		Domain: &conf.StringList{nodeInfo.BlockingRules.Domain},
-		IP: &conf.StringList{nodeInfo.BlockingRules.IP},
-		Port: &conf.PortList{nodeInfo.BlockingRules.Port},
-		Protocols: &conf.StringList{nodeInfo.BlockingRules.Protocol},
+		Domain: &nodeInfo.BlockingRules.Domain,
+		IP: &nodeInfo.BlockingRules.IP,
+		Protocols: &nodeInfo.BlockingRules.Protocol,
+		Port: &conf.PortList{
+			Range: []conf.PortRange{{From: nodeInfo.BlockingRules.Port, To: nodeInfo.BlockingRules.Port}}
+		},
 	}
 	
 	rule, err := json.Marshal(ruleList)
