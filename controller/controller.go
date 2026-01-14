@@ -85,7 +85,7 @@ func (c *Controller) Start() error {
 	}
 	c.subscriptionList = subscriptionInfo
 	
-	err := c.nodeManager.BlockingRuleTag(
+	err = c.nodeManager.BlockingRuleTag(
 		c.nodeInfo, 
 		c.Tag,
 	)
@@ -100,7 +100,7 @@ func (c *Controller) Start() error {
 		c.RelayTag = c.buildRNodeTag()
 		
 		err = c.nodeManager.AddRelayTag(
-			newRelayNodeInfo,
+			newNodeInfo,
 			c.RelayTag,
 			c.Tag,
 			c.subscriptionList,
@@ -124,7 +124,7 @@ func (c *Controller) Start() error {
 	}
 	
 	// Add user Subscriptions
-	err = c.subManager.addNewSubscription(
+	err = c.subManager.AddNewSubscription(
 		subscriptionInfo, 
 		newNodeInfo,
 		c.Tag,
@@ -134,7 +134,7 @@ func (c *Controller) Start() error {
 	}
 	
 	// Add Limiter
-	err := c.nodeManager.AddInboundLimiter(
+	err = c.nodeManager.AddInboundLimiter(
 		c.Tag, 
 		newNodeInfo.SpeedLimit, 
 		subscriptionInfo, 
@@ -154,7 +154,7 @@ func (c *Controller) Start() error {
 	c.taskManager.Add(task.NewWithInterval(
 		"subscriptions",
 		time.Duration(c.nodeInfo.UpdateTime)*time.Second,
-		c.subManager.subscriptionMonitor(c.subscriptionList, c.Tag, c.logPrefix),
+		c.subManager.SubscriptionMonitor(c.subscriptionList, c.Tag, c.logPrefix),
 	))
 	
 	// Check cert service if needed
@@ -229,7 +229,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 				log.Print(err)
 				return nil
 			}
-			err := c.nodeManager.RemoveBlockingRules(oldTag)
+			err = c.nodeManager.RemoveBlockingRules(oldTag)
 			if err != nil {
 				log.Print(err)
 			}
@@ -244,12 +244,12 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 			// Add new tag
 			c.nodeInfo = newNodeInfo
 			c.Tag = c.buildNodeTag()
-			err := c.nodeManager.AddTag(newNodeInfo, c.Tag, c.config)
+			err = c.nodeManager.AddTag(newNodeInfo, c.Tag, c.config)
 			if err != nil {
 				log.Print(err)
 				return nil
 			}
-			err := c.nodeManager.BlockingRuleTag(c.nodeInfo, c.Tag)
+			err = c.nodeManager.BlockingRuleTag(c.nodeInfo, c.Tag)
 			if err != nil {
 				log.Print(err)
 				return nil
@@ -257,7 +257,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 			//nodeInfoChanged = true
 		
 			// Remove Old limiter
-			err := c.nodeManager.DeleteInboundLimiter(oldTag)
+			err = c.nodeManager.DeleteInboundLimiter(oldTag)
 			if err != nil {
 				log.Print(err)
 				return nil
@@ -281,7 +281,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 		c.RelayTag = c.buildRNodeTag()
 		
 		err := c.nodeManager.AddRelayTag(
-			newRelayNodeInfo,
+			newNodeInfo,
 			c.RelayTag,
 			c.Tag,
 			newSubscriptionInfo,
@@ -294,7 +294,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 	}
 	
 	if nodeInfoChanged {
-		err := c.subManager.addNewSubscription(
+		err := c.subManager.AddNewSubscription(
 			newSubscriptionInfo, 
 			newNodeInfo, 
 			c.Tag,
@@ -327,7 +327,7 @@ func (c *Controller) nodeInfoMonitor() (err error) {
 				}
 			}
 			if len(added) > 0 {
-				err := c.subManager.addNewSubscription(&added, c.nodeInfo, c.Tag)
+				err := c.subManager.AddNewSubscription(&added, c.nodeInfo, c.Tag)
 				if err != nil {
 					log.Print(err)
 				}

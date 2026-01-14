@@ -39,7 +39,7 @@ func NewManager(server *core.Instance, client api.API) *Manager {
 	}
 }
 
-func (m *Manager) addNewSubscription(subscriptionInfo *[]api.SubscriptionInfo, nodeInfo *api.NodeInfo, tag string) (err error) {
+func (m *Manager) AddNewSubscription(subscriptionInfo *[]api.SubscriptionInfo, nodeInfo *api.NodeInfo, tag string) (err error) {
 	if subscriptionInfo == nil || len(*subscriptionInfo) == 0 {
 		return nil
 	}
@@ -159,7 +159,7 @@ func Compare(old, new *[]api.SubscriptionInfo) (deleted, added []api.Subscriptio
 }
 
 
-func (m *Manager) subscriptionMonitor(
+func (m *Manager) SubscriptionMonitor(
 	subscriptionList *[]api.SubscriptionInfo,
 	tag string,
 	logPrefix string,
