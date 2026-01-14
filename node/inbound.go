@@ -223,8 +223,10 @@ func InboundBuilder(config *Config, nodeInfo *api.NodeInfo, tag string) (*core.I
 		tlsSettings.Insecure = nodeInfo.TlsSettings.AllowInsecure
 		tlsSettings.RejectUnknownSNI = nodeInfo.TlsSettings.RejectUnknownSni
 		tlsSettings.ServerName = nodeInfo.TlsSettings.ServerName
-		tlsSettings.ALPN = &nodeInfo.TlsSettings.Alpn
-		tlsSettings.CurvePreferences = &conf.StringList{nodeInfo.TlsSettings.CurvePreferences}
+		alpn := conf.StringList(nodeInfo.TlsSettings.Alpn)
+		tlsSettings.ALPN = &alpn
+		CurvePreferences := conf.StringList{nodeInfo.TlsSettings.CurvePreferences}
+		tlsSettings.CurvePreferences = &CurvePreferences
 		tlsSettings.Fingerprint = nodeInfo.TlsSettings.FingerPrint
 		if nodeInfo.TlsSettings.ServerNameToVerify != "" {
 			tlsSettings.ServerNameToVerify = nodeInfo.TlsSettings.ServerNameToVerify

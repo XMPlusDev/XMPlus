@@ -54,9 +54,14 @@ type SubscriptionResponse struct {
 }
 
 type Traffic struct {
-	id  int   `json:"subscription_id"`
-	u   int64 `json:"u"`
-	d   int64 `json:"d"`
+	Id  int   `json:"subscription_id"`
+	Upload   int64 `json:"u"`
+	Download   int64 `json:"d"`
+}
+
+type AliveIP struct {
+	Id int    `json:"subscription_id"`
+	IP  string `json:"ip"`
 }
 
 type Subscription struct {
@@ -225,7 +230,7 @@ type OnlineIP struct {
 }
 
 type SubscriptionTraffic struct {
-	id  int
-	u   int64
-	d   int64
+	Id  int
+	Upload   int64
+	Download   int64
 }

@@ -108,9 +108,9 @@ func (c *Client) ReportTraffic(subscriptionTraffic *[]SubscriptionTraffic) error
 	data := make([]Traffic, len(*subscriptionTraffic))	
 	for i, traffic := range *subscriptionTraffic {
 		data[i] = Traffic{
-			id:  traffic.id,
-			u:   traffic.u,
-			d:   traffic.d,
+			Id:  traffic.Id,
+			Upload:   traffic.Upload,
+			Download:   traffic.Download,
 		}
 	}
 	
@@ -136,9 +136,9 @@ func (c *Client) ReportOnlineIPs(onlineSubscriptionList *[]OnlineIP) error {
 	defer c.access.Unlock()
 
 	reportOnline := make(map[int]int)
-	data := make([]OnlineIP, len(*onlineSubscriptionList))
+	data := make([]AliveIP, len(*onlineSubscriptionList))
 	for i, subscription := range *onlineSubscriptionList {
-		data[i] = OnlineIP{Id: subscription.Id, IP: subscription.IP}
+		data[i] = AliveIP{Id: subscription.Id, IP: subscription.IP}
 		if _, ok := reportOnline[subscription.Id]; ok {
 			reportOnline[subscription.Id]++
 		} else {
